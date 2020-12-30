@@ -88,4 +88,4 @@ clean:
 	@rm -rf $(GENERATED_DIR)
 	@rm -f $(OBJS)
 
-.PHONY: all clean gsoap_target
+.PHONY: all clean gsoap_target $(TARGET)
