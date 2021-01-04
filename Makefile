@@ -1,12 +1,13 @@
 CXX      ?= g++
 CXXFLAGS  = -std=c++11 -O2  -Wall  -pipe
 CXXFLAGS += -I$(GENERATED_DIR) -I$(GSOAP_IMPORT_DIR) -I$(GSOAP_DIR) \
-            -I$(GSOAP_CUSTOM_DIR) -I$(GSOAP_PLUGIN_DIR)
+            -I$(GSOAP_CUSTOM_DIR) -I$(GSOAP_PLUGIN_DIR) -I$(UTILS_DIR)
 
 TARGET     := onvif-server
 SRC_DIR     = src
 SERVICE_DIR = $(SRC_DIR)/services
 WSDD_DIR    = $(SRC_DIR)/wsdd
+UTILS_DIR   = $(SRC_DIR)/utils
 
 # gSOAP
 
@@ -59,11 +60,14 @@ OBJS := $(patsubst %.c,   %.o, $(OBJS))
 
 all: $(TARGET)
 
+debug: CXXFLAGS += -g -fsanitize=address -DDEBUG
+debug: $(TARGET)
+
 # Little trick to ensure gsoap files will get generated before
 # compilation even with parallelism (-jN)
 $(TARGET):
-	$(MAKE) gsoap_target
-	$(MAKE) compilation
+	$(MAKE) gsoap_target CXX="$(CXX)" CXXFLAGS="$(CXXFLAGS)"
+	$(MAKE) compilation CXX="$(CXX)" CXXFLAGS="$(CXXFLAGS)"
 
 compilation: $(OBJS)
 	$(CXX) -o $(TARGET) $^ $(CXXFLAGS)
@@ -85,7 +89,10 @@ $(GENERATED_DIR)/wsddClient.cpp: $(GSOAP_IMPORT_DIR)/wsdd.h
 
 
 clean:
+	@rm -f $(OBJS)
+
+deep-clean:
 	@rm -rf $(GENERATED_DIR)
 	@rm -f $(OBJS)
 
-.PHONY: all clean gsoap_target $(TARGET)
+.PHONY: all clean deep-clean gsoap_target $(TARGET) debug
