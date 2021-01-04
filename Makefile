@@ -32,6 +32,7 @@ SRC  = $(SRC_DIR)/main.cpp                 \
        $(SERVICE_DIR)/ServiceDiscovery.cpp \
        $(DISCOVERY_DIR)/discovery.cpp      \
        $(UTILS_DIR)/arguments.cpp          \
+       $(UTILS_DIR)/utils.cpp
 
 # gSOAP sources
 SRC += $(GSOAP_DIR)/stdsoap2.cpp            \
