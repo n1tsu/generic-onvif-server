@@ -122,7 +122,7 @@ soap_wsdd_mode wsdd_event_Probe(struct soap *soap, const char *MessageID, const 
   Context *context = (Context *)soap->user;
   soap_wsdd_init_ProbeMatches(soap, matches);
 
-  std::string xaddr = "http://" + context->xaddr + ":" + std::to_string(context->port);
+  std::string xaddr = context->get_xaddr();
   std::string scopes = context->get_scopes();
   std::string endpoint = context->endpoint;
 

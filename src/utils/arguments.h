@@ -29,6 +29,7 @@ class Context
 public:
   Context();
   std::string get_scopes();
+  std::string get_xaddr();
 
   std::string interface;
   std::string stream_url;

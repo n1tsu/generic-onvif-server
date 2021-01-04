@@ -57,7 +57,7 @@ void discovery_routine()
       exit(1);
     }
 
-    std::string xaddr = "http://" + context.xaddr + ":" + std::to_string(context.port);
+    std::string xaddr = context.get_xaddr();
     std::string scopes = context.get_scopes();
     const char *endpoint = context.endpoint.c_str();
 

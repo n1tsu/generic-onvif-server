@@ -99,3 +99,9 @@ std::string Context::get_scopes()
 
   return scopes;
 }
+
+std::string Context::get_xaddr()
+{
+  std::string result = "http://" + this->xaddr + ":" + std::to_string(port);
+  return result;
+}
