@@ -43,6 +43,10 @@ public:
   int port;
   std::string xaddr;
   std::string endpoint;
+
+  std::string user;
+  std::string password;
+
   CameraGeneric *camera;
 };
 

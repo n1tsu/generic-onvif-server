@@ -1,10 +1,9 @@
 #pragma once
 
+#include "utils.h"
 
 // Debug macros
 #ifdef DEBUG
-
-#include "utils.h"
 
 #define DEBUG_MSG(...) do {      \
   fprintf (stderr, __VA_ARGS__); \
@@ -24,3 +23,10 @@
 // Stringify macro
 #define STRINGIFY(X) #X
 #define STR(X) STRINGIFY(X)
+
+
+// WS-Security
+#define CHECK_SECURITY(soap, ctx)           \
+    int result = ctx->check_security(soap); \
+    if (result != SOAP_OK)                  \
+        return result

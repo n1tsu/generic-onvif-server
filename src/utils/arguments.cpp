@@ -108,6 +108,8 @@ Context::Context():
   port(8080),
   xaddr("192.168.1.90"),
   endpoint(""),
+  user("admin"),
+  password("password"),
   camera(NULL)
 {
   scopes = std::vector<std::string>();
