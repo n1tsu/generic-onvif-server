@@ -17,6 +17,8 @@ namespace LongOpts
     scope,
     port,
     xaddr,
+    encoder,
+    camera_lib,
   };
 }
 
@@ -39,4 +41,15 @@ public:
   int port;
   std::string xaddr;
   std::string endpoint;
+};
+
+
+class VideoArgs
+{
+public:
+  VideoArgs();
+
+  std::string encoder;
+  std::string stream_url;
+  std::string camera_lib;
 };

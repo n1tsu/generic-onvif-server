@@ -6,13 +6,22 @@ CXXFLAGS += -DWITH_OPENSSL -lssl -lcrypto -lz -pthread
 # Includes
 CXXFLAGS += -I$(GENERATED_DIR) -I$(GSOAP_IMPORT_DIR) -I$(GSOAP_DIR) \
             -I$(GSOAP_CUSTOM_DIR) -I$(GSOAP_PLUGIN_DIR) -I$(UTILS_DIR) \
-            -I$(DISCOVERY_DIR)
+            -I$(DISCOVERY_DIR) -I$(RTSP_DIR) -I$(CAMERA_DIR)
+# Libraries
+CXXFLAGS += -ldl                                                    \
+            -lgstbase-1.0                                           \
+            -lgobject-2.0                                           \
+            `pkg-config --cflags --libs glib-2.0`                   \
+            `pkg-config --cflags --libs gstreamer-1.0`              \
+            `pkg-config --cflags --libs gstreamer-rtsp-server-1.0`  \
 
 TARGET       := onvif-server
 SRC_DIR       = src
 SERVICE_DIR   = $(SRC_DIR)/services
 DISCOVERY_DIR = $(SRC_DIR)/discovery
 UTILS_DIR     = $(SRC_DIR)/utils
+RTSP_DIR      = $(SRC_DIR)/rtsp
+CAMERA_DIR    = camera
 
 # gSOAP
 
@@ -32,7 +41,8 @@ SRC  = $(SRC_DIR)/main.cpp                 \
        $(SERVICE_DIR)/ServiceDiscovery.cpp \
        $(DISCOVERY_DIR)/discovery.cpp      \
        $(UTILS_DIR)/arguments.cpp          \
-       $(UTILS_DIR)/utils.cpp
+       $(UTILS_DIR)/utils.cpp              \
+       $(RTSP_DIR)/pipeline.cpp            \
 
 # gSOAP sources
 SRC += $(GSOAP_DIR)/stdsoap2.cpp            \

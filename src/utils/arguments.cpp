@@ -4,6 +4,13 @@
 #include <iostream>
 
 Context context;
+VideoArgs video_args;
+
+
+////////////////
+// PARAMETERS //
+////////////////
+
 
 void usage()
 {
@@ -15,7 +22,9 @@ void usage()
     "  --scope <scope>     ONVIF Scope to be added." << std::endl <<
     "  --stream_url <url>  URL to be used for the RTSP server." << std::endl <<
     "  --port <port>       Port to be used to serve ONVIF server." << std::endl <<
-    "  --xaddr <addr>      Address used by client to reach ONVIF server." << std::endl;
+    "  --xaddr <addr>      Address used by client to reach ONVIF server." << std::endl <<
+    "  --encoder <name>    GStreamer encoder name to be used by RTSP server." << std::endl <<
+    "  --cameralib <path>     Camera library path." << std::endl;
 }
 
 
@@ -30,6 +39,8 @@ static const struct option long_opts[] =
     { "stream_url",   required_argument, NULL, LongOpts::stream_url    },
     { "port",         required_argument, NULL, LongOpts::port          },
     { "xaddr",        required_argument, NULL, LongOpts::xaddr         },
+    { "encoder",      required_argument, NULL, LongOpts::encoder       },
+    { "cameralib",    required_argument, NULL, LongOpts::camera_lib    },
     { NULL,           no_argument,       NULL,  0                      }
 };
 
@@ -57,6 +68,7 @@ void processing_cmd(int argc, char *argv[])
 
     case LongOpts::stream_url:
       context.stream_url = optarg;
+      video_args.stream_url = optarg;
       break;
 
     case LongOpts::port:
@@ -67,6 +79,14 @@ void processing_cmd(int argc, char *argv[])
       context.xaddr = optarg;
       break;
 
+    case LongOpts::encoder:
+      video_args.encoder = optarg;
+      break;
+
+    case LongOpts::camera_lib:
+      video_args.camera_lib = optarg;
+      break;
+
     default:
       std::cout << "Invalid argument !" << std::endl;
       usage();
@@ -75,6 +95,11 @@ void processing_cmd(int argc, char *argv[])
     }
   }
 }
+
+
+/////////////
+// CONTEXT //
+/////////////
 
 
 Context::Context():
@@ -118,3 +143,15 @@ std::string Context::get_xaddr()
   std::string result = "http://" + this->xaddr + ":" + std::to_string(port);
   return result;
 }
+
+
+////////////////
+// VIDEO ARGS //
+////////////////
+
+
+VideoArgs::VideoArgs():
+  encoder("vaapih264enc"),
+  stream_url("rtsp://127.0.0.1:8080/cam"),
+  camera_lib("camera/libdummycam.so")
+{}

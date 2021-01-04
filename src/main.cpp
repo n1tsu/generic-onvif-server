@@ -1,5 +1,6 @@
 #include <iostream>
 #include <thread>
+#include <dlfcn.h>
 
 #include "DeviceBinding.nsmap"
 #include "soapDeviceBindingService.h"
@@ -9,8 +10,11 @@
 
 #include "discovery.h"
 #include "arguments.h"
+#include "camera_generic.h"
+#include "pipeline.h"
 
 extern Context context;
+extern VideoArgs video_args;
 
 int services_routine()
 {
@@ -60,18 +64,56 @@ int services_routine()
 }
 
 
+CameraGeneric *load_camera_library(std::string name)
+{
+  void* handle = dlopen(name.c_str(), RTLD_NOW);
+  if (!handle)
+  {
+    std::cerr << "Failed to load: '" << name.c_str() << "'\n";
+    std::cerr << dlerror() << "\n";
+    return NULL;
+  }
+
+  CameraGeneric* (*create)();
+
+  create = (CameraGeneric* (*)())dlsym(handle, "create_object");
+
+  const char *dlsym_error = dlerror();
+  if (dlsym_error)
+  {
+
+    std::cerr << "Failed to find symbol: 'create_object'\n";
+    std::cerr << dlsym_error << "\n";
+    return NULL;
+  }
+
+  CameraGeneric* camera = (CameraGeneric*)create();
+  return camera;
+}
+
+
+
 int main(int argc, char *argv[])
 {
   // Retrieve arguments
   processing_cmd(argc, argv);
 
+  // Load camera library
+  CameraGeneric *camera = load_camera_library(video_args.camera_lib.c_str());
+  if (!camera)
+    return 1;
+
   // Run WS Discovery thread
   std::thread discovery_thread(discovery_routine);
 
+  // Run RTSP Server thread
+  std::thread rtsp_thread(start_pipeline, argc, argv, camera);
+
   // Run ONVIF services on main thread
   services_routine();
-  std::cout << "Left services" << std::endl;
+  std::cerr << "Left services loop" << std::endl;
 
   discovery_thread.join();
+  rtsp_thread.join();
   return 0;
 }
