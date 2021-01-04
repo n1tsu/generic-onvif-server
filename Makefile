@@ -1,13 +1,18 @@
 CXX      ?= g++
-CXXFLAGS  = -std=c++11 -O2  -Wall  -pipe
-CXXFLAGS += -I$(GENERATED_DIR) -I$(GSOAP_IMPORT_DIR) -I$(GSOAP_DIR) \
-            -I$(GSOAP_CUSTOM_DIR) -I$(GSOAP_PLUGIN_DIR) -I$(UTILS_DIR)
 
-TARGET     := onvif-server
-SRC_DIR     = src
-SERVICE_DIR = $(SRC_DIR)/services
-WSDD_DIR    = $(SRC_DIR)/wsdd
-UTILS_DIR   = $(SRC_DIR)/utils
+CXXFLAGS  = -std=c++11 -O2  -Wall  -pipe
+# for WS-Security
+CXXFLAGS += -DWITH_OPENSSL -lssl -lcrypto -lz -pthread
+# Includes
+CXXFLAGS += -I$(GENERATED_DIR) -I$(GSOAP_IMPORT_DIR) -I$(GSOAP_DIR) \
+            -I$(GSOAP_CUSTOM_DIR) -I$(GSOAP_PLUGIN_DIR) -I$(UTILS_DIR) \
+            -I$(DISCOVERY_DIR)
+
+TARGET       := onvif-server
+SRC_DIR       = src
+SERVICE_DIR   = $(SRC_DIR)/services
+DISCOVERY_DIR = $(SRC_DIR)/discovery
+UTILS_DIR     = $(SRC_DIR)/utils
 
 # gSOAP
 
@@ -24,14 +29,22 @@ SRC  = $(SRC_DIR)/main.cpp                 \
        $(SERVICE_DIR)/ServiceMedia.cpp     \
        $(SERVICE_DIR)/ServicePTZ.cpp       \
        $(SERVICE_DIR)/ServiceImaging.cpp   \
-#       $(SERVICE_DIR)/ServiceDiscovery.cpp \
-#       $(WSDD_DIR)/wsdd.cpp                \
+       $(SERVICE_DIR)/ServiceDiscovery.cpp \
+       $(DISCOVERY_DIR)/discovery.cpp      \
 
 # gSOAP sources
 SRC += $(GSOAP_DIR)/stdsoap2.cpp            \
        $(GSOAP_DIR)/dom.cpp                 \
        $(GSOAP_CUSTOM_DIR)/duration.c       \
-       $(GSOAP_CUSTOM_DIR)/struct_timeval.c
+       $(GSOAP_CUSTOM_DIR)/struct_timeval.c \
+
+# gSOAP plugins sources (WS-discover and WS-Security)
+SRC += $(GSOAP_PLUGIN_DIR)/wsseapi.c \
+       $(GSOAP_PLUGIN_DIR)/mecevp.c  \
+       $(GSOAP_PLUGIN_DIR)/smdevp.c  \
+       $(GSOAP_PLUGIN_DIR)/wsaapi.c  \
+       $(GSOAP_PLUGIN_DIR)/wsddapi.c \
+       $(GSOAP_PLUGIN_DIR)/threads.c
 
 # generated sources
 SRC += $(GENERATED_DIR)/soapDeviceBindingService.cpp           \
@@ -39,9 +52,9 @@ SRC += $(GENERATED_DIR)/soapDeviceBindingService.cpp           \
        $(GENERATED_DIR)/soapMediaBindingService.cpp            \
        $(GENERATED_DIR)/soapPTZBindingService.cpp              \
        $(GENERATED_DIR)/soapC.cpp                              \
-#       $(GENERATED_DIR)/soapRemoteDiscoveryBindingService.cpp  \
-#       $(GENERATED_DIR)/soapwsddService.cpp                    \
-#       $(GENERATED_DIR)/wsddClient.cpp                         \
+       $(GENERATED_DIR)/soapRemoteDiscoveryBindingService.cpp  \
+       $(GENERATED_DIR)/soapwsddService.cpp                    \
+       $(GENERATED_DIR)/wsddClient.cpp                         \
 
 
 # objects

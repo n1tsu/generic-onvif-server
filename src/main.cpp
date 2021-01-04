@@ -1,10 +1,13 @@
 #include <iostream>
+#include <thread>
 
 #include "DeviceBinding.nsmap"
 #include "soapDeviceBindingService.h"
 #include "soapImagingBindingService.h"
 #include "soapMediaBindingService.h"
 #include "soapPTZBindingService.h"
+
+#include "discovery.h"
 
 
 int services_routine()
@@ -55,6 +58,10 @@ int services_routine()
 
 int main(int argc, char *argv[])
 {
+  // Run WS Discovery thread
+  std::thread discovery_thread(discovery_routine);
+
+  // Run ONVIF services on main thread
   services_routine();
   return 0;
 }

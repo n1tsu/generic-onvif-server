@@ -1,8 +1,5 @@
-#include "wsdd.h"
+#include "discovery.h"
 
-
-extern ServiceContext service_ctx;
-static struct soap *soap_discover;
 
 
 const char* get_rand_endpoint(struct soap *soap_srv)
@@ -20,13 +17,11 @@ const char* get_rand_endpoint(struct soap *soap_srv)
 }
 
 
-void wsdd_routine()
+void discovery_routine()
 {
-    soap_discover = soap_new1(SOAP_IO_UDP);
+    struct soap *soap_discover = soap_new1(SOAP_IO_UDP);
 
-    if(!soap_discover)
-        daemon_error_exit("Can't get mem for discover SOAP\n");
-
+    // Setup multicast socket
     in_addr_t addr                     = inet_addr("239.255.255.250");
     soap_discover->ipv4_multicast_if   = (char *)&addr;
     soap_discover->ipv6_multicast_if   = addr;
@@ -36,33 +31,36 @@ void wsdd_routine()
 
     if(!soap_valid_socket(soap_bind(soap_discover, NULL, 3702, 100)))
     {
-        soap_stream_fault(soap_discover, std::cerr);
-        exit(EXIT_FAILURE);
+      std::cerr << "Failed to bind multicast socket." << std::endl;
+      exit(1);
     }
 
-    service_ctx.endpoint = get_rand_endpoint(soap_discover);
-    soap_discover->user = (void*)&service_ctx;
+    const char *endpoint = get_rand_endpoint(soap_discover);
 
     // Join multicast group
     struct ip_mreq mcast;
     mcast.imr_multiaddr.s_addr = inet_addr("239.255.255.250");
-    if(get_addr_of_if(service_ctx.eth_ifs.back().dev_name(), AF_INET, &mcast.imr_interface) != 0)
-        daemon_error_exit("Cant get addr for interface error: %m\n");
+    mcast.imr_interface.s_addr = INADDR_ANY;
 
-    setsockopt(soap_discover->master, IPPROTO_IP, IP_MULTICAST_IF, &mcast.imr_interface.s_addr, sizeof(struct in_addr));
+    setsockopt(soap_discover->master, IPPROTO_IP, IP_MULTICAST_IF,
+               &mcast.imr_interface.s_addr, sizeof(struct in_addr));
 
-    if(setsockopt(soap_discover->master, IPPROTO_IP, IP_ADD_MEMBERSHIP, (char *)&mcast, sizeof(mcast)) != 0 )
-        daemon_error_exit("Cant adding multicast group error: %m\n");
+    if(setsockopt(soap_discover->master, IPPROTO_IP, IP_ADD_MEMBERSHIP,
+                  (char *)&mcast, sizeof(mcast)) != 0 )
+    {
+      std::cerr << "Failed to add multicast subscription." << std::endl;
+      exit(1);
+    }
 
-    std::string xaddr = service_ctx.getXAddr(soap_discover);
-    std::string scope = service_ctx.get_scopes();
+    std::string xaddr = "";
+    std::string scope = "";
 
     soap_wsdd_Hello(soap_discover,
                     SOAP_WSDD_ADHOC,                                 // or SOAP_WSDD_ADHOC for ad-hoc mode
                     "soap.udp://239.255.255.250:3702",               // "http(s):" URL, or "soap.udp:" UDP, or TCP/IP address
                     soap_wsa_rand_uuid(soap_discover),               // a unique message ID
                     NULL,
-                    service_ctx.endpoint.c_str(),
+                    endpoint,
                     "tdn:NetworkVideoTransmitter",                   // Types: I'm a TS
                     scope.c_str(),
                     NULL,                                            // MatchBy
@@ -71,7 +69,7 @@ void wsdd_routine()
 
     while (true)
     {
-        if (soap_wsdd_listen(soap_discover, 0))
-            soap_print_fault(soap_discover, stderr);
+      if (soap_wsdd_listen(soap_discover, 0))
+        soap_print_fault(soap_discover, stderr);
     }
 }

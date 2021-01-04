@@ -74,30 +74,35 @@ int wsddService::ResolveMatches(struct wsdd__ResolveMatchesType *matches)
 
 void wsdd_event_ProbeMatches(struct soap *soap, unsigned int InstanceId, const char *SequenceId, unsigned int MessageNumber, const char *MessageID, const char *RelatesTo, struct wsdd__ProbeMatchesType *matches)
 {
+  DEBUG_MSG("%s: %s\n", __FILE__, __FUNCTION__);
 }
 
 
 
 void wsdd_event_ResolveMatches(struct soap *soap, unsigned int InstanceId, const char *SequenceId, unsigned int MessageNumber, const char *MessageID, const char *RelatesTo, struct wsdd__ResolveMatchType *match)
 {
+  DEBUG_MSG("%s: %s\n", __FILE__, __FUNCTION__);
 }
 
 
 
 void wsdd_event_Hello(struct soap *soap, unsigned int InstanceId, const char *SequenceId, unsigned int MessageNumber, const char *MessageID, const char *RelatesTo, const char *EndpointReference, const char *Types, const char *Scopes, const char *MatchBy, const char *XAddrs, unsigned int MetadataVersion)
 {
+  DEBUG_MSG("%s: %s\n", __FILE__, __FUNCTION__);
 }
 
 
 
 void wsdd_event_Bye(struct soap *soap, unsigned int InstanceId, const char *SequenceId, unsigned int MessageNumber, const char *MessageID, const char *RelatesTo, const char *EndpointReference, const char *Types, const char *Scopes, const char *MatchBy, const char *XAddrs, unsigned int *MetadataVersion)
 {
+  DEBUG_MSG("%s: %s\n", __FILE__, __FUNCTION__);
 }
 
 
 
 soap_wsdd_mode wsdd_event_Resolve(struct soap *soap, const char *MessageID, const char *ReplyTo, const char *EndpointReference, struct wsdd__ResolveMatchType *match)
 {
+  DEBUG_MSG("%s: %s\n", __FILE__, __FUNCTION__);
   /*
   if (EndpointReference && (strcmp(EndpointReference, _endpoint) == 0) )
   {
@@ -111,12 +116,13 @@ soap_wsdd_mode wsdd_event_Resolve(struct soap *soap, const char *MessageID, cons
 
 soap_wsdd_mode wsdd_event_Probe(struct soap *soap, const char *MessageID, const char *ReplyTo, const char *Types, const char *Scopes, const char *MatchBy, struct wsdd__ProbeMatchesType *matches)
 {
+  DEBUG_MSG("%s: %s\n", __FILE__, __FUNCTION__);
+
   soap_wsdd_init_ProbeMatches(soap, matches);
 
-  /*
-  std::string xaddr;
-  std::string scope;
-  std::string endpoint;
+  std::string xaddr = "";
+  std::string scope = "";
+  std::string endpoint = "";
 
   soap_wsdd_add_ProbeMatch(soap,
                            matches,
@@ -133,7 +139,6 @@ soap_wsdd_mode wsdd_event_Probe(struct soap *soap, const char *MessageID, const 
                          MessageID,
                          ReplyTo,
                          matches);
-  */
 
   return SOAP_WSDD_ADHOC;
 }
