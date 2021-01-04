@@ -1,9 +1,7 @@
 #include "discovery.h"
 #include "arguments.h"
 
-
 extern Context context;
-
 
 const char* get_rand_endpoint(struct soap *soap_srv)
 {

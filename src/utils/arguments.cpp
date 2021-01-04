@@ -83,7 +83,20 @@ Context::Context():
   port(8080),
   xaddr("192.168.1.90"),
   endpoint("")
-{}
+{
+  scopes = std::vector<std::string>();
+}
+
+
+Context::Context(const Context &context)
+{
+  interface = context.interface;
+  stream_url = context.stream_url;
+  scopes = context.scopes;
+  port = context.port;
+  xaddr = context.xaddr;
+  endpoint = context.endpoint;
+}
 
 
 std::string Context::get_scopes()

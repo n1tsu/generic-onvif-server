@@ -28,6 +28,8 @@ class Context
 {
 public:
   Context();
+  Context(const Context &context);
+
   std::string get_scopes();
   std::string get_xaddr();
 

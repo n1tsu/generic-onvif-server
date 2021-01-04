@@ -20,6 +20,8 @@ int services_routine()
   MediaBindingService media_service(soap);
   PTZBindingService ptz_service(soap);
 
+  soap->user = (void*)&context;
+
   if (!soap_valid_socket(soap_bind(soap, NULL, context.port, 100)))
     return 1;
 
@@ -68,5 +70,8 @@ int main(int argc, char *argv[])
 
   // Run ONVIF services on main thread
   services_routine();
+  std::cout << "Left services" << std::endl;
+
+  discovery_thread.join();
   return 0;
 }
