@@ -8,7 +8,9 @@
 #include "soapPTZBindingService.h"
 
 #include "discovery.h"
+#include "arguments.h"
 
+extern Context context;
 
 int services_routine()
 {
@@ -58,6 +60,9 @@ int services_routine()
 
 int main(int argc, char *argv[])
 {
+  // Retrieve arguments
+  processing_cmd(argc, argv);
+
   // Run WS Discovery thread
   std::thread discovery_thread(discovery_routine);
 

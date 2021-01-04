@@ -1,6 +1,6 @@
 CXX      ?= g++
 
-CXXFLAGS  = -std=c++11 -O2  -Wall  -pipe
+CXXFLAGS  = -std=c++11 -O2  -Wall  -pipe -DBIN_NAME=$(TARGET)
 # for WS-Security
 CXXFLAGS += -DWITH_OPENSSL -lssl -lcrypto -lz -pthread
 # Includes
@@ -31,6 +31,7 @@ SRC  = $(SRC_DIR)/main.cpp                 \
        $(SERVICE_DIR)/ServiceImaging.cpp   \
        $(SERVICE_DIR)/ServiceDiscovery.cpp \
        $(DISCOVERY_DIR)/discovery.cpp      \
+       $(UTILS_DIR)/arguments.cpp          \
 
 # gSOAP sources
 SRC += $(GSOAP_DIR)/stdsoap2.cpp            \

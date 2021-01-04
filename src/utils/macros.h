@@ -7,3 +7,7 @@
 #else
 #define DEBUG_MSG(...)
 #endif
+
+
+#define STRINGIFY(X) #X
+#define STR(X) STRINGIFY(X)
