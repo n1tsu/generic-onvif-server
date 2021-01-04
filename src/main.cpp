@@ -20,7 +20,7 @@ int services_routine()
   MediaBindingService media_service(soap);
   PTZBindingService ptz_service(soap);
 
-  if (!soap_valid_socket(soap_bind(soap, NULL, 8080, 100)))
+  if (!soap_valid_socket(soap_bind(soap, NULL, context.port, 100)))
     return 1;
 
   while (true)

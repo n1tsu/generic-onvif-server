@@ -1,3 +1,4 @@
 *.o
 generated
 onvif-server
+*.log

@@ -2,6 +2,7 @@
 #include "soapwsddService.h"
 #include "wsddapi.h"
 #include "macros.h"
+#include "arguments.h"
 
 
 int RemoteDiscoveryBindingService::Hello(const struct wsdd__HelloType& tdn__Hello, struct wsdd__ResolveType &tdn__HelloResponse)
@@ -118,17 +119,18 @@ soap_wsdd_mode wsdd_event_Probe(struct soap *soap, const char *MessageID, const 
 {
   DEBUG_MSG("%s: %s\n", __FILE__, __FUNCTION__);
 
+  Context *context = (Context *)soap->user;
   soap_wsdd_init_ProbeMatches(soap, matches);
 
-  std::string xaddr = "";
-  std::string scope = "";
-  std::string endpoint = "";
+  std::string xaddr = "http://" + context->xaddr + ":" + std::to_string(context->port);
+  std::string scopes = context->get_scopes();
+  std::string endpoint = context->endpoint;
 
   soap_wsdd_add_ProbeMatch(soap,
                            matches,
                            endpoint.c_str(),
                            "tdn:NetworkVideoTransmitter",
-                           scope.c_str(),
+                           scopes.c_str(),
                            NULL,
                            xaddr.c_str(),
                            0);

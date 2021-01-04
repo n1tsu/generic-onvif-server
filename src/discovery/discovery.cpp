@@ -1,5 +1,8 @@
 #include "discovery.h"
+#include "arguments.h"
 
+
+extern Context context;
 
 
 const char* get_rand_endpoint(struct soap *soap_srv)
@@ -35,7 +38,9 @@ void discovery_routine()
       exit(1);
     }
 
-    const char *endpoint = get_rand_endpoint(soap_discover);
+    // Create endpoint and save it to be used by ServiceDiscovery
+    context.endpoint = get_rand_endpoint(soap_discover);
+    soap_discover->user = &context;
 
     // Join multicast group
     struct ip_mreq mcast;
@@ -52,8 +57,9 @@ void discovery_routine()
       exit(1);
     }
 
-    std::string xaddr = "";
-    std::string scope = "";
+    std::string xaddr = "http://" + context.xaddr + ":" + std::to_string(context.port);
+    std::string scopes = context.get_scopes();
+    const char *endpoint = context.endpoint.c_str();
 
     soap_wsdd_Hello(soap_discover,
                     SOAP_WSDD_ADHOC,                                 // or SOAP_WSDD_ADHOC for ad-hoc mode
@@ -62,7 +68,7 @@ void discovery_routine()
                     NULL,
                     endpoint,
                     "tdn:NetworkVideoTransmitter",                   // Types: I'm a TS
-                    scope.c_str(),
+                    scopes.c_str(),
                     NULL,                                            // MatchBy
                     xaddr.c_str(),
                     0);                                              // MDVersion

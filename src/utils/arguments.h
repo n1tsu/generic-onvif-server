@@ -15,6 +15,8 @@ namespace LongOpts
     interface,
     stream_url,
     scope,
+    port,
+    xaddr,
   };
 }
 
@@ -26,8 +28,12 @@ class Context
 {
 public:
   Context();
+  std::string get_scopes();
 
   std::string interface;
   std::string stream_url;
   std::vector<std::string> scopes;
+  int port;
+  std::string xaddr;
+  std::string endpoint;
 };
