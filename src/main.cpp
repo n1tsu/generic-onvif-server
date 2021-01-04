@@ -64,14 +64,14 @@ int services_routine()
 }
 
 
-CameraGeneric *load_camera_library(std::string name)
+bool load_camera_library(std::string name)
 {
   void* handle = dlopen(name.c_str(), RTLD_NOW);
   if (!handle)
   {
     std::cerr << "Failed to load: '" << name.c_str() << "'\n";
     std::cerr << dlerror() << "\n";
-    return NULL;
+    return true;
   }
 
   CameraGeneric* (*create)();
@@ -84,11 +84,14 @@ CameraGeneric *load_camera_library(std::string name)
 
     std::cerr << "Failed to find symbol: 'create_object'\n";
     std::cerr << dlsym_error << "\n";
-    return NULL;
+    return true;
   }
 
   CameraGeneric* camera = (CameraGeneric*)create();
-  return camera;
+  context.camera = camera;
+  video_args.camera = camera;
+
+  return false;
 }
 
 
@@ -99,15 +102,14 @@ int main(int argc, char *argv[])
   processing_cmd(argc, argv);
 
   // Load camera library
-  CameraGeneric *camera = load_camera_library(video_args.camera_lib.c_str());
-  if (!camera)
+  if (load_camera_library(video_args.camera_lib.c_str()))
     return 1;
 
   // Run WS Discovery thread
   std::thread discovery_thread(discovery_routine);
 
   // Run RTSP Server thread
-  std::thread rtsp_thread(start_pipeline, argc, argv, camera);
+  std::thread rtsp_thread(start_pipeline, argc, argv);
 
   // Run ONVIF services on main thread
   services_routine();

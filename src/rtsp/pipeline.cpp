@@ -2,6 +2,8 @@
 
 #include <sstream>
 
+extern VideoArgs video_args;
+
 static void need_data(GstElement *appsrc, guint unused, PipelineContainer *data)
 {
   GstBuffer *buffer;
@@ -9,7 +11,7 @@ static void need_data(GstElement *appsrc, guint unused, PipelineContainer *data)
   GstMapInfo map;
 
   // Insert image data here
-  Image image_data = data->camera->get_current_image();
+  Image image_data = video_args.camera->get_current_image();
   uint32_t size = image_data.size;
   // ------------------
 
@@ -32,7 +34,7 @@ static void need_data(GstElement *appsrc, guint unused, PipelineContainer *data)
   gst_buffer_unref(buffer);
 }
 
-static void media_configure(GstRTSPMediaFactory *factory, GstRTSPMedia *media, CameraGeneric *camera)
+static void media_configure(GstRTSPMediaFactory *factory, GstRTSPMedia *media)
 {
   GstElement *element, *app_source;
   PipelineContainer *data;
@@ -56,7 +58,6 @@ static void media_configure(GstRTSPMediaFactory *factory, GstRTSPMedia *media, C
                                     NULL), NULL);
 
   data = g_new0(PipelineContainer, 1);
-  data->camera = camera;
   data->timestamp = 0;
 
   /* make sure ther datais freed when the media is gone */
@@ -65,12 +66,12 @@ static void media_configure(GstRTSPMediaFactory *factory, GstRTSPMedia *media, C
 
 
   /* install the callback that will be called when a buffer is needed */
-  g_signal_connect(app_source, "need-data", G_CALLBACK (need_data), data);
+  g_signal_connect(app_source, "need-data", G_CALLBACK (need_data), NULL);
   gst_object_unref(app_source);
   gst_object_unref(element);
 }
 
-int start_pipeline(int argc, char *argv[], CameraGeneric *camera) {
+int start_pipeline(int argc, char *argv[]) {
   GstRTSPServer *server;
   GstRTSPMountPoints *mounts;
   GstRTSPMediaFactory *factory;
@@ -104,7 +105,7 @@ int start_pipeline(int argc, char *argv[], CameraGeneric *camera) {
 
   /* notify when our media is ready, This is called whenever someone asks for
    * the media and a new pipeline with our appsrc is created */
-  g_signal_connect(factory, "media-configure", (GCallback) media_configure, camera);
+  g_signal_connect(factory, "media-configure", (GCallback) media_configure, NULL);
 
   /* attach the test factory to the url */
   std::size_t found = video_args.stream_url.find_last_of("/");

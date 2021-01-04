@@ -18,6 +18,4 @@ typedef struct _Container {
   GstClockTime timestamp;
 } PipelineContainer;
 
-extern struct VideoArgs video_args;
-
-int start_pipeline(int argc, char *argv[], CameraGeneric *camera);
+int start_pipeline(int argc, char *argv[]);

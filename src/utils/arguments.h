@@ -4,6 +4,8 @@
 #include <vector>
 #include <getopt.h>
 
+#include "camera_generic.h"
+
 
 namespace LongOpts
 {
@@ -41,6 +43,7 @@ public:
   int port;
   std::string xaddr;
   std::string endpoint;
+  CameraGeneric *camera;
 };
 
 
@@ -52,4 +55,5 @@ public:
   std::string encoder;
   std::string stream_url;
   std::string camera_lib;
+  CameraGeneric *camera;
 };

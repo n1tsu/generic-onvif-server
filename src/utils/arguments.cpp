@@ -17,14 +17,14 @@ void usage()
   std::cout <<
     "Usage: " << STR(BIN_NAME) << " [options]" << std::endl <<
     "Options:" << std::endl <<
-    "  -h | --help        Print this help." << std::endl <<
-    "  --interface <name>  The network interface to be used." << std::endl <<
-    "  --scope <scope>     ONVIF Scope to be added." << std::endl <<
-    "  --stream_url <url>  URL to be used for the RTSP server." << std::endl <<
-    "  --port <port>       Port to be used to serve ONVIF server." << std::endl <<
-    "  --xaddr <addr>      Address used by client to reach ONVIF server." << std::endl <<
-    "  --encoder <name>    GStreamer encoder name to be used by RTSP server." << std::endl <<
-    "  --cameralib <path>     Camera library path." << std::endl;
+    "  -h | --help           Print this help." << std::endl <<
+    "  --interface  <name>   The network interface to be used." << std::endl <<
+    "  --scope      <scope>  ONVIF Scope to be added." << std::endl <<
+    "  --stream_url <url>    URL to be used for the RTSP server." << std::endl <<
+    "  --port       <port>   Port to be used to serve ONVIF server." << std::endl <<
+    "  --xaddr      <addr>   Address used by client to reach ONVIF server." << std::endl <<
+    "  --encoder    <name>   GStreamer encoder name to be used by RTSP server." << std::endl <<
+    "  --cameralib  <path>   Camera library path." << std::endl;
 }
 
 
@@ -107,7 +107,8 @@ Context::Context():
   stream_url("rtsp://127.0.0.1:8080/cam"),
   port(8080),
   xaddr("192.168.1.90"),
-  endpoint("")
+  endpoint(""),
+  camera(NULL)
 {
   scopes = std::vector<std::string>();
 }
@@ -153,5 +154,6 @@ std::string Context::get_xaddr()
 VideoArgs::VideoArgs():
   encoder("vaapih264enc"),
   stream_url("rtsp://127.0.0.1:8080/cam"),
-  camera_lib("camera/libdummycam.so")
+  camera_lib("camera/libdummycam.so"),
+  camera(NULL)
 {}

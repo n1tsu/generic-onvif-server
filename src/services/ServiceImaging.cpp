@@ -1,5 +1,6 @@
 #include "soapImagingBindingService.h"
 #include "macros.h"
+#include "arguments.h"
 
 
 int ImagingBindingService::GetServiceCapabilities(_timg__GetServiceCapabilities *timg__GetServiceCapabilities, _timg__GetServiceCapabilitiesResponse &timg__GetServiceCapabilitiesResponse)
@@ -12,6 +13,38 @@ int ImagingBindingService::GetServiceCapabilities(_timg__GetServiceCapabilities 
 int ImagingBindingService::GetImagingSettings(_timg__GetImagingSettings *timg__GetImagingSettings, _timg__GetImagingSettingsResponse &timg__GetImagingSettingsResponse)
 {
   DEBUG_FUNCTION();
+
+  Context* context = (Context*)this->soap->user;
+
+  timg__GetImagingSettingsResponse.ImagingSettings = soap_new_tt__ImagingSettings20(this->soap);
+
+  // Focus
+  timg__GetImagingSettingsResponse.ImagingSettings->Focus = soap_new_tt__FocusConfiguration20(this->soap);
+  auto camera_focus_mode = context->camera->get_focus_mode();
+  auto onvif_focus_mode = tt__AutoFocusMode__AUTO;
+  if (camera_focus_mode == Mode::MANUAL)
+    onvif_focus_mode = tt__AutoFocusMode__MANUAL;
+  timg__GetImagingSettingsResponse.ImagingSettings->Focus->AutoFocusMode = onvif_focus_mode;
+
+  // White balance
+  timg__GetImagingSettingsResponse.ImagingSettings->WhiteBalance = soap_new_tt__WhiteBalance20(this->soap);
+  auto camera_white_balance_mode = context->camera->get_white_balance_mode();
+  auto onvif_white_balance_mode = tt__WhiteBalanceMode__AUTO;
+  if (camera_white_balance_mode == Mode::MANUAL)
+    onvif_white_balance_mode = tt__WhiteBalanceMode__MANUAL;
+  timg__GetImagingSettingsResponse.ImagingSettings->WhiteBalance->Mode = onvif_white_balance_mode;
+  timg__GetImagingSettingsResponse.ImagingSettings->WhiteBalance->CrGain = soap_new_float(this->soap);
+  *timg__GetImagingSettingsResponse.ImagingSettings->WhiteBalance->CrGain = (float)context->camera->get_color_temperature();
+
+  // Exposure
+  timg__GetImagingSettingsResponse.ImagingSettings->Exposure = soap_new_tt__Exposure20(this->soap);
+  auto camera_exposure_mode = context->camera->get_exposure_mode();
+  auto onvif_exposure_mode = tt__ExposureMode__AUTO;
+  if (camera_exposure_mode == Mode::MANUAL)
+    onvif_exposure_mode = tt__ExposureMode__MANUAL;
+  timg__GetImagingSettingsResponse.ImagingSettings->Exposure->Mode = onvif_exposure_mode;
+
+
   return SOAP_OK;
 }
 
@@ -19,6 +52,45 @@ int ImagingBindingService::GetImagingSettings(_timg__GetImagingSettings *timg__G
 int ImagingBindingService::SetImagingSettings(_timg__SetImagingSettings *timg__SetImagingSettings, _timg__SetImagingSettingsResponse &timg__SetImagingSettingsResponse)
 {
   DEBUG_FUNCTION();
+
+  Context* context = (Context*)this->soap->user;
+
+  if (timg__SetImagingSettings && timg__SetImagingSettings->ImagingSettings)
+  {
+    // Focus mode
+    if (timg__SetImagingSettings->ImagingSettings->Focus)
+    {
+      if (timg__SetImagingSettings->ImagingSettings->Focus->AutoFocusMode == tt__AutoFocusMode__MANUAL)
+        context->camera->set_focus_mode(Mode::MANUAL);
+      else if (timg__SetImagingSettings->ImagingSettings->Focus->AutoFocusMode == tt__AutoFocusMode__AUTO)
+        context->camera->set_focus_mode(Mode::AUTO);
+    }
+
+    // Exposure
+    if (timg__SetImagingSettings->ImagingSettings->Exposure)
+    {
+      if (timg__SetImagingSettings->ImagingSettings->Exposure->Mode == tt__ExposureMode__MANUAL)
+        context->camera->set_exposure_mode(Mode::MANUAL);
+      else if (timg__SetImagingSettings->ImagingSettings->Exposure->Mode == tt__ExposureMode__AUTO)
+        context->camera->set_exposure_mode(Mode::AUTO);
+    }
+
+    // White balance
+    if (timg__SetImagingSettings->ImagingSettings->WhiteBalance)
+    {
+      auto onvif_white_balance = timg__SetImagingSettings->ImagingSettings->WhiteBalance->Mode;
+      if (onvif_white_balance == tt__WhiteBalanceMode__MANUAL)
+      {
+        context->camera->set_white_balance_mode(Mode::MANUAL);
+        float *white_balance_value = timg__SetImagingSettings->ImagingSettings->WhiteBalance->CrGain;
+        if (white_balance_value != NULL)
+          context->camera->set_color_temperature(*white_balance_value);
+      }
+      else if (onvif_white_balance == tt__WhiteBalanceMode__AUTO)
+        context->camera->set_white_balance_mode(Mode::AUTO);
+      }
+  }
+
   return SOAP_OK;
 }
 
@@ -26,6 +98,30 @@ int ImagingBindingService::SetImagingSettings(_timg__SetImagingSettings *timg__S
 int ImagingBindingService::GetOptions(_timg__GetOptions *timg__GetOptions, _timg__GetOptionsResponse &timg__GetOptionsResponse)
 {
   DEBUG_FUNCTION();
+
+  timg__GetOptionsResponse.ImagingOptions = soap_new_tt__ImagingOptions20(this->soap);
+  // Focus
+  timg__GetOptionsResponse.ImagingOptions->Focus = soap_new_tt__FocusOptions20(this->soap);
+  soap_default_std__vectorTemplateOftt__AutoFocusMode(soap, &timg__GetOptionsResponse.ImagingOptions->Focus->AutoFocusModes);
+  timg__GetOptionsResponse.ImagingOptions->Focus->AutoFocusModes.push_back(tt__AutoFocusMode__AUTO);
+  timg__GetOptionsResponse.ImagingOptions->Focus->AutoFocusModes.push_back(tt__AutoFocusMode__MANUAL);
+
+  // White balance
+  timg__GetOptionsResponse.ImagingOptions->WhiteBalance = soap_new_tt__WhiteBalanceOptions20(this->soap);
+  soap_default_std__vectorTemplateOftt__WhiteBalanceMode(soap, &timg__GetOptionsResponse.ImagingOptions->WhiteBalance->Mode);
+  timg__GetOptionsResponse.ImagingOptions->WhiteBalance->Mode.push_back(tt__WhiteBalanceMode__AUTO);
+  timg__GetOptionsResponse.ImagingOptions->WhiteBalance->Mode.push_back(tt__WhiteBalanceMode__MANUAL);
+  timg__GetOptionsResponse.ImagingOptions->WhiteBalance->YrGain = soap_new_tt__FloatRange(this->soap);
+  // We use YrGain to set Kelvin color temperature white balance
+  timg__GetOptionsResponse.ImagingOptions->WhiteBalance->YrGain->Min = 2500.0f;
+  timg__GetOptionsResponse.ImagingOptions->WhiteBalance->YrGain->Max = 9900.0f;
+
+  // Exposure
+  timg__GetOptionsResponse.ImagingOptions->Exposure = soap_new_tt__ExposureOptions20(this->soap);
+  soap_default_std__vectorTemplateOftt__ExposureMode(soap, &timg__GetOptionsResponse.ImagingOptions->Exposure->Mode);
+  timg__GetOptionsResponse.ImagingOptions->Exposure->Mode.push_back(tt__ExposureMode__AUTO);
+  timg__GetOptionsResponse.ImagingOptions->Exposure->Mode.push_back(tt__ExposureMode__MANUAL);
+
   return SOAP_OK;
 }
 
