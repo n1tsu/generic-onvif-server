@@ -4,6 +4,18 @@
 
 extern Context context;
 
+gboolean check_status(gpointer user_data)
+{
+  GMainLoop *loop = (GMainLoop *)user_data;
+  if (context.stop)
+  {
+    g_main_loop_quit(loop);
+    return FALSE;
+  }
+  return TRUE;
+}
+
+
 static void need_data(GstElement *appsrc, guint unused, PipelineContainer *data)
 {
   GstBuffer *buffer;
@@ -106,7 +118,10 @@ int start_pipeline(int argc, char *argv[]) {
 
   /* notify when our media is ready, This is called whenever someone asks for
    * the media and a new pipeline with our appsrc is created */
-  g_signal_connect(factory, "media-configure", (GCallback) media_configure, NULL);
+  g_signal_connect(factory, "media-configure", (GCallback) media_configure, (void*)main_loop);
+
+  /* Check every 2 seconds if the loop should terminate */
+  g_timeout_add_seconds(2, check_status, NULL);
 
   /* attach the test factory to the url */
   std::size_t found = context.rtsp_context->stream_url.find_last_of("/");
@@ -124,7 +139,8 @@ int start_pipeline(int argc, char *argv[]) {
   g_print ("stream ready at %s\n", context.rtsp_context->stream_url.c_str());
   g_main_loop_run (main_loop);
 
-  g_printerr("GSTREAMER IS DOWN\n");
+  g_printerr("! GStreamer left loop !\n");
+  context.stop = true;
 
   return 0;
 }

@@ -26,12 +26,18 @@ int services_routine()
   soap->user = (void*)&context;
 
   if (!soap_valid_socket(soap_bind(soap, NULL, context.ws_context->port, 100)))
+  {
+    std::cerr << "Failed to bind service socket." << std::endl;
     return 1;
+  }
 
   while (true)
   {
     if (!soap_valid_socket(soap_accept(soap)))
+    {
+      std::cerr << "Failed to accept connection." << std::endl;
       return 1;
+    }
     soap->keep_alive = soap->max_keep_alive + 1;
 
     do
@@ -60,6 +66,9 @@ int services_routine()
     soap_end(soap);
   }
   soap_free(soap);
+
+  std::cerr << "Exiting services loop." << std::endl;
+  return 0;
 }
 
 
@@ -112,7 +121,7 @@ int main(int argc, char *argv[])
 
   // Run ONVIF services on main thread
   services_routine();
-  std::cerr << "Left services loop" << std::endl;
+  context.stop = true;
 
   discovery_thread.join();
   rtsp_thread.join();

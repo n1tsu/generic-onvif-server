@@ -125,6 +125,7 @@ void processing_cmd(int argc, char *argv[])
 /////////////
 
 Context::Context()
+  : stop(false)
 {
   rtsp_context = new RTSPContext();
   ws_context = new WSContext();

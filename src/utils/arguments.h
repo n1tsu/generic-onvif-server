@@ -83,4 +83,5 @@ public:
   RTSPContext *rtsp_context;
   // Web services
   WSContext *ws_context;
+  bool stop;
 };
