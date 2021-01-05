@@ -162,6 +162,42 @@ void Context::parse_profiles()
 }
 
 
+void Context::parse_nodes()
+{
+  // Temporary, since we aim to have nodes described inside a file and
+  // created by parsing it.
+
+  auto main_node = new PTZNode("Main", "main");
+  main_node->fixed_home = true;
+  main_node->geo_move = false;
+  main_node->max_presets = 10;
+  main_node->support_home = true;
+
+  main_node->absolute_ranges.pan_min =  -180.0f;
+  main_node->absolute_ranges.pan_max =   180.0f;
+  main_node->absolute_ranges.tilt_min = -180.0f;
+  main_node->absolute_ranges.tilt_max =  180.0f;
+  main_node->absolute_ranges.zoom_min =  0.0f;
+  main_node->absolute_ranges.zoom_max =  1.0f;
+
+  main_node->relative_ranges.pan_min =  -1.0f;
+  main_node->relative_ranges.pan_max =   1.0f;
+  main_node->relative_ranges.tilt_min = -1.0f;
+  main_node->relative_ranges.tilt_max =  1.0f;
+  main_node->relative_ranges.zoom_min = -0.1f;
+  main_node->relative_ranges.zoom_max =  0.1f;
+
+  main_node->continuous_ranges.pan_min  = -1.0f;
+  main_node->continuous_ranges.pan_max  =  1.0f;
+  main_node->continuous_ranges.tilt_min = -1.0f;
+  main_node->continuous_ranges.tilt_max =  1.0f;
+  main_node->continuous_ranges.zoom_min = -1.0f;
+  main_node->continuous_ranges.zoom_max =  1.0f;
+
+  nodes.push_back(main_node);
+}
+
+
 WSContext::WSContext():
   interface("wlan0"),
   port(8080),

@@ -81,6 +81,7 @@ public:
 
   void print();
   void parse_profiles();
+  void parse_nodes();
 
   // RTSP
   RTSPContext *rtsp_context;
@@ -88,5 +89,7 @@ public:
   WSContext *ws_context;
 
   std::vector<Profile*> profiles;
+  std::vector<PTZNode*> nodes;
+
   std::atomic<bool> stop;
 };
