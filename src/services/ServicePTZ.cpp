@@ -25,6 +25,10 @@ int PTZBindingService::GetConfigurations(_tptz__GetConfigurations *tptz__GetConf
   DEBUG_FUNCTION();
 
   Context *context = (Context *)this->soap->user;
+  auto& response = tptz__GetConfigurationsResponse;
+
+  for (auto configuration : context->ptz_confs)
+    response.PTZConfiguration.push_back(to_gsoap(soap, configuration));
 
   return SOAP_OK;
 }
@@ -68,6 +72,17 @@ int PTZBindingService::GetStatus(_tptz__GetStatus *tptz__GetStatus, _tptz__GetSt
 int PTZBindingService::GetConfiguration(_tptz__GetConfiguration *tptz__GetConfiguration, _tptz__GetConfigurationResponse &tptz__GetConfigurationResponse)
 {
   DEBUG_FUNCTION();
+
+  Context *context = (Context *)this->soap->user;
+  auto request = tptz__GetConfiguration;
+  auto& response = tptz__GetConfigurationResponse;
+
+  for (auto configuration : context->ptz_confs)
+  {
+    if (request->PTZConfigurationToken.compare(configuration->get_token()) == 0)
+      response.PTZConfiguration = to_gsoap(soap, configuration);
+  }
+
   return SOAP_OK;
 }
 
