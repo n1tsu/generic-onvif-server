@@ -4,7 +4,6 @@
 #include <iostream>
 
 Context context;
-VideoArgs video_args;
 
 
 ////////////////
@@ -24,6 +23,9 @@ void usage()
     "  --port       <port>   Port to be used to serve ONVIF server." << std::endl <<
     "  --xaddr      <addr>   Address used by client to reach ONVIF server." << std::endl <<
     "  --encoder    <name>   GStreamer encoder name to be used by RTSP server." << std::endl <<
+    "  --framerate  <num>    Framerate to be used by the camera." << std::endl <<
+    "  --width      <num>    Width to be used by the camera." << std::endl <<
+    "  --height     <num>    Height to be used by the camera." << std::endl <<
     "  --cameralib  <path>   Camera library path." << std::endl;
 }
 
@@ -40,6 +42,9 @@ static const struct option long_opts[] =
     { "port",         required_argument, NULL, LongOpts::port          },
     { "xaddr",        required_argument, NULL, LongOpts::xaddr         },
     { "encoder",      required_argument, NULL, LongOpts::encoder       },
+    { "framerate",    required_argument, NULL, LongOpts::framerate     },
+    { "width",        required_argument, NULL, LongOpts::width         },
+    { "height",       required_argument, NULL, LongOpts::height        },
     { "cameralib",    required_argument, NULL, LongOpts::camera_lib    },
     { NULL,           no_argument,       NULL,  0                      }
 };
@@ -68,7 +73,6 @@ void processing_cmd(int argc, char *argv[])
 
     case LongOpts::stream_url:
       context.stream_url = optarg;
-      video_args.stream_url = optarg;
       break;
 
     case LongOpts::port:
@@ -80,12 +84,25 @@ void processing_cmd(int argc, char *argv[])
       break;
 
     case LongOpts::encoder:
-      video_args.encoder = optarg;
+      context.encoder = optarg;
       break;
 
     case LongOpts::camera_lib:
-      video_args.camera_lib = optarg;
+      context.camera_lib = optarg;
       break;
+
+    case LongOpts::framerate:
+      context.framerate = std::stoi(optarg);
+      break;
+
+    case LongOpts::width:
+      context.width = std::stoi(optarg);
+      break;
+
+    case LongOpts::height:
+      context.height = std::stoi(optarg);
+      break;
+
 
     default:
       std::cout << "Invalid argument !" << std::endl;
@@ -104,26 +121,20 @@ void processing_cmd(int argc, char *argv[])
 
 Context::Context():
   interface("wlan0"),
-  stream_url("rtsp://127.0.0.1:8080/cam"),
   port(8080),
   xaddr("192.168.1.90"),
   endpoint(""),
   user("admin"),
   password("password"),
+  stream_url("rtsp://127.0.0.1:8080/cam"),
+  encoder("vaapih264enc"),
+  camera_lib("camera/libdummycam.so"),
+  framerate(30),
+  width(1280),
+  height(720),
   camera(NULL)
 {
   scopes = std::vector<std::string>();
-}
-
-
-Context::Context(const Context &context)
-{
-  interface = context.interface;
-  stream_url = context.stream_url;
-  scopes = context.scopes;
-  port = context.port;
-  xaddr = context.xaddr;
-  endpoint = context.endpoint;
 }
 
 
@@ -141,6 +152,7 @@ std::string Context::get_scopes()
   return scopes;
 }
 
+
 std::string Context::get_xaddr()
 {
   std::string result = "http://" + this->xaddr + ":" + std::to_string(port);
@@ -148,14 +160,21 @@ std::string Context::get_xaddr()
 }
 
 
-////////////////
-// VIDEO ARGS //
-////////////////
-
-
-VideoArgs::VideoArgs():
-  encoder("vaapih264enc"),
-  stream_url("rtsp://127.0.0.1:8080/cam"),
-  camera_lib("camera/libdummycam.so"),
-  camera(NULL)
-{}
+void Context::print()
+{
+  std::cout <<
+    "Context: " << std::endl <<
+    std::endl << " - Web services -" << std::endl <<
+    " - interface : " << interface << std::endl <<
+    " - scopes    : " << get_scopes().c_str() << std::endl <<
+    " - port      : " << port << std::endl <<
+    " - xaddr     : " << xaddr << std::endl <<
+    " - endpoint  : " << endpoint << std::endl <<
+    std::endl << " - RTSP server -" << std::endl <<
+    " - streamurl : " << stream_url << std::endl <<
+    " - encoder   : " << encoder << std::endl <<
+    " - cameralib : " << camera_lib << std::endl <<
+    " - framerate : " << framerate << std::endl <<
+    " - width     : " << width << std::endl <<
+    " - height    : " << height << std::endl;
+}

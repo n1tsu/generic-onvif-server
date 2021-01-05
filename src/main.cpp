@@ -14,7 +14,6 @@
 #include "pipeline.h"
 
 extern Context context;
-extern VideoArgs video_args;
 
 int services_routine()
 {
@@ -89,7 +88,6 @@ bool load_camera_library(std::string name)
 
   CameraGeneric* camera = (CameraGeneric*)create();
   context.camera = camera;
-  video_args.camera = camera;
 
   return false;
 }
@@ -100,9 +98,10 @@ int main(int argc, char *argv[])
 {
   // Retrieve arguments
   processing_cmd(argc, argv);
+  context.print();
 
   // Load camera library
-  if (load_camera_library(video_args.camera_lib.c_str()))
+  if (load_camera_library(context.camera_lib.c_str()))
     return 1;
 
   // Run WS Discovery thread

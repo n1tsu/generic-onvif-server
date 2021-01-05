@@ -12,6 +12,20 @@ int MediaBindingService::GetServiceCapabilities(_trt__GetServiceCapabilities *tr
 int MediaBindingService::GetVideoSources(_trt__GetVideoSources *trt__GetVideoSources, _trt__GetVideoSourcesResponse &trt__GetVideoSourcesResponse)
 {
   DEBUG_FUNCTION();
+
+  Context *context = (Context *)this->soap->user;
+  auto& response = trt__GetVideoSourcesResponse;
+
+  // We assume that we have only one video source.
+
+  auto source = soap_new_tt__VideoSource(soap);
+  source->Framerate = context->framerate;
+  source->Resolution = soap_new_tt__VideoResolution(soap);
+  source->Resolution->Width = context->width;
+  source->Resolution->Height = context->height;
+  // Imaging settings are optionals
+  response.VideoSources.push_back(source);
+
   return SOAP_OK;
 }
 

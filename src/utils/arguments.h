@@ -14,13 +14,19 @@ namespace LongOpts
     version = 'v',
     help    = 'h',
 
+    // Web services
     interface,
-    stream_url,
     scope,
     port,
     xaddr,
-    encoder,
+
+    // RTSP
     camera_lib,
+    stream_url,
+    encoder,
+    framerate,
+    width,
+    height,
   };
 }
 
@@ -32,13 +38,14 @@ class Context
 {
 public:
   Context();
-  Context(const Context &context);
+  // Context(const Context &context);
 
   std::string get_scopes();
   std::string get_xaddr();
+  void print();
 
+  // Web services
   std::string interface;
-  std::string stream_url;
   std::vector<std::string> scopes;
   int port;
   std::string xaddr;
@@ -47,17 +54,13 @@ public:
   std::string user;
   std::string password;
 
-  CameraGeneric *camera;
-};
 
-
-class VideoArgs
-{
-public:
-  VideoArgs();
-
-  std::string encoder;
+  // RTSP
   std::string stream_url;
+  std::string encoder;
   std::string camera_lib;
+  float framerate;
+  int width;
+  int height;
   CameraGeneric *camera;
 };

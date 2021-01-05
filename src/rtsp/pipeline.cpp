@@ -2,7 +2,7 @@
 
 #include <sstream>
 
-extern VideoArgs video_args;
+extern Context context;
 
 static void need_data(GstElement *appsrc, guint unused, PipelineContainer *data)
 {
@@ -11,7 +11,7 @@ static void need_data(GstElement *appsrc, guint unused, PipelineContainer *data)
   GstMapInfo map;
 
   // Insert image data here
-  Image image_data = video_args.camera->get_current_image();
+  Image image_data = context.camera->get_current_image();
   uint32_t size = image_data.size;
   // ------------------
 
@@ -21,7 +21,7 @@ static void need_data(GstElement *appsrc, guint unused, PipelineContainer *data)
 
 
   GST_BUFFER_PTS(buffer) = data->timestamp;
-  GST_BUFFER_DURATION(buffer) = gst_util_uint64_scale_int(1, GST_SECOND, 30);
+  GST_BUFFER_DURATION(buffer) = gst_util_uint64_scale_int(1, GST_SECOND, context.framerate);
   data->timestamp += GST_BUFFER_DURATION(buffer);
 
   // Copy image data to buffer
@@ -53,7 +53,7 @@ static void media_configure(GstRTSPMediaFactory *factory, GstRTSPMedia *media)
 
   g_object_set(G_OBJECT(app_source), "caps",
                gst_caps_new_simple ("image/jpeg",
-                                    "framerate", GST_TYPE_FRACTION, 30, 1,
+                                    "framerate", GST_TYPE_FRACTION, context.framerate, 1,
                                     "pixel-aspect-ratio", GST_TYPE_FRACTION, 1, 1,
                                     NULL), NULL);
 
@@ -97,8 +97,9 @@ int start_pipeline(int argc, char *argv[]) {
 
   std::ostringstream pipeline_stream;
   pipeline_stream << "( appsrc do-timestamp=true is-live=true name=mysrc "
-                  << "! queue ! jpegdec ! queue ! videoconvert ! video/x-raw,format=I420,framerate=30/1 "
-                  << "! queue ! " << video_args.encoder << " ! queue ! rtph264pay name=pay0 pt=96 )";
+                  << "! queue ! jpegdec ! queue ! videoconvert ! video/x-raw,format=I420,framerate="
+                  << context.framerate << "/1 " << "! queue ! " << context.encoder
+                  << " ! queue ! rtph264pay name=pay0 pt=96 )";
   std::string pipeline = pipeline_stream.str();
 
   gst_rtsp_media_factory_set_launch(factory, pipeline.c_str());
@@ -108,8 +109,8 @@ int start_pipeline(int argc, char *argv[]) {
   g_signal_connect(factory, "media-configure", (GCallback) media_configure, NULL);
 
   /* attach the test factory to the url */
-  std::size_t found = video_args.stream_url.find_last_of("/");
-  std::string endpoint = video_args.stream_url.substr(found);
+  std::size_t found = context.stream_url.find_last_of("/");
+  std::string endpoint = context.stream_url.substr(found);
 
   gst_rtsp_mount_points_add_factory(mounts, endpoint.c_str(), factory);
 
@@ -120,7 +121,7 @@ int start_pipeline(int argc, char *argv[]) {
   gst_rtsp_server_attach(server, NULL);
 
   /* start serving */
-  g_print ("stream ready at %s\n", video_args.stream_url.c_str());
+  g_print ("stream ready at %s\n", context.stream_url.c_str());
   g_main_loop_run (main_loop);
 
   g_printerr("GSTREAMER IS DOWN\n");
