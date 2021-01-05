@@ -5,6 +5,7 @@
 #include <getopt.h>
 
 #include "camera_generic.h"
+#include "profile.h"
 
 
 namespace LongOpts
@@ -27,7 +28,6 @@ namespace LongOpts
     framerate,
     width,
     height,
-    profile_name,
   };
 }
 
@@ -64,7 +64,6 @@ public:
   int port;
   std::string xaddr;
   std::string endpoint;
-  std::string profile_name;
 
   std::string user;
   std::string password;
@@ -79,9 +78,13 @@ public:
   // Context(const Context &context);
 
   void print();
+  void parse_profiles();
+
   // RTSP
   RTSPContext *rtsp_context;
   // Web services
   WSContext *ws_context;
+
+  std::vector<Profile*> profiles;
   bool stop;
 };

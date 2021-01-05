@@ -7,7 +7,8 @@ extern Context context;
 gboolean check_status(gpointer user_data)
 {
   GMainLoop *loop = (GMainLoop *)user_data;
-  if (context.stop)
+  g_print ("stop: %d\n", context.stop);
+  if (context.stop && loop)
   {
     g_main_loop_quit(loop);
     return FALSE;
@@ -120,8 +121,8 @@ int start_pipeline(int argc, char *argv[]) {
    * the media and a new pipeline with our appsrc is created */
   g_signal_connect(factory, "media-configure", (GCallback) media_configure, (void*)main_loop);
 
-  /* Check every 2 seconds if the loop should terminate */
-  g_timeout_add_seconds(2, check_status, NULL);
+  /* Check every 3 seconds if the loop should terminate */
+  g_timeout_add_seconds(3, check_status, NULL);
 
   /* attach the test factory to the url */
   std::size_t found = context.rtsp_context->stream_url.find_last_of("/");

@@ -42,7 +42,6 @@ static const struct option long_opts[] =
     { "stream_url",   required_argument, NULL, LongOpts::stream_url    },
     { "port",         required_argument, NULL, LongOpts::port          },
     { "xaddr",        required_argument, NULL, LongOpts::xaddr         },
-    { "profile",      required_argument, NULL, LongOpts::profile_name  },
     { "encoder",      required_argument, NULL, LongOpts::encoder       },
     { "framerate",    required_argument, NULL, LongOpts::framerate     },
     { "width",        required_argument, NULL, LongOpts::width         },
@@ -83,10 +82,6 @@ void processing_cmd(int argc, char *argv[])
 
     case LongOpts::xaddr:
       context.ws_context->xaddr = optarg;
-      break;
-
-    case LongOpts::profile_name:
-      context.ws_context->profile_name = optarg;
       break;
 
     case LongOpts::encoder:
@@ -137,18 +132,42 @@ Context::~Context()
   delete ws_context;
 }
 
+void Context::parse_profiles()
+{
+  // Temporary, since we aim to have profiles described inside a file and
+  // created by parsing it.
+
+  auto main_profile = new Profile("Main", "main");
+  main_profile->fixed = true;
+
+  main_profile->video_configuration = std::make_shared<VideoConfiguration>("VideoMain", "video_main");
+  main_profile->encoder_configuration = std::make_shared<EncoderConfiguration>("EncoderMain", "encoder_main");
+  main_profile->ptz_configuration = std::make_shared<PTZConfiguration>("PTZMain", "ptz_main");
+
+  main_profile->video_configuration->x = 0;
+  main_profile->video_configuration->y = 0;
+  main_profile->video_configuration->width = rtsp_context->width;
+  main_profile->video_configuration->height = rtsp_context->height;
+
+  main_profile->encoder_configuration->height = rtsp_context->height;
+  main_profile->encoder_configuration->width = rtsp_context->width;
+  main_profile->encoder_configuration->quality = 1.0f;
+  main_profile->encoder_configuration->encoder = "H264";
+
+  main_profile->print();
+
+  profiles.push_back(main_profile);
+}
+
 
 WSContext::WSContext():
   interface("wlan0"),
   port(8080),
   xaddr("192.168.1.90"),
   endpoint(""),
-  profile_name("Profile1"),
   user("admin"),
   password("password")
-{
-  scopes = std::vector<std::string>();
-}
+{}
 
 RTSPContext::RTSPContext():
   stream_url("rtsp://127.0.0.1:8080/cam"),

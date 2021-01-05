@@ -54,7 +54,21 @@ int MediaBindingService::CreateProfile(_trt__CreateProfile *trt__CreateProfile, 
 int MediaBindingService::GetProfile(_trt__GetProfile *trt__GetProfile, _trt__GetProfileResponse &trt__GetProfileResponse)
 {
   DEBUG_FUNCTION();
-  return SOAP_OK;
+
+  auto request = trt__GetProfile;
+  auto& response = trt__GetProfileResponse;
+  auto context = (Context *)this->soap->user;
+
+  for (auto profile : context->profiles)
+  {
+    if (profile->name.compare(request->ProfileToken) == 0)
+    {
+      response.Profile = to_gsoap(soap, profile);
+      return SOAP_OK;
+    }
+  }
+
+  return SOAP_FAULT;
 }
 
 
@@ -65,47 +79,9 @@ int MediaBindingService::GetProfiles(_trt__GetProfiles *trt__GetProfiles, _trt__
   auto& response = trt__GetProfilesResponse;
   auto context = (Context *)this->soap->user;
 
-  // We assume that we have only one profile
+  for (auto profile : context->profiles)
+    response.Profiles.push_back(to_gsoap(this->soap, profile));
 
-  auto profile = soap_new_tt__Profile(soap);
-  profile->Name = context->ws_context->profile_name;
-  profile->token = context->ws_context->profile_name;
-  profile->fixed = soap_new_bool(soap); // Specify that we can't delete this profile.
-  *profile->fixed = true;
-
-  /*
-  // VideoSourceConfiguration
-  profile->VideoSourceConfiguration = soap_new_tt__VideoSourceConfiguration(soap);
-  profile->VideoSourceConfiguration->SourceToken = context->ws_context->profile_name + "_video";
-  profile->VideoSourceConfiguration->Name = context->ws_context->profile_name + "_video";
-  profile->VideoSourceConfiguration->UseCount = 1;
-  profile->VideoSourceConfiguration->token = context->ws_context->profile_name + "_video";
-  profile->VideoSourceConfiguration->Bounds = soap_new_tt__IntRectangle(soap);
-  profile->VideoSourceConfiguration->Bounds->x = 0;
-  profile->VideoSourceConfiguration->Bounds->y = 0;
-  profile->VideoSourceConfiguration->Bounds->width = context->rtsp_context->width;
-  profile->VideoSourceConfiguration->Bounds->height = context->rtsp_context->height;
-
-  // VideoEncoderConfiguration
-  profile->VideoEncoderConfiguration = soap_new_tt__VideoEncoderConfiguration(soap);
-  profile->VideoEncoderConfiguration->Name = context->ws_context->profile_name + "_encoder";
-  profile->VideoEncoderConfiguration->UseCount = 1;
-  profile->VideoEncoderConfiguration->token = context->ws_context->profile_name + "_encoder";
-  profile->VideoEncoderConfiguration->Encoding = tt__VideoEncoding__H264; // other values: JPEG or MPEG4
-  profile->VideoEncoderConfiguration->Resolution = soap_new_tt__VideoResolution(soap);
-  profile->VideoEncoderConfiguration->Resolution->Width = context->rtsp_context->width;
-  profile->VideoEncoderConfiguration->Resolution->Height = context->rtsp_context->height;
-  profile->VideoEncoderConfiguration->Quality = 1.0f;
-
-  // PTZConfiguration
-  profile->PTZConfiguration = soap_new_tt__PTZConfiguration(soap);
-  profile->PTZConfiguration->Name = context->ws_context->profile_name + "_ptz";
-  profile->PTZConfiguration->UseCount = 1;
-  profile->PTZConfiguration->token = context->ws_context->profile_name + "_ptz";
-  profile->PTZConfiguration->NodeToken = context->ws_context->profile_name + "_node";
-  */
-
-  response.Profiles.push_back(profile);
 
   return SOAP_OK;
 }
