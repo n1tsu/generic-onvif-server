@@ -5,6 +5,18 @@
 int PTZBindingService::GetServiceCapabilities(_tptz__GetServiceCapabilities *tptz__GetServiceCapabilities, _tptz__GetServiceCapabilitiesResponse &tptz__GetServiceCapabilitiesResponse)
 {
   DEBUG_FUNCTION();
+
+  auto& response = tptz__GetServiceCapabilitiesResponse;
+
+  response.Capabilities = soap_new_tptz__Capabilities(soap);
+  response.Capabilities->EFlip = soap_new_bool(soap);
+  *response.Capabilities->EFlip = false;
+  response.Capabilities->Reverse = soap_new_bool(soap);
+  *response.Capabilities->Reverse = false;
+  response.Capabilities->GetCompatibleConfigurations = soap_new_bool(soap);
+  *response.Capabilities->GetCompatibleConfigurations = true;
+
+
   return SOAP_OK;
 }
 

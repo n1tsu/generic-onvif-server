@@ -26,6 +26,60 @@ int check_security(soap *soap)
 }
 
 
+tt__VideoSourceConfiguration *to_gsoap(soap *soap, std::shared_ptr<VideoConfiguration> configuration)
+{
+  auto video_configuration = soap_new_tt__VideoSourceConfiguration(soap);
+  // profile->VideoSourceConfiguration->SourceToken = context->ws_context->profile_name + "_video";
+  video_configuration->Name           = configuration->get_name();
+  video_configuration->UseCount       = configuration.use_count();
+  video_configuration->token          = configuration->get_token();
+  video_configuration->Bounds         = soap_new_tt__IntRectangle(soap);
+  video_configuration->Bounds->x      = configuration->x;
+  video_configuration->Bounds->y      = configuration->y;
+  video_configuration->Bounds->width  = configuration->width;
+  video_configuration->Bounds->height = configuration->height;
+
+  return video_configuration;
+}
+
+
+tt__VideoEncoderConfiguration *to_gsoap(soap *soap, std::shared_ptr<EncoderConfiguration> configuration)
+{
+  auto encoder_configuration = soap_new_tt__VideoEncoderConfiguration(soap);
+
+  encoder_configuration->Name     = configuration->get_name();
+  encoder_configuration->UseCount = configuration.use_count();
+  encoder_configuration->token    = configuration->get_token();
+
+  if (!configuration->encoder.compare("H264"))
+    encoder_configuration->Encoding = tt__VideoEncoding__H264;
+  else if (configuration->encoder.compare("JPEG"))
+    encoder_configuration->Encoding = tt__VideoEncoding__JPEG;
+  else if (configuration->encoder.compare("MPEG4"))
+    encoder_configuration->Encoding = tt__VideoEncoding__MPEG4;
+
+  encoder_configuration->Resolution         = soap_new_tt__VideoResolution(soap);
+  encoder_configuration->Resolution->Width  = configuration->width;
+  encoder_configuration->Resolution->Height = configuration->height;
+  encoder_configuration->Quality            = configuration->quality;
+
+  return encoder_configuration;
+}
+
+
+tt__PTZConfiguration *to_gsoap(soap *soap, std::shared_ptr<PTZConfiguration> configuration)
+{
+    auto ptz_configuration = soap_new_tt__PTZConfiguration(soap);
+
+    ptz_configuration->Name = configuration->get_name();
+    ptz_configuration->UseCount = configuration.use_count();
+    ptz_configuration->token = configuration->get_token();
+    ptz_configuration->NodeToken = "node";
+
+    return ptz_configuration;
+}
+
+
 tt__Profile *to_gsoap(soap *soap, Profile *profile)
 {
   auto g_profile = soap_new_tt__Profile(soap);
@@ -36,47 +90,13 @@ tt__Profile *to_gsoap(soap *soap, Profile *profile)
   *g_profile->fixed = profile->fixed;
 
   if (profile->video_configuration)
-  {
-    g_profile->VideoSourceConfiguration = soap_new_tt__VideoSourceConfiguration(soap);
-    // profile->VideoSourceConfiguration->SourceToken = context->ws_context->profile_name + "_video";
-    g_profile->VideoSourceConfiguration->Name = profile->video_configuration->get_name();
-    g_profile->VideoSourceConfiguration->UseCount = profile->video_configuration.use_count();
-    g_profile->VideoSourceConfiguration->token = profile->video_configuration->get_token();
-    g_profile->VideoSourceConfiguration->Bounds = soap_new_tt__IntRectangle(soap);
-    g_profile->VideoSourceConfiguration->Bounds->x = profile->video_configuration->x;
-    g_profile->VideoSourceConfiguration->Bounds->y = profile->video_configuration->y;
-    g_profile->VideoSourceConfiguration->Bounds->width = profile->video_configuration->width;
-    g_profile->VideoSourceConfiguration->Bounds->height = profile->video_configuration->height;
-  }
+    g_profile->VideoSourceConfiguration = to_gsoap(soap, profile->video_configuration);
 
   if (profile->encoder_configuration)
-  {
-    g_profile->VideoEncoderConfiguration = soap_new_tt__VideoEncoderConfiguration(soap);
-    g_profile->VideoEncoderConfiguration->Name = profile->encoder_configuration->get_name();
-    g_profile->VideoEncoderConfiguration->UseCount = profile->encoder_configuration.use_count();
-    g_profile->VideoEncoderConfiguration->token = profile->encoder_configuration->get_token();
-
-    if (!profile->encoder_configuration->encoder.compare("H264"))
-        g_profile->VideoEncoderConfiguration->Encoding = tt__VideoEncoding__H264;
-    else if (profile->encoder_configuration->encoder.compare("JPEG"))
-        g_profile->VideoEncoderConfiguration->Encoding = tt__VideoEncoding__JPEG;
-    else if (profile->encoder_configuration->encoder.compare("MPEG4"))
-        g_profile->VideoEncoderConfiguration->Encoding = tt__VideoEncoding__MPEG4;
-
-    g_profile->VideoEncoderConfiguration->Resolution = soap_new_tt__VideoResolution(soap);
-    g_profile->VideoEncoderConfiguration->Resolution->Width = profile->encoder_configuration->width;
-    g_profile->VideoEncoderConfiguration->Resolution->Height = profile->encoder_configuration->height;
-    g_profile->VideoEncoderConfiguration->Quality = profile->encoder_configuration->quality;
-  }
+    g_profile->VideoEncoderConfiguration = to_gsoap(soap, profile->encoder_configuration);
 
   if (profile->ptz_configuration)
-  {
-    g_profile->PTZConfiguration = soap_new_tt__PTZConfiguration(soap);
-    g_profile->PTZConfiguration->Name = profile->ptz_configuration->get_name();
-    g_profile->PTZConfiguration->UseCount = profile->ptz_configuration.use_count();
-    g_profile->PTZConfiguration->token = profile->ptz_configuration->get_token();
-    g_profile->PTZConfiguration->NodeToken = "node";
-  }
+    g_profile->PTZConfiguration = to_gsoap(soap, profile->ptz_configuration);
 
   return g_profile;
 }

@@ -52,6 +52,24 @@ public:
   std::string get_name() { return name; }
   std::string get_token() { return token; }
 
+  bool absolute_pantilt;
+  bool abosulte_zoom;
+  bool relative_pantilt;
+  bool relative_zoom;
+  bool continuous_pantilt;
+  bool continuous_zoom;
+
+  float pan_speed;
+  float tilt_speed;
+  float zoom_speed;
+
+  float min_pan;
+  float max_pan;
+  float min_tilt;
+  float max_tilt;
+  float min_zoom;
+  float max_zoom;
+
 private:
   std::string name;
   std::string token;

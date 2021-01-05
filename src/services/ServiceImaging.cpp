@@ -6,6 +6,17 @@
 int ImagingBindingService::GetServiceCapabilities(_timg__GetServiceCapabilities *timg__GetServiceCapabilities, _timg__GetServiceCapabilitiesResponse &timg__GetServiceCapabilitiesResponse)
 {
   DEBUG_FUNCTION();
+
+  auto& response = timg__GetServiceCapabilitiesResponse;
+
+  response.Capabilities = soap_new_timg__Capabilities(soap);
+  response.Capabilities->ImageStabilization = soap_new_bool(soap);
+  *response.Capabilities->ImageStabilization = false;
+  response.Capabilities->Presets = soap_new_bool(soap);
+  *response.Capabilities->Presets = true;
+  response.Capabilities->AdaptablePreset = soap_new_bool(soap);
+  *response.Capabilities->AdaptablePreset = true;
+
   return SOAP_OK;
 }
 

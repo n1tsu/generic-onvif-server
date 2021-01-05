@@ -115,6 +115,9 @@ int main(int argc, char *argv[])
   processing_cmd(argc, argv);
   context.print();
 
+  // Parse profile
+  context.parse_profiles();
+
   // Load camera library
   if (load_camera_library(context.rtsp_context->camera_lib.c_str()))
     return 1;
