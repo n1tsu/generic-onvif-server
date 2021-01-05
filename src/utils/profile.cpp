@@ -7,6 +7,8 @@ Profile::Profile(std::string name, std::string token)
     token(token)
 {}
 
+Profile::~Profile() {}
+
 void Profile::print()
 {
   std::cout <<

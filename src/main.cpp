@@ -28,6 +28,9 @@ int services_routine()
   if (!soap_valid_socket(soap_bind(soap, NULL, context.ws_context->port, 100)))
   {
     std::cerr << "Failed to bind service socket." << std::endl;
+    soap_destroy(soap);
+    soap_end(soap);
+    soap_free(soap);
     return 1;
   }
 
@@ -36,6 +39,9 @@ int services_routine()
     if (!soap_valid_socket(soap_accept(soap)))
     {
       std::cerr << "Failed to accept connection." << std::endl;
+      soap_destroy(soap);
+      soap_end(soap);
+      soap_free(soap);
       return 1;
     }
     soap->keep_alive = soap->max_keep_alive + 1;
@@ -125,5 +131,6 @@ int main(int argc, char *argv[])
 
   discovery_thread.join();
   rtsp_thread.join();
+
   return 0;
 }

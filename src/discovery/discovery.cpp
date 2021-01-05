@@ -71,11 +71,15 @@ void discovery_routine()
                     xaddr.c_str(),
                     0);                                              // MDVersion
 
-    while (!context.stop)
+    while (!context.stop.load())
     {
       if (soap_wsdd_listen(soap_discover, 1))
         soap_print_fault(soap_discover, stderr);
     }
+
+    soap_destroy(soap_discover);
+    soap_end(soap_discover);
+    soap_free(soap_discover);
 
     context.stop = true;
 }

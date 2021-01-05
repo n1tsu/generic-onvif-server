@@ -130,6 +130,8 @@ Context::~Context()
 {
   delete rtsp_context;
   delete ws_context;
+  for (auto profile : profiles)
+    delete profile;
 }
 
 void Context::parse_profiles()
@@ -178,6 +180,12 @@ RTSPContext::RTSPContext():
   height(720),
   camera(NULL)
 {}
+
+
+RTSPContext::~RTSPContext()
+{
+  delete camera;
+}
 
 
 std::string WSContext::get_scopes()

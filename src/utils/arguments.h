@@ -3,6 +3,7 @@
 #include <string>
 #include <vector>
 #include <getopt.h>
+#include <atomic>
 
 #include "camera_generic.h"
 #include "profile.h"
@@ -39,6 +40,7 @@ class RTSPContext
 {
 public:
   RTSPContext();
+  ~RTSPContext();
   void print();
 
   std::string stream_url;
@@ -86,5 +88,5 @@ public:
   WSContext *ws_context;
 
   std::vector<Profile*> profiles;
-  bool stop;
+  std::atomic<bool> stop;
 };
