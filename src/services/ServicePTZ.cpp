@@ -23,6 +23,9 @@ int PTZBindingService::GetServiceCapabilities(_tptz__GetServiceCapabilities *tpt
 int PTZBindingService::GetConfigurations(_tptz__GetConfigurations *tptz__GetConfigurations, _tptz__GetConfigurationsResponse &tptz__GetConfigurationsResponse)
 {
   DEBUG_FUNCTION();
+
+  Context *context = (Context *)this->soap->user;
+
   return SOAP_OK;
 }
 

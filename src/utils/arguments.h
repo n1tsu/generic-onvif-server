@@ -3,6 +3,7 @@
 #include <string>
 #include <vector>
 #include <getopt.h>
+#include <memory>
 #include <atomic>
 
 #include "camera_generic.h"
@@ -82,6 +83,7 @@ public:
   void print();
   void parse_profiles();
   void parse_nodes();
+  void parse_configurations();
 
   // RTSP
   RTSPContext *rtsp_context;
@@ -90,6 +92,9 @@ public:
 
   std::vector<Profile*> profiles;
   std::vector<PTZNode*> nodes;
+  std::vector<std::shared_ptr<VideoConfiguration>> video_confs;
+  std::vector<std::shared_ptr<EncoderConfiguration>> encoder_confs;
+  std::vector<std::shared_ptr<PTZConfiguration>> ptz_confs;
 
   std::atomic<bool> stop;
 };

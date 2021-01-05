@@ -142,22 +142,23 @@ void Context::parse_profiles()
   auto main_profile = new Profile("Main", "main");
   main_profile->fixed = true;
 
-  main_profile->video_configuration = std::make_shared<VideoConfiguration>("VideoMain", "video_main");
-  main_profile->encoder_configuration = std::make_shared<EncoderConfiguration>("EncoderMain", "encoder_main");
-  main_profile->ptz_configuration = std::make_shared<PTZConfiguration>("PTZMain", "ptz_main");
-
-  main_profile->video_configuration->x = 0;
-  main_profile->video_configuration->y = 0;
-  main_profile->video_configuration->width = rtsp_context->width;
-  main_profile->video_configuration->height = rtsp_context->height;
-
-  main_profile->encoder_configuration->height = rtsp_context->height;
-  main_profile->encoder_configuration->width = rtsp_context->width;
-  main_profile->encoder_configuration->quality = 1.0f;
-  main_profile->encoder_configuration->encoder = "H264";
+  for (auto video_conf : video_confs)
+  {
+    if (video_conf->get_token().compare("video_main"))
+      main_profile->video_configuration = video_conf;
+  }
+  for (auto encoder_conf : encoder_confs)
+  {
+    if (encoder_conf->get_token().compare("encoder_main"))
+      main_profile->encoder_configuration = encoder_conf;
+  }
+  for (auto ptz_conf : ptz_confs)
+  {
+    if (ptz_conf->get_token().compare("ptz_main"))
+      main_profile->ptz_configuration = ptz_conf;
+  }
 
   main_profile->print();
-
   profiles.push_back(main_profile);
 }
 
@@ -195,6 +196,47 @@ void Context::parse_nodes()
   main_node->continuous_ranges.zoom_max =  1.0f;
 
   nodes.push_back(main_node);
+}
+
+void Context::parse_configurations()
+{
+  // Temporary, since we aim to have nodes described inside a file and
+  // created by parsing it.
+
+  auto video_configuration = std::make_shared<VideoConfiguration>("VideoMain", "video_main");
+  auto encoder_configuration = std::make_shared<EncoderConfiguration>("EncoderMain", "encoder_main");
+  auto ptz_configuration = std::make_shared<PTZConfiguration>("PTZMain", "ptz_main");
+
+  video_configuration->x = 0;
+  video_configuration->y = 0;
+  video_configuration->width = rtsp_context->width;
+  video_configuration->height = rtsp_context->height;
+
+  encoder_configuration->height = rtsp_context->height;
+  encoder_configuration->width = rtsp_context->width;
+  encoder_configuration->quality = 1.0f;
+  encoder_configuration->encoder = "H264";
+
+  ptz_configuration->absolute_pantilt = true;
+  ptz_configuration->absolute_zoom = true;
+  ptz_configuration->relative_pantilt = true;
+  ptz_configuration->relative_zoom = true;
+  ptz_configuration->continuous_pantilt = true;
+  ptz_configuration->continuous_zoom = true;
+  ptz_configuration->pan_speed = 1.0f;
+  ptz_configuration->tilt_speed = 1.0f;
+  ptz_configuration->zoom_speed = 0.1f;
+  ptz_configuration->ranges.pan_min =  -180.0f;
+  ptz_configuration->ranges.pan_max =   180.0f;
+  ptz_configuration->ranges.tilt_min = -180.0f;
+  ptz_configuration->ranges.tilt_max =  180.0f;
+  ptz_configuration->ranges.zoom_min =  0.0f;
+  ptz_configuration->ranges.zoom_max =  1.0f;
+  ptz_configuration->node_token = "main_token";
+
+  video_confs.push_back(video_configuration);
+  encoder_confs.push_back(encoder_configuration);
+  ptz_confs.push_back(ptz_configuration);
 }
 
 

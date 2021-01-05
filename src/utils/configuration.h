@@ -54,7 +54,7 @@ public:
   std::string get_token() { return token; }
 
   bool absolute_pantilt;
-  bool abosulte_zoom;
+  bool absolute_zoom;
   bool relative_pantilt;
   bool relative_zoom;
   bool continuous_pantilt;
