@@ -144,17 +144,17 @@ void Context::parse_profiles()
 
   for (auto video_conf : video_confs)
   {
-    if (video_conf->get_token().compare("video_main"))
+    if (video_conf->get_token().compare("video_main") == 0)
       main_profile->video_configuration = video_conf;
   }
   for (auto encoder_conf : encoder_confs)
   {
-    if (encoder_conf->get_token().compare("encoder_main"))
+    if (encoder_conf->get_token().compare("encoder_main") == 0)
       main_profile->encoder_configuration = encoder_conf;
   }
   for (auto ptz_conf : ptz_confs)
   {
-    if (ptz_conf->get_token().compare("ptz_main"))
+    if (ptz_conf->get_token().compare("ptz_main") == 0)
       main_profile->ptz_configuration = ptz_conf;
   }
 

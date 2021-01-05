@@ -90,6 +90,13 @@ int PTZBindingService::GetConfiguration(_tptz__GetConfiguration *tptz__GetConfig
 int PTZBindingService::GetNodes(_tptz__GetNodes *tptz__GetNodes, _tptz__GetNodesResponse &tptz__GetNodesResponse)
 {
   DEBUG_FUNCTION();
+
+  Context *context = (Context *)this->soap->user;
+  auto& response = tptz__GetNodesResponse;
+
+  for (auto node : context->nodes)
+    response.PTZNode.push_back(to_gsoap(soap, node));
+
   return SOAP_OK;
 }
 
@@ -97,6 +104,17 @@ int PTZBindingService::GetNodes(_tptz__GetNodes *tptz__GetNodes, _tptz__GetNodes
 int PTZBindingService::GetNode(_tptz__GetNode *tptz__GetNode, _tptz__GetNodeResponse &tptz__GetNodeResponse)
 {
   DEBUG_FUNCTION();
+
+  Context *context = (Context *)this->soap->user;
+  auto request = tptz__GetNode;
+  auto& response = tptz__GetNodeResponse;
+
+  for (auto node : context->nodes)
+  {
+    if (request->NodeToken.compare(node->get_token()) == 0)
+      response.PTZNode = to_gsoap(soap, node);
+  }
+
   return SOAP_OK;
 }
 

@@ -9,7 +9,6 @@ gboolean check_status(gpointer user_data)
   GMainLoop *loop = (GMainLoop *)user_data;
   if (context.stop.load())
   {
-    g_print ("endter\n", context.stop.load());
     g_main_loop_quit(loop);
     return FALSE;
   }

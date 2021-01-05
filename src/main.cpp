@@ -115,7 +115,9 @@ int main(int argc, char *argv[])
   processing_cmd(argc, argv);
   context.print();
 
-  // Parse profile
+  // Parsing to retrieve information
+  context.parse_configurations();
+  context.parse_nodes();
   context.parse_profiles();
 
   // Load camera library
