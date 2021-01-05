@@ -122,9 +122,9 @@ soap_wsdd_mode wsdd_event_Probe(struct soap *soap, const char *MessageID, const 
   Context *context = (Context *)soap->user;
   soap_wsdd_init_ProbeMatches(soap, matches);
 
-  std::string xaddr = context->get_xaddr();
-  std::string scopes = context->get_scopes();
-  std::string endpoint = context->endpoint;
+  std::string xaddr = context->ws_context->get_xaddr();
+  std::string scopes = context->ws_context->get_scopes();
+  std::string endpoint = context->ws_context->endpoint;
 
   soap_wsdd_add_ProbeMatch(soap,
                            matches,

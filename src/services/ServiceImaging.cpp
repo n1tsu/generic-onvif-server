@@ -20,7 +20,7 @@ int ImagingBindingService::GetImagingSettings(_timg__GetImagingSettings *timg__G
 
   // Focus
   timg__GetImagingSettingsResponse.ImagingSettings->Focus = soap_new_tt__FocusConfiguration20(this->soap);
-  auto camera_focus_mode = context->camera->get_focus_mode();
+  auto camera_focus_mode = context->rtsp_context->camera->get_focus_mode();
   auto onvif_focus_mode = tt__AutoFocusMode__AUTO;
   if (camera_focus_mode == Mode::MANUAL)
     onvif_focus_mode = tt__AutoFocusMode__MANUAL;
@@ -28,17 +28,17 @@ int ImagingBindingService::GetImagingSettings(_timg__GetImagingSettings *timg__G
 
   // White balance
   timg__GetImagingSettingsResponse.ImagingSettings->WhiteBalance = soap_new_tt__WhiteBalance20(this->soap);
-  auto camera_white_balance_mode = context->camera->get_white_balance_mode();
+  auto camera_white_balance_mode = context->rtsp_context->camera->get_white_balance_mode();
   auto onvif_white_balance_mode = tt__WhiteBalanceMode__AUTO;
   if (camera_white_balance_mode == Mode::MANUAL)
     onvif_white_balance_mode = tt__WhiteBalanceMode__MANUAL;
   timg__GetImagingSettingsResponse.ImagingSettings->WhiteBalance->Mode = onvif_white_balance_mode;
   timg__GetImagingSettingsResponse.ImagingSettings->WhiteBalance->CrGain = soap_new_float(this->soap);
-  *timg__GetImagingSettingsResponse.ImagingSettings->WhiteBalance->CrGain = (float)context->camera->get_color_temperature();
+  *timg__GetImagingSettingsResponse.ImagingSettings->WhiteBalance->CrGain = (float)context->rtsp_context->camera->get_color_temperature();
 
   // Exposure
   timg__GetImagingSettingsResponse.ImagingSettings->Exposure = soap_new_tt__Exposure20(this->soap);
-  auto camera_exposure_mode = context->camera->get_exposure_mode();
+  auto camera_exposure_mode = context->rtsp_context->camera->get_exposure_mode();
   auto onvif_exposure_mode = tt__ExposureMode__AUTO;
   if (camera_exposure_mode == Mode::MANUAL)
     onvif_exposure_mode = tt__ExposureMode__MANUAL;
@@ -61,18 +61,18 @@ int ImagingBindingService::SetImagingSettings(_timg__SetImagingSettings *timg__S
     if (timg__SetImagingSettings->ImagingSettings->Focus)
     {
       if (timg__SetImagingSettings->ImagingSettings->Focus->AutoFocusMode == tt__AutoFocusMode__MANUAL)
-        context->camera->set_focus_mode(Mode::MANUAL);
+        context->rtsp_context->camera->set_focus_mode(Mode::MANUAL);
       else if (timg__SetImagingSettings->ImagingSettings->Focus->AutoFocusMode == tt__AutoFocusMode__AUTO)
-        context->camera->set_focus_mode(Mode::AUTO);
+        context->rtsp_context->camera->set_focus_mode(Mode::AUTO);
     }
 
     // Exposure
     if (timg__SetImagingSettings->ImagingSettings->Exposure)
     {
       if (timg__SetImagingSettings->ImagingSettings->Exposure->Mode == tt__ExposureMode__MANUAL)
-        context->camera->set_exposure_mode(Mode::MANUAL);
+        context->rtsp_context->camera->set_exposure_mode(Mode::MANUAL);
       else if (timg__SetImagingSettings->ImagingSettings->Exposure->Mode == tt__ExposureMode__AUTO)
-        context->camera->set_exposure_mode(Mode::AUTO);
+        context->rtsp_context->camera->set_exposure_mode(Mode::AUTO);
     }
 
     // White balance
@@ -81,13 +81,13 @@ int ImagingBindingService::SetImagingSettings(_timg__SetImagingSettings *timg__S
       auto onvif_white_balance = timg__SetImagingSettings->ImagingSettings->WhiteBalance->Mode;
       if (onvif_white_balance == tt__WhiteBalanceMode__MANUAL)
       {
-        context->camera->set_white_balance_mode(Mode::MANUAL);
+        context->rtsp_context->camera->set_white_balance_mode(Mode::MANUAL);
         float *white_balance_value = timg__SetImagingSettings->ImagingSettings->WhiteBalance->CrGain;
         if (white_balance_value != NULL)
-          context->camera->set_color_temperature(*white_balance_value);
+          context->rtsp_context->camera->set_color_temperature(*white_balance_value);
       }
       else if (onvif_white_balance == tt__WhiteBalanceMode__AUTO)
-        context->camera->set_white_balance_mode(Mode::AUTO);
+        context->rtsp_context->camera->set_white_balance_mode(Mode::AUTO);
       }
   }
 

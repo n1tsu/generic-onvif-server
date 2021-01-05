@@ -19,10 +19,10 @@ int MediaBindingService::GetVideoSources(_trt__GetVideoSources *trt__GetVideoSou
   // We assume that we have only one video source.
 
   auto source = soap_new_tt__VideoSource(soap);
-  source->Framerate = context->framerate;
+  source->Framerate = context->rtsp_context->framerate;
   source->Resolution = soap_new_tt__VideoResolution(soap);
-  source->Resolution->Width = context->width;
-  source->Resolution->Height = context->height;
+  source->Resolution->Width = context->rtsp_context->width;
+  source->Resolution->Height = context->rtsp_context->height;
   // Imaging settings are optionals
   response.VideoSources.push_back(source);
 
@@ -61,6 +61,26 @@ int MediaBindingService::GetProfile(_trt__GetProfile *trt__GetProfile, _trt__Get
 int MediaBindingService::GetProfiles(_trt__GetProfiles *trt__GetProfiles, _trt__GetProfilesResponse &trt__GetProfilesResponse)
 {
   DEBUG_FUNCTION();
+
+  auto& response = trt__GetProfilesResponse;
+  auto context = (Context *)this->soap->user;
+
+  // We assume that we have only one profile
+
+  auto profile = soap_new_tt__Profile(soap);
+  profile->Name = context->ws_context->profile_name;
+  profile->fixed = soap_new_bool(soap, true); // Specify that we can't delete this profile.
+
+  // Video source configuration is optional
+  // Audio source configuration is optional
+  // Video Encoder configuration is optional
+  // Audio encoder configuration is optional
+  // Video analytics configuration is optional
+  // PTZ configuration is optional
+  // Metadata configuration is optional
+
+  response.Profiles.push_back(profile);
+
   return SOAP_OK;
 }
 

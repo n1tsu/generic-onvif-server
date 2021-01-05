@@ -37,7 +37,7 @@ void discovery_routine()
     }
 
     // Create endpoint and save it to be used by ServiceDiscovery
-    context.endpoint = get_rand_endpoint(soap_discover);
+    context.ws_context->endpoint = get_rand_endpoint(soap_discover);
     soap_discover->user = &context;
 
     // Join multicast group
@@ -55,9 +55,9 @@ void discovery_routine()
       exit(1);
     }
 
-    std::string xaddr = context.get_xaddr();
-    std::string scopes = context.get_scopes();
-    const char *endpoint = context.endpoint.c_str();
+    std::string xaddr = context.ws_context->get_xaddr();
+    std::string scopes = context.ws_context->get_scopes();
+    const char *endpoint = context.ws_context->endpoint.c_str();
 
     soap_wsdd_Hello(soap_discover,
                     SOAP_WSDD_ADHOC,                                 // or SOAP_WSDD_ADHOC for ad-hoc mode

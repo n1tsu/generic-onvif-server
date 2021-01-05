@@ -22,6 +22,7 @@ void usage()
     "  --stream_url <url>    URL to be used for the RTSP server." << std::endl <<
     "  --port       <port>   Port to be used to serve ONVIF server." << std::endl <<
     "  --xaddr      <addr>   Address used by client to reach ONVIF server." << std::endl <<
+    "  --profile    <name>   Name of the main profile." << std::endl <<
     "  --encoder    <name>   GStreamer encoder name to be used by RTSP server." << std::endl <<
     "  --framerate  <num>    Framerate to be used by the camera." << std::endl <<
     "  --width      <num>    Width to be used by the camera." << std::endl <<
@@ -41,6 +42,7 @@ static const struct option long_opts[] =
     { "stream_url",   required_argument, NULL, LongOpts::stream_url    },
     { "port",         required_argument, NULL, LongOpts::port          },
     { "xaddr",        required_argument, NULL, LongOpts::xaddr         },
+    { "profile",      required_argument, NULL, LongOpts::profile_name  },
     { "encoder",      required_argument, NULL, LongOpts::encoder       },
     { "framerate",    required_argument, NULL, LongOpts::framerate     },
     { "width",        required_argument, NULL, LongOpts::width         },
@@ -64,43 +66,47 @@ void processing_cmd(int argc, char *argv[])
       break;
 
     case LongOpts::interface:
-      context.interface = optarg;
+      context.ws_context->interface = optarg;
       break;
 
     case LongOpts::scope:
-      context.scopes.push_back(optarg);
+      context.ws_context->scopes.push_back(optarg);
       break;
 
     case LongOpts::stream_url:
-      context.stream_url = optarg;
+      context.rtsp_context->stream_url = optarg;
       break;
 
     case LongOpts::port:
-      context.port = std::stoi(optarg);
+      context.ws_context->port = std::stoi(optarg);
       break;
 
     case LongOpts::xaddr:
-      context.xaddr = optarg;
+      context.ws_context->xaddr = optarg;
+      break;
+
+    case LongOpts::profile_name:
+      context.ws_context->profile_name = optarg;
       break;
 
     case LongOpts::encoder:
-      context.encoder = optarg;
+      context.rtsp_context->encoder = optarg;
       break;
 
     case LongOpts::camera_lib:
-      context.camera_lib = optarg;
+      context.rtsp_context->camera_lib = optarg;
       break;
 
     case LongOpts::framerate:
-      context.framerate = std::stoi(optarg);
+      context.rtsp_context->framerate = std::stoi(optarg);
       break;
 
     case LongOpts::width:
-      context.width = std::stoi(optarg);
+      context.rtsp_context->width = std::stoi(optarg);
       break;
 
     case LongOpts::height:
-      context.height = std::stoi(optarg);
+      context.rtsp_context->height = std::stoi(optarg);
       break;
 
 
@@ -118,14 +124,32 @@ void processing_cmd(int argc, char *argv[])
 // CONTEXT //
 /////////////
 
+Context::Context()
+{
+  rtsp_context = new RTSPContext();
+  ws_context = new WSContext();
+}
 
-Context::Context():
+Context::~Context()
+{
+  delete rtsp_context;
+  delete ws_context;
+}
+
+
+WSContext::WSContext():
   interface("wlan0"),
   port(8080),
   xaddr("192.168.1.90"),
   endpoint(""),
+  profile_name("Profile1"),
   user("admin"),
-  password("password"),
+  password("password")
+{
+  scopes = std::vector<std::string>();
+}
+
+RTSPContext::RTSPContext():
   stream_url("rtsp://127.0.0.1:8080/cam"),
   encoder("vaapih264enc"),
   camera_lib("camera/libdummycam.so"),
@@ -133,12 +157,10 @@ Context::Context():
   width(1280),
   height(720),
   camera(NULL)
-{
-  scopes = std::vector<std::string>();
-}
+{}
 
 
-std::string Context::get_scopes()
+std::string WSContext::get_scopes()
 {
   std::string scopes;
 
@@ -153,7 +175,7 @@ std::string Context::get_scopes()
 }
 
 
-std::string Context::get_xaddr()
+std::string WSContext::get_xaddr()
 {
   std::string result = "http://" + this->xaddr + ":" + std::to_string(port);
   return result;
@@ -162,19 +184,30 @@ std::string Context::get_xaddr()
 
 void Context::print()
 {
+  std::cout << "Context: " << std::endl;
+  rtsp_context->print();
+  ws_context->print();
+}
+
+void WSContext::print()
+{
   std::cout <<
-    "Context: " << std::endl <<
     std::endl << " - Web services -" << std::endl <<
     " - interface : " << interface << std::endl <<
     " - scopes    : " << get_scopes().c_str() << std::endl <<
     " - port      : " << port << std::endl <<
     " - xaddr     : " << xaddr << std::endl <<
-    " - endpoint  : " << endpoint << std::endl <<
-    std::endl << " - RTSP server -" << std::endl <<
-    " - streamurl : " << stream_url << std::endl <<
-    " - encoder   : " << encoder << std::endl <<
-    " - cameralib : " << camera_lib << std::endl <<
-    " - framerate : " << framerate << std::endl <<
-    " - width     : " << width << std::endl <<
-    " - height    : " << height << std::endl;
+    " - endpoint  : " << endpoint << std::endl;
+}
+
+void RTSPContext::print()
+{
+   std::cout <<
+     std::endl << " - RTSP server -" << std::endl <<
+     " - streamurl : " << stream_url << std::endl <<
+     " - encoder   : " << encoder << std::endl <<
+     " - cameralib : " << camera_lib << std::endl <<
+     " - framerate : " << framerate << std::endl <<
+     " - width     : " << width << std::endl <<
+     " - height    : " << height << std::endl;
 }

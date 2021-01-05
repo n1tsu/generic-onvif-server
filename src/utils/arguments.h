@@ -27,6 +27,7 @@ namespace LongOpts
     framerate,
     width,
     height,
+    profile_name,
   };
 }
 
@@ -34,28 +35,12 @@ namespace LongOpts
 void processing_cmd(int argc, char *argv[]);
 
 
-class Context
+class RTSPContext
 {
 public:
-  Context();
-  // Context(const Context &context);
-
-  std::string get_scopes();
-  std::string get_xaddr();
+  RTSPContext();
   void print();
 
-  // Web services
-  std::string interface;
-  std::vector<std::string> scopes;
-  int port;
-  std::string xaddr;
-  std::string endpoint;
-
-  std::string user;
-  std::string password;
-
-
-  // RTSP
   std::string stream_url;
   std::string encoder;
   std::string camera_lib;
@@ -63,4 +48,39 @@ public:
   int width;
   int height;
   CameraGeneric *camera;
+};
+
+
+class WSContext
+{
+public:
+  WSContext();
+  std::string get_scopes();
+  std::string get_xaddr();
+  void print();
+
+  std::string interface;
+  std::vector<std::string> scopes;
+  int port;
+  std::string xaddr;
+  std::string endpoint;
+  std::string profile_name;
+
+  std::string user;
+  std::string password;
+};
+
+
+class Context
+{
+public:
+  Context();
+  ~Context();
+  // Context(const Context &context);
+
+  void print();
+  // RTSP
+  RTSPContext *rtsp_context;
+  // Web services
+  WSContext *ws_context;
 };

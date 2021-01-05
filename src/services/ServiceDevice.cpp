@@ -15,7 +15,7 @@ int DeviceBindingService::GetServices(_tds__GetServices *tds__GetServices, _tds_
   // Device Service
   auto device_service = soap_new_tds__Service(soap);
   device_service->Namespace = "http://www.onvif.org/ver10/device/wsdl";
-  device_service->XAddr = context->xaddr;
+  device_service->XAddr = context->ws_context->xaddr;
   device_service->Version = soap_new_tt__OnvifVersion(soap);
   device_service->Version->Major = 19;
   device_service->Version->Minor = 12;
@@ -25,7 +25,7 @@ int DeviceBindingService::GetServices(_tds__GetServices *tds__GetServices, _tds_
   // Imaging Service
   auto imaging_service = soap_new_tds__Service(soap);
   imaging_service->Namespace = "http://www.onvif.org/ver20/imaging/wsdl";
-  imaging_service->XAddr = context->xaddr;
+  imaging_service->XAddr = context->ws_context->xaddr;
   imaging_service->Version = soap_new_tt__OnvifVersion(soap);
   imaging_service->Version->Major = 19;
   imaging_service->Version->Minor = 6;
@@ -35,7 +35,7 @@ int DeviceBindingService::GetServices(_tds__GetServices *tds__GetServices, _tds_
   // Media Service
   auto media_service = soap_new_tds__Service(soap);
   media_service->Namespace = "http://www.onvif.org/ver10/media/wsdl";
-  media_service->XAddr = context->xaddr;
+  media_service->XAddr = context->ws_context->xaddr;
   media_service->Version = soap_new_tt__OnvifVersion(soap);
   media_service->Version->Major = 19;
   media_service->Version->Minor = 6;
@@ -45,7 +45,7 @@ int DeviceBindingService::GetServices(_tds__GetServices *tds__GetServices, _tds_
   // PTZ Service
   auto ptz_service = soap_new_tds__Service(soap);
   ptz_service->Namespace = "http://www.onvif.org/ver20/ptz/wsdl";
-  ptz_service->XAddr = context->xaddr;
+  ptz_service->XAddr = context->ws_context->xaddr;
   ptz_service->Version = soap_new_tt__OnvifVersion(soap);
   ptz_service->Version->Major = 20;
   ptz_service->Version->Minor = 12;
@@ -155,7 +155,7 @@ int DeviceBindingService::GetScopes(_tds__GetScopes *tds__GetScopes, _tds__GetSc
 
   auto& response = tds__GetScopesResponse;
 
-  for (auto scope_uri : context->scopes)
+  for (auto scope_uri : context->ws_context->scopes)
   {
     auto scope = soap_new_tt__Scope(soap);
     scope->ScopeDef = tt__ScopeDefinition__Fixed;
@@ -300,7 +300,7 @@ int DeviceBindingService::GetCapabilities(_tds__GetCapabilities *tds__GetCapabil
   if ((device_found != end) || (all_found != end))
   {
     response.Capabilities->Device = soap_new_tt__DeviceCapabilities(soap);
-    response.Capabilities->Device->XAddr = context->get_xaddr();
+    response.Capabilities->Device->XAddr = context->ws_context->get_xaddr();
     response.Capabilities->Device->System = soap_new_tt__SystemCapabilities(soap);
     response.Capabilities->Device->System->RemoteDiscovery = soap_new_bool(soap, true);
     response.Capabilities->Device->System->DiscoveryBye = soap_new_bool(soap, false);
@@ -317,12 +317,12 @@ int DeviceBindingService::GetCapabilities(_tds__GetCapabilities *tds__GetCapabil
   if ((imaging_found != end) || (all_found != end))
   {
     response.Capabilities->Imaging = soap_new_tt__ImagingCapabilities(soap);
-    response.Capabilities->Imaging->XAddr = context->get_xaddr();
+    response.Capabilities->Imaging->XAddr = context->ws_context->get_xaddr();
   }
   if ((media_found != end) || (all_found != end))
   {
     response.Capabilities->Media = soap_new_tt__MediaCapabilities(soap);
-    response.Capabilities->Media->XAddr = context->get_xaddr();
+    response.Capabilities->Media->XAddr = context->ws_context->get_xaddr();
     response.Capabilities->Media->StreamingCapabilities = soap_new_tt__RealTimeStreamingCapabilities(soap);
     //response.Capabilities->Media->StreamingCapabilities->RTPMulticast = soap_new_bool(soap, false);
     //response.Capabilities->Media->StreamingCapabilities->RTP_USCORETCP = soap_new_bool(soap, false);
@@ -331,7 +331,7 @@ int DeviceBindingService::GetCapabilities(_tds__GetCapabilities *tds__GetCapabil
   if ((ptz_found != end) || (all_found != end))
   {
     response.Capabilities->PTZ = soap_new_tt__PTZCapabilities(soap);
-    response.Capabilities->PTZ->XAddr = context->get_xaddr();
+    response.Capabilities->PTZ->XAddr = context->ws_context->get_xaddr();
   }
 
   return SOAP_OK;

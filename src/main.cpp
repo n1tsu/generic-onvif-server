@@ -25,7 +25,7 @@ int services_routine()
 
   soap->user = (void*)&context;
 
-  if (!soap_valid_socket(soap_bind(soap, NULL, context.port, 100)))
+  if (!soap_valid_socket(soap_bind(soap, NULL, context.ws_context->port, 100)))
     return 1;
 
   while (true)
@@ -87,7 +87,7 @@ bool load_camera_library(std::string name)
   }
 
   CameraGeneric* camera = (CameraGeneric*)create();
-  context.camera = camera;
+  context.rtsp_context->camera = camera;
 
   return false;
 }
@@ -101,7 +101,7 @@ int main(int argc, char *argv[])
   context.print();
 
   // Load camera library
-  if (load_camera_library(context.camera_lib.c_str()))
+  if (load_camera_library(context.rtsp_context->camera_lib.c_str()))
     return 1;
 
   // Run WS Discovery thread
