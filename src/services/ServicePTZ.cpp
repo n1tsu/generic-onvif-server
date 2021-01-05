@@ -16,7 +16,6 @@ int PTZBindingService::GetServiceCapabilities(_tptz__GetServiceCapabilities *tpt
   response.Capabilities->GetCompatibleConfigurations = soap_new_bool(soap);
   *response.Capabilities->GetCompatibleConfigurations = true;
 
-
   return SOAP_OK;
 }
 

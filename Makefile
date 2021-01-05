@@ -42,7 +42,9 @@ SRC  = $(SRC_DIR)/main.cpp                 \
        $(DISCOVERY_DIR)/discovery.cpp      \
        $(UTILS_DIR)/arguments.cpp          \
        $(UTILS_DIR)/utils.cpp              \
-       $(UTILS_DIR)/profile.cpp             \
+       $(UTILS_DIR)/profile.cpp            \
+       $(UTILS_DIR)/ptz.cpp                \
+       $(UTILS_DIR)/configuration.cpp      \
        $(RTSP_DIR)/pipeline.cpp            \
 
 # gSOAP sources
