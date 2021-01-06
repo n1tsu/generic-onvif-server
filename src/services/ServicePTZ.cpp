@@ -232,7 +232,7 @@ int PTZBindingService::GotoHomePosition(_tptz__GotoHomePosition *tptz__GotoHomeP
 
   for (Profile *profile : context->profiles)
   {
-    if (profile->get_token().compare(request->ProfileToken))
+    if (profile->get_token().compare(request->ProfileToken) == 0)
     {
       context->rtsp_context->camera->zoom_to(profile->home_preset->position.zoom_pos * 100);
       context->rtsp_context->camera->pan_to(profile->home_preset->position.pan_pos);

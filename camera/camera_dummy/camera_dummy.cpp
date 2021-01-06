@@ -103,13 +103,13 @@ struct Image CameraDummy::get_current_image()
 
 uint8_t CameraDummy::get_zoom_percent()
 {
-  std::cout << "- Get zoom percent: " << zoom_percent << std::endl;
+  std::cout << "- Get zoom percent: " << unsigned(zoom_percent) << std::endl;
   return zoom_percent;
 }
 
 bool CameraDummy::zoom_to(uint8_t percent)
 {
-  std::cout << "- Set zoom to " << percent << std::endl;
+  std::cout << "- Set zoom to " << unsigned(percent) << std::endl;
   return false;
 }
 
@@ -203,28 +203,30 @@ bool CameraDummy::tilt_stop()
   return false;
 }
 
+
+
 enum Mode CameraDummy::get_focus_mode()
 {
   std::cout << "- Get focus mode" << std::endl;
-  return Mode::AUTO;
+  return focus_mode;
 }
 
 enum Mode CameraDummy::get_white_balance_mode()
 {
   std::cout << "- Get white balance mode" << std::endl;
-  return Mode::AUTO;
+  return white_balance_mode;
 }
 
 uint16_t CameraDummy::get_color_temperature()
 {
   std::cout << "- Get color temperature" << std::endl;
-  return 0;
+  return color_temperature;
 }
 
 enum Mode CameraDummy::get_exposure_mode()
 {
   std::cout << "- Get exposure mode" << std::endl;
-  return Mode::AUTO;
+  return exposure_mode;
 }
 
 bool CameraDummy::set_focus_mode(enum Mode mode)
