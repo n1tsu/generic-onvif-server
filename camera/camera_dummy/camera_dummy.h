@@ -30,4 +30,7 @@ public:
   bool set_white_balance_mode(enum Mode mode) override;
   bool set_color_temperature(uint16_t kelvin) override;
   bool set_exposure_mode(enum Mode mode) override;
+
+private:
+  int frame_count = 0;
 };

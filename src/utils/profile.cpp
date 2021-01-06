@@ -7,7 +7,11 @@ Profile::Profile(std::string name, std::string token)
     token(token)
 {}
 
-Profile::~Profile() {}
+Profile::~Profile()
+{
+  for (PTZPreset *preset : presets)
+    delete preset;
+}
 
 void Profile::print()
 {

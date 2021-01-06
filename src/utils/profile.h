@@ -2,8 +2,10 @@
 
 #include <string>
 #include <memory>
+#include <vector>
 
 #include "configuration.h"
+
 
 class Profile
 {
@@ -22,4 +24,6 @@ public:
   std::shared_ptr<VideoConfiguration> video_configuration;
   std::shared_ptr<EncoderConfiguration> encoder_configuration;
   std::shared_ptr<PTZConfiguration> ptz_configuration;
+
+  std::vector<PTZPreset*> presets;
 };

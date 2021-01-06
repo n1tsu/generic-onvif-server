@@ -1,5 +1,31 @@
 #include "utils.h"
 
+#include <ctime>
+#include <unistd.h>
+
+
+std::string random_string(const int len)
+{
+  std::string r_string;
+  static const char alphanum[] =
+      "0123456789"
+      "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+      "abcdefghijklmnopqrstuvwxyz";
+
+  srand((unsigned)time(NULL) * getpid());
+
+  r_string.reserve(len);
+
+  for (int i = 0; i < len; i++)
+  {
+    char letter = alphanum[rand() % 62];
+    r_string += letter;
+  }
+
+  return r_string;
+}
+
+
 std::string last_occurence(std::string str, std::string separators)
 {
   std::size_t found = str.find_last_of(separators);
@@ -241,4 +267,23 @@ tt__Profile *to_gsoap(soap *soap, Profile *profile)
     g_profile->PTZConfiguration = to_gsoap(soap, profile->ptz_configuration);
 
   return g_profile;
+}
+
+
+tt__PTZPreset *to_gsoap(soap *soap, PTZPreset *preset)
+{
+  auto g_preset = soap_new_tt__PTZPreset(soap);
+
+  g_preset->Name = soap_new_std__string(soap);
+  *g_preset->Name = preset->get_name();
+  g_preset->token = soap_new_std__string(soap);
+  *g_preset->token = preset->get_token();
+  g_preset->PTZPosition = soap_new_tt__PTZVector(soap);
+  g_preset->PTZPosition->PanTilt = soap_new_tt__Vector2D(soap);
+  g_preset->PTZPosition->PanTilt->x = preset->position.pan_pos;
+  g_preset->PTZPosition->PanTilt->y = preset->position.tilt_pos;
+  g_preset->PTZPosition->Zoom = soap_new_tt__Vector1D(soap);
+  g_preset->PTZPosition->Zoom->x = preset->position.zoom_pos;
+
+  return g_preset;
 }

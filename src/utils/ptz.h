@@ -3,6 +3,30 @@
 #include <string>
 
 
+struct PTZPosition
+{
+  float pan_pos;
+  float tilt_pos;
+  float zoom_pos;
+};
+
+
+class PTZPreset
+{
+public:
+  PTZPreset(std::string name, std::string token);
+
+  std::string get_name() { return name; }
+  std::string get_token() { return token; }
+
+  struct PTZPosition position;
+
+private:
+  std::string name;
+  std::string token;
+};
+
+
 class PTZSpace
 {
 public:

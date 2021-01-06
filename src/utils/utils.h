@@ -6,6 +6,8 @@
 #include "arguments.h"
 #include "wsseapi.h"
 
+std::string random_string(const int len);
+
 std::string last_occurence(std::string str, std::string separators);
 
 int check_security(soap *soap);
@@ -19,3 +21,5 @@ tt__VideoEncoderConfiguration *to_gsoap(soap *soap, std::shared_ptr<EncoderConfi
 tt__VideoSourceConfiguration *to_gsoap(soap *soap, std::shared_ptr<VideoConfiguration> configuration);
 
 tt__Profile *to_gsoap(soap *soap, Profile *profile);
+
+tt__PTZPreset *to_gsoap(soap *soap, PTZPreset *preset);

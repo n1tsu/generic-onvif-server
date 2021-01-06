@@ -1,6 +1,7 @@
 #include "camera_dummy.h"
 #include <iostream>
 #include <fstream>
+#include <sstream>
 
 extern "C" CameraGeneric* create_object()
 {
@@ -68,8 +69,10 @@ struct Image CameraDummy::get_current_image()
     NULL,
   };
 
-
-  std::ifstream file("image1.jpeg", std::ios::binary | std::ios::ate);
+  std::ostringstream stream_format;
+  stream_format << "camera/image" << frame_count % 11 << ".jpeg";
+  std::string image_name = stream_format.str();
+  std::ifstream file(image_name, std::ios::binary | std::ios::ate);
   if (file.fail())
   {
     std::cout << "! Failed opening JPEG." << std::endl;
@@ -84,6 +87,7 @@ struct Image CameraDummy::get_current_image()
   {
     image.size = size;
     image.data = buffer;
+    frame_count += 1;
 
     return image;
   }

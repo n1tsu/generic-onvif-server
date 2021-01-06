@@ -1,6 +1,8 @@
 #include "soapPTZBindingService.h"
 #include "macros.h"
 
+#include <algorithm>
+
 
 int PTZBindingService::GetServiceCapabilities(_tptz__GetServiceCapabilities *tptz__GetServiceCapabilities, _tptz__GetServiceCapabilitiesResponse &tptz__GetServiceCapabilitiesResponse)
 {
@@ -37,6 +39,20 @@ int PTZBindingService::GetConfigurations(_tptz__GetConfigurations *tptz__GetConf
 int PTZBindingService::GetPresets(_tptz__GetPresets *tptz__GetPresets, _tptz__GetPresetsResponse &tptz__GetPresetsResponse)
 {
   DEBUG_FUNCTION();
+
+  Context *context = (Context *)this->soap->user;
+  auto request = tptz__GetPresets;
+  auto& response = tptz__GetPresetsResponse;
+
+  for (Profile *profile : context->profiles)
+  {
+    if (profile->get_token().compare(request->ProfileToken) == 0)
+    {
+      for (PTZPreset *preset : profile->presets)
+        response.Preset.push_back(to_gsoap(soap, preset));
+    }
+  }
+
   return SOAP_OK;
 }
 
@@ -44,13 +60,61 @@ int PTZBindingService::GetPresets(_tptz__GetPresets *tptz__GetPresets, _tptz__Ge
 int PTZBindingService::SetPreset(_tptz__SetPreset *tptz__SetPreset, _tptz__SetPresetResponse &tptz__SetPresetResponse)
 {
   DEBUG_FUNCTION();
-  return SOAP_OK;
+
+  Context *context = (Context *)this->soap->user;
+  auto request = tptz__SetPreset;
+  auto& response = tptz__SetPresetResponse;
+
+  for (Profile *profile : context->profiles)
+  {
+    if (profile->get_token().compare(request->ProfileToken) == 0)
+    {
+      std::string name;
+      std::string token;
+      if (request->PresetName)
+        name = *request->PresetName;
+      else
+        name = random_string(10);
+      if (request->PresetToken)
+        token = *request->PresetToken;
+      else
+        token = random_string(10);
+
+      PTZPreset *preset = new PTZPreset(name, token);
+      profile->presets.push_back(preset);
+
+      response.PresetToken = token;
+      return SOAP_OK;
+    }
+  }
+
+  return SOAP_FAULT;
 }
 
 
 int PTZBindingService::RemovePreset(_tptz__RemovePreset *tptz__RemovePreset, _tptz__RemovePresetResponse &tptz__RemovePresetResponse)
 {
   DEBUG_FUNCTION();
+
+  Context *context = (Context *)this->soap->user;
+  auto request = tptz__RemovePreset;
+
+  for (Profile *profile : context->profiles)
+  {
+    if (profile->get_token().compare(request->ProfileToken) == 0)
+    {
+      std::vector<PTZPreset *>presets = profile->presets;
+      presets.erase(std::remove_if(presets.begin(),
+                                   presets.end(),
+                                   [&](PTZPreset *p){
+                                     return !p->get_token()
+                                       .compare(request->PresetToken);
+                                   }),
+                    presets.end());
+      return SOAP_OK;
+    }
+  }
+
   return SOAP_OK;
 }
 
