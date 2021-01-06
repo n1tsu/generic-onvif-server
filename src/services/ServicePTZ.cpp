@@ -81,6 +81,9 @@ int PTZBindingService::SetPreset(_tptz__SetPreset *tptz__SetPreset, _tptz__SetPr
         token = random_string(10);
 
       PTZPreset *preset = new PTZPreset(name, token);
+      preset->position.zoom_pos = (float)(context->rtsp_context->camera->get_zoom_percent()) / 100.0f;
+      preset->position.pan_pos = context->rtsp_context->camera->get_pan_degree();
+      preset->position.tilt_pos = context->rtsp_context->camera->get_tilt_degree();
       profile->presets.push_back(preset);
 
       response.PresetToken = token;
@@ -134,7 +137,7 @@ int PTZBindingService::GotoPreset(_tptz__GotoPreset *tptz__GotoPreset, _tptz__Go
       {
         if (preset->get_token().compare(request->PresetToken) == 0)
         {
-          context->rtsp_context->camera->zoom_to(preset->position.zoom_pos);
+          context->rtsp_context->camera->zoom_to(100 * preset->position.zoom_pos);
           context->rtsp_context->camera->tilt_to(preset->position.tilt_pos);
           context->rtsp_context->camera->pan_to(preset->position.pan_pos);
 
@@ -223,6 +226,21 @@ int PTZBindingService::GetConfigurationOptions(_tptz__GetConfigurationOptions *t
 int PTZBindingService::GotoHomePosition(_tptz__GotoHomePosition *tptz__GotoHomePosition, _tptz__GotoHomePositionResponse &tptz__GotoHomePositionResponse)
 {
   DEBUG_FUNCTION();
+
+  Context *context = (Context *)this->soap->user;
+  auto request = tptz__GotoHomePosition;
+
+  for (Profile *profile : context->profiles)
+  {
+    if (profile->get_token().compare(request->ProfileToken))
+    {
+      context->rtsp_context->camera->zoom_to(profile->home_preset->position.zoom_pos * 100);
+      context->rtsp_context->camera->pan_to(profile->home_preset->position.pan_pos);
+      context->rtsp_context->camera->tilt_to(profile->home_preset->position.tilt_pos);
+      return SOAP_OK;
+    }
+  }
+
   return SOAP_OK;
 }
 
@@ -230,6 +248,21 @@ int PTZBindingService::GotoHomePosition(_tptz__GotoHomePosition *tptz__GotoHomeP
 int PTZBindingService::SetHomePosition(_tptz__SetHomePosition *tptz__SetHomePosition, _tptz__SetHomePositionResponse &tptz__SetHomePositionResponse)
 {
   DEBUG_FUNCTION();
+
+  Context *context = (Context *)this->soap->user;
+  auto request = tptz__SetHomePosition;
+
+  for (Profile *profile : context->profiles)
+  {
+    if (profile->get_token().compare(request->ProfileToken))
+    {
+      profile->home_preset->position.zoom_pos = (float)(context->rtsp_context->camera->get_zoom_percent()) / 100.0f;
+      profile->home_preset->position.pan_pos = context->rtsp_context->camera->get_pan_degree();
+      profile->home_preset->position.tilt_pos = context->rtsp_context->camera->get_tilt_degree();
+      return SOAP_OK;
+    }
+  }
+
   return SOAP_OK;
 }
 

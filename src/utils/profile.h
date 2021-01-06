@@ -26,4 +26,5 @@ public:
   std::shared_ptr<PTZConfiguration> ptz_configuration;
 
   std::vector<PTZPreset*> presets;
+  PTZPreset *home_preset;
 };
