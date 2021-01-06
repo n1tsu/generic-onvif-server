@@ -92,7 +92,7 @@ int MediaBindingService::GetProfile(_trt__GetProfile *trt__GetProfile, _trt__Get
 
   for (Profile *profile : context->profiles)
   {
-    if (profile->name.compare(request->ProfileToken) == 0)
+    if (profile->token.compare(request->ProfileToken) == 0)
     {
       response.Profile = to_gsoap(soap, profile);
       return SOAP_OK;
@@ -534,6 +534,23 @@ int MediaBindingService::GetGuaranteedNumberOfVideoEncoderInstances(_trt__GetGua
 int MediaBindingService::GetStreamUri(_trt__GetStreamUri *trt__GetStreamUri, _trt__GetStreamUriResponse &trt__GetStreamUriResponse)
 {
   DEBUG_FUNCTION();
+
+  Context *context = (Context *)this->soap->user;
+
+  // Request provides us profile token, transport method, stream type
+  // auto request = trt__GetStreamUri;
+
+  auto& response = trt__GetStreamUriResponse;
+
+  response.MediaUri = soap_new_tt__MediaUri(soap);
+  response.MediaUri->Uri = "rtsp://" + context->ws_context->xaddr +
+    ":" + std::to_string(context->rtsp_context->stream_port) +
+    "/" + context->rtsp_context->stream_endpoint;
+
+  response.MediaUri->InvalidAfterConnect = false;
+  response.MediaUri->InvalidAfterReboot = false;
+  response.MediaUri->Timeout = 0;
+
   return SOAP_OK;
 }
 

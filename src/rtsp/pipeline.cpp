@@ -25,7 +25,6 @@ static void need_data(GstElement *appsrc, guint unused, PipelineContainer *data)
   // Insert image data here
   Image image_data = context.rtsp_context->camera->get_current_image();
   uint32_t size = image_data.size;
-  g_printerr("! %d !\n", size);
   // ------------------
 
   // Create a buffer and allocate it
