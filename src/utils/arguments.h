@@ -25,7 +25,8 @@ namespace LongOpts
 
     // RTSP
     camera_lib,
-    stream_url,
+    stream_endpoint,
+    stream_port,
     encoder,
     framerate,
     width,
@@ -44,10 +45,11 @@ public:
   ~RTSPContext();
   void print();
 
-  std::string stream_url;
+  std::string stream_endpoint;
+  int stream_port;
   std::string encoder;
   std::string camera_lib;
-  float framerate;
+  int framerate;
   int width;
   int height;
   CameraGeneric *camera;

@@ -304,12 +304,12 @@ int DeviceBindingService::GetCapabilities(_tds__GetCapabilities *tds__GetCapabil
     response.Capabilities->Device = soap_new_tt__DeviceCapabilities(soap);
     response.Capabilities->Device->XAddr = context->ws_context->get_xaddr();
     response.Capabilities->Device->System = soap_new_tt__SystemCapabilities(soap);
-    response.Capabilities->Device->System->RemoteDiscovery = soap_new_bool(soap, true);
-    response.Capabilities->Device->System->DiscoveryBye = soap_new_bool(soap, false);
-    response.Capabilities->Device->System->DiscoveryResolve = soap_new_bool(soap, true);
-    response.Capabilities->Device->System->SystemBackup = soap_new_bool(soap, false);
-    response.Capabilities->Device->System->SystemLogging = soap_new_bool(soap, false);
-    response.Capabilities->Device->System->FirmwareUpgrade = soap_new_bool(soap, false);
+    response.Capabilities->Device->System->RemoteDiscovery = true;
+    response.Capabilities->Device->System->DiscoveryBye = false;
+    response.Capabilities->Device->System->DiscoveryResolve = true;
+    response.Capabilities->Device->System->SystemBackup = false;
+    response.Capabilities->Device->System->SystemLogging = false;
+    response.Capabilities->Device->System->FirmwareUpgrade = false;
     response.Capabilities->Device->System->SupportedVersions.push_back(soap_new_req_tt__OnvifVersion(this->soap, 2, 0));
     response.Capabilities->Device->Network = soap_new_tt__NetworkCapabilities(soap);
     response.Capabilities->Device->Security = soap_new_tt__SecurityCapabilities(soap);

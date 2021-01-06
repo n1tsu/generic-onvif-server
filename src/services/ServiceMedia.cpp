@@ -90,7 +90,7 @@ int MediaBindingService::GetProfile(_trt__GetProfile *trt__GetProfile, _trt__Get
   auto& response = trt__GetProfileResponse;
   auto context = (Context *)this->soap->user;
 
-  for (auto profile : context->profiles)
+  for (Profile *profile : context->profiles)
   {
     if (profile->name.compare(request->ProfileToken) == 0)
     {
@@ -110,7 +110,7 @@ int MediaBindingService::GetProfiles(_trt__GetProfiles *trt__GetProfiles, _trt__
   auto& response = trt__GetProfilesResponse;
   auto context = (Context *)this->soap->user;
 
-  for (auto profile : context->profiles)
+  for (Profile *profile : context->profiles)
     response.Profiles.push_back(to_gsoap(this->soap, profile));
 
 

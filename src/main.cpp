@@ -24,6 +24,7 @@ int services_routine()
   PTZBindingService ptz_service(soap);
 
   soap->user = (void*)&context;
+  soap->bind_flags |= SO_REUSEADDR;
 
   if (!soap_valid_socket(soap_bind(soap, NULL, context.ws_context->port, 100)))
   {

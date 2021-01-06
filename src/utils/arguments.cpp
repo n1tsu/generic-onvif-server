@@ -16,18 +16,19 @@ void usage()
   std::cout <<
     "Usage: " << STR(BIN_NAME) << " [options]" << std::endl <<
     "Options:" << std::endl <<
-    "  -h | --help           Print this help." << std::endl <<
-    "  --interface  <name>   The network interface to be used." << std::endl <<
-    "  --scope      <scope>  ONVIF Scope to be added." << std::endl <<
-    "  --stream_url <url>    URL to be used for the RTSP server." << std::endl <<
-    "  --port       <port>   Port to be used to serve ONVIF server." << std::endl <<
-    "  --xaddr      <addr>   Address used by client to reach ONVIF server." << std::endl <<
-    "  --profile    <name>   Name of the main profile." << std::endl <<
-    "  --encoder    <name>   GStreamer encoder name to be used by RTSP server." << std::endl <<
-    "  --framerate  <num>    Framerate to be used by the camera." << std::endl <<
-    "  --width      <num>    Width to be used by the camera." << std::endl <<
-    "  --height     <num>    Height to be used by the camera." << std::endl <<
-    "  --cameralib  <path>   Camera library path." << std::endl;
+    "  -h | --help                  Print this help." << std::endl <<
+    "  --interface       <name>     The network interface to be used." << std::endl <<
+    "  --scope           <scope>    ONVIF Scope to be added." << std::endl <<
+    "  --stream_endpoint <endpoint> URL endpoint to be used for the RTSP stream." << std::endl <<
+    "  --stream_port     <port>     Port to be used to serve the RTSP server." << std::endl <<
+    "  --port            <port>     Port to be used to serve ONVIF server." << std::endl <<
+    "  --xaddr           <addr>     Address used by client to reach ONVIF server." << std::endl <<
+    "  --profile         <name>     Name of the main profile." << std::endl <<
+    "  --encoder         <name>     GStreamer encoder name to be used by RTSP server." << std::endl <<
+    "  --framerate       <num>      Framerate to be used by the camera." << std::endl <<
+    "  --width           <num>      Width to be used by the camera." << std::endl <<
+    "  --height          <num>      Height to be used by the camera." << std::endl <<
+    "  --cameralib       <path>     Camera library path." << std::endl;
 }
 
 
@@ -36,18 +37,19 @@ static const char *short_opts = "h";
 
 static const struct option long_opts[] =
 {
-    { "help",         no_argument,       NULL, LongOpts::help          },
-    { "interface",    required_argument, NULL, LongOpts::interface     },
-    { "scope",        required_argument, NULL, LongOpts::scope         },
-    { "stream_url",   required_argument, NULL, LongOpts::stream_url    },
-    { "port",         required_argument, NULL, LongOpts::port          },
-    { "xaddr",        required_argument, NULL, LongOpts::xaddr         },
-    { "encoder",      required_argument, NULL, LongOpts::encoder       },
-    { "framerate",    required_argument, NULL, LongOpts::framerate     },
-    { "width",        required_argument, NULL, LongOpts::width         },
-    { "height",       required_argument, NULL, LongOpts::height        },
-    { "cameralib",    required_argument, NULL, LongOpts::camera_lib    },
-    { NULL,           no_argument,       NULL,  0                      }
+    { "help",            no_argument,       NULL, LongOpts::help            },
+    { "interface",       required_argument, NULL, LongOpts::interface       },
+    { "scope",           required_argument, NULL, LongOpts::scope           },
+    { "stream_endpoint", required_argument, NULL, LongOpts::stream_endpoint },
+    { "stream_port",     required_argument, NULL, LongOpts::stream_port     },
+    { "port",            required_argument, NULL, LongOpts::port            },
+    { "xaddr",           required_argument, NULL, LongOpts::xaddr           },
+    { "encoder",         required_argument, NULL, LongOpts::encoder         },
+    { "framerate",       required_argument, NULL, LongOpts::framerate       },
+    { "width",           required_argument, NULL, LongOpts::width           },
+    { "height",          required_argument, NULL, LongOpts::height          },
+    { "cameralib",       required_argument, NULL, LongOpts::camera_lib      },
+    { NULL,              no_argument,       NULL,  0                        }
 };
 
 
@@ -72,8 +74,12 @@ void processing_cmd(int argc, char *argv[])
       context.ws_context->scopes.push_back(optarg);
       break;
 
-    case LongOpts::stream_url:
-      context.rtsp_context->stream_url = optarg;
+    case LongOpts::stream_endpoint:
+      context.rtsp_context->stream_endpoint = optarg;
+      break;
+
+    case LongOpts::stream_port:
+      context.rtsp_context->stream_port = std::stoi(optarg);
       break;
 
     case LongOpts::port:
@@ -257,7 +263,8 @@ WSContext::WSContext():
 {}
 
 RTSPContext::RTSPContext():
-  stream_url("rtsp://127.0.0.1:8080/cam"),
+  stream_endpoint("cam"),
+  stream_port(8554),
   encoder("vaapih264enc"),
   camera_lib("camera/libdummycam.so"),
   framerate(30),
@@ -317,7 +324,8 @@ void RTSPContext::print()
 {
    std::cout <<
      std::endl << " - RTSP server -" << std::endl <<
-     " - streamurl : " << stream_url << std::endl <<
+     " - endpoint  : " << stream_endpoint << std::endl <<
+     " - port      : " << stream_port << std::endl <<
      " - encoder   : " << encoder << std::endl <<
      " - cameralib : " << camera_lib << std::endl <<
      " - framerate : " << framerate << std::endl <<

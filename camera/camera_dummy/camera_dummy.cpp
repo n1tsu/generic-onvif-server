@@ -1,6 +1,6 @@
 #include "camera_dummy.h"
 #include <iostream>
-
+#include <fstream>
 
 extern "C" CameraGeneric* create_object()
 {
@@ -62,10 +62,34 @@ struct CameraInformation CameraDummy::get_camera_information()
 struct Image CameraDummy::get_current_image()
 {
   std::cout << "- Get current image" << std::endl;
+
   struct Image image = {
     0,
     NULL,
   };
+
+
+  std::ifstream file("image1.jpeg", std::ios::binary | std::ios::ate);
+  if (file.fail())
+  {
+    std::cout << "! Failed opening JPEG." << std::endl;
+    return image;
+  }
+  file.seekg(0, std::ios::end);
+  int size = file.tellg();
+  file.seekg(0, std::ios::beg);
+  char *buffer = (char *)malloc(size);
+
+  if (file.read(buffer, size))
+  {
+    image.size = size;
+    image.data = buffer;
+
+    return image;
+  }
+
+  free(buffer);
+  std::cout << "! Failed reading JPEG." << std::endl;
 
   return image;
 }

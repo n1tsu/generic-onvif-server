@@ -21,6 +21,7 @@ const char* get_rand_endpoint(struct soap *soap_srv)
 void discovery_routine()
 {
     struct soap *soap_discover = soap_new1(SOAP_IO_UDP);
+    soap_discover->bind_flags |= SO_REUSEADDR;
 
     // Setup multicast socket
     in_addr_t addr                     = inet_addr("239.255.255.250");

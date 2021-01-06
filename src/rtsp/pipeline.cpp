@@ -25,6 +25,7 @@ static void need_data(GstElement *appsrc, guint unused, PipelineContainer *data)
   // Insert image data here
   Image image_data = context.rtsp_context->camera->get_current_image();
   uint32_t size = image_data.size;
+  g_printerr("! %d !\n", size);
   // ------------------
 
   // Create a buffer and allocate it
@@ -78,7 +79,7 @@ static void media_configure(GstRTSPMediaFactory *factory, GstRTSPMedia *media)
 
 
   /* install the callback that will be called when a buffer is needed */
-  g_signal_connect(app_source, "need-data", G_CALLBACK (need_data), NULL);
+  g_signal_connect(app_source, "need-data", G_CALLBACK (need_data), data);
   gst_object_unref(app_source);
   gst_object_unref(element);
 }
@@ -96,6 +97,9 @@ int start_pipeline(int argc, char *argv[]) {
 
   /* create a server instance */
   server = gst_rtsp_server_new();
+  // gst_rtsp_server_set_address
+  gst_rtsp_server_set_service(server, std::to_string(context.rtsp_context->stream_port).c_str());
+
 
   /* get the mount points for this server, every server has a default object
    * that be used to map uri mount points to media factories */
@@ -124,10 +128,8 @@ int start_pipeline(int argc, char *argv[]) {
   g_timeout_add_seconds(3, check_status, (void*)main_loop);
 
   /* attach the test factory to the url */
-  std::size_t found = context.rtsp_context->stream_url.find_last_of("/");
-  std::string endpoint = context.rtsp_context->stream_url.substr(found);
 
-  gst_rtsp_mount_points_add_factory(mounts, endpoint.c_str(), factory);
+  gst_rtsp_mount_points_add_factory(mounts, ("/" + context.rtsp_context->stream_endpoint).c_str(), factory);
 
   /* don't need the ref to the mounts anymore */
   g_object_unref(mounts);
@@ -136,7 +138,10 @@ int start_pipeline(int argc, char *argv[]) {
   gst_rtsp_server_attach(server, NULL);
 
   /* start serving */
-  g_print ("stream ready at %s\n", context.rtsp_context->stream_url.c_str());
+  g_print ("stream ready at rtsp://127.0.0.1:%d/%s\n",
+           context.rtsp_context->stream_port,
+           context.rtsp_context->stream_endpoint.c_str());
+
   g_main_loop_run (main_loop);
 
   g_printerr("! GStreamer left loop !\n");
