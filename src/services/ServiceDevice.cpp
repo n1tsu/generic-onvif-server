@@ -67,11 +67,13 @@ int DeviceBindingService::GetDeviceInformation(_tds__GetDeviceInformation *tds__
 {
   DEBUG_FUNCTION();
 
+  Context *context = (Context *)this->soap->user;
+
   auto& response = tds__GetDeviceInformationResponse;
-  response.Model = "MoDeL";
-  response.FirmwareVersion = "0.1";
-  response.SerialNumber = "AYAB";
-  response.HardwareId = "AYAB";
+  response.Model = context->model;
+  response.FirmwareVersion = context->firmware_version;
+  response.SerialNumber = context->serial_number;
+  response.HardwareId = context->hardware_id;
 
   return SOAP_OK;
 }
@@ -324,9 +326,12 @@ int DeviceBindingService::GetCapabilities(_tds__GetCapabilities *tds__GetCapabil
     response.Capabilities->Media = soap_new_tt__MediaCapabilities(soap);
     response.Capabilities->Media->XAddr = context->ws_context->get_xaddr();
     response.Capabilities->Media->StreamingCapabilities = soap_new_tt__RealTimeStreamingCapabilities(soap);
-    //response.Capabilities->Media->StreamingCapabilities->RTPMulticast = soap_new_bool(soap, false);
-    //response.Capabilities->Media->StreamingCapabilities->RTP_USCORETCP = soap_new_bool(soap, false);
-    //response.Capabilities->Media->StreamingCapabilities->RTP_USCORERTSP_USCORETCP = soap_new_bool(soap, true);
+    response.Capabilities->Media->StreamingCapabilities->RTPMulticast = soap_new_bool(soap);
+    *response.Capabilities->Media->StreamingCapabilities->RTPMulticast = false;
+    response.Capabilities->Media->StreamingCapabilities->RTP_USCORETCP = soap_new_bool(soap);
+    *response.Capabilities->Media->StreamingCapabilities->RTP_USCORETCP = false;
+    response.Capabilities->Media->StreamingCapabilities->RTP_USCORERTSP_USCORETCP = soap_new_bool(soap);
+    *response.Capabilities->Media->StreamingCapabilities->RTP_USCORERTSP_USCORETCP = true;
   }
   if ((ptz_found != end) || (all_found != end))
   {

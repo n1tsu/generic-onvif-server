@@ -21,6 +21,7 @@ class PTZNode
 {
 public:
   PTZNode(std::string name, std::string token);
+  ~PTZNode();
 
   std::string get_name() { return name; }
   std::string get_token() { return token; }

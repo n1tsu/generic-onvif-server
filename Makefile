@@ -118,9 +118,10 @@ $(GENERATED_DIR)/wsddClient.cpp: $(GSOAP_IMPORT_DIR)/wsdd.h
 
 clean:
 	@rm -f $(OBJS)
+	@rm -f $(TARGET)
 
-deep-clean:
+deep-clean: clean
 	@rm -rf $(GENERATED_DIR)
-	@rm -f $(OBJS)
+	@rm *.log
 
 .PHONY: all clean deep-clean gsoap_target $(TARGET) debug

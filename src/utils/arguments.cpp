@@ -124,6 +124,11 @@ Context::Context()
 {
   rtsp_context = new RTSPContext();
   ws_context = new WSContext();
+
+  model = "Cara Delevingne";
+  firmware_version = "69";
+  serial_number = "42";
+  hardware_id = "1234567890";
 }
 
 Context::~Context()
@@ -132,6 +137,8 @@ Context::~Context()
   delete ws_context;
   for (auto profile : profiles)
     delete profile;
+  for (auto node : nodes)
+    delete node;
 }
 
 void Context::parse_profiles()
@@ -168,7 +175,7 @@ void Context::parse_nodes()
   // Temporary, since we aim to have nodes described inside a file and
   // created by parsing it.
 
-  auto main_node = new PTZNode("Main", "main");
+  auto main_node = new PTZNode("Main", "main_node");
   main_node->fixed_home = true;
   main_node->geo_move = false;
   main_node->max_presets = 10;
@@ -232,7 +239,7 @@ void Context::parse_configurations()
   ptz_configuration->ranges.tilt_max =  180.0f;
   ptz_configuration->ranges.zoom_min =  0.0f;
   ptz_configuration->ranges.zoom_max =  1.0f;
-  ptz_configuration->node_token = "main_token";
+  ptz_configuration->node_token = "main_node";
 
   video_confs.push_back(video_configuration);
   encoder_confs.push_back(encoder_configuration);

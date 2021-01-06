@@ -90,6 +90,11 @@ public:
   // Web services
   WSContext *ws_context;
 
+  std::string model;
+  std::string firmware_version;
+  std::string serial_number;
+  std::string hardware_id;
+
   std::vector<Profile*> profiles;
   std::vector<PTZNode*> nodes;
   std::vector<std::shared_ptr<VideoConfiguration>> video_confs;
