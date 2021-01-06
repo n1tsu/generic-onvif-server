@@ -270,6 +270,25 @@ int PTZBindingService::SetHomePosition(_tptz__SetHomePosition *tptz__SetHomePosi
 int PTZBindingService::ContinuousMove(_tptz__ContinuousMove *tptz__ContinuousMove, _tptz__ContinuousMoveResponse &tptz__ContinuousMoveResponse)
 {
   DEBUG_FUNCTION();
+
+  Context *context = (Context *)this->soap->user;
+  auto request = tptz__ContinuousMove;
+
+  if (request->Velocity->Zoom->x > 0)
+    context->rtsp_context->camera->zoom_in();
+  else if (request->Velocity->Zoom->x < 0)
+    context->rtsp_context->camera->zoom_out();
+
+  if (request->Velocity->PanTilt->x > 0)
+    context->rtsp_context->camera->pan_right();
+  else if (request->Velocity->PanTilt->x < 0)
+    context->rtsp_context->camera->pan_left();
+
+  if (request->Velocity->PanTilt->y > 0)
+    context->rtsp_context->camera->tilt_up();
+  else if (request->Velocity->PanTilt->y < 0)
+    context->rtsp_context->camera->tilt_down();
+
   return SOAP_OK;
 }
 
@@ -277,6 +296,18 @@ int PTZBindingService::ContinuousMove(_tptz__ContinuousMove *tptz__ContinuousMov
 int PTZBindingService::RelativeMove(_tptz__RelativeMove *tptz__RelativeMove, _tptz__RelativeMoveResponse &tptz__RelativeMoveResponse)
 {
   DEBUG_FUNCTION();
+
+  Context *context = (Context *)this->soap->user;
+  auto request = tptz__RelativeMove;
+
+  auto zoom_pos = context->rtsp_context->camera->get_zoom_percent();
+  auto pan_pos = context->rtsp_context->camera->get_pan_degree();
+  auto tilt_pos = context->rtsp_context->camera->get_tilt_degree();
+
+  context->rtsp_context->camera->zoom_to(request->Translation->Zoom->x * 100 + zoom_pos);
+  context->rtsp_context->camera->zoom_to(request->Translation->PanTilt->x + pan_pos);
+  context->rtsp_context->camera->zoom_to(request->Translation->PanTilt->y + tilt_pos);
+
   return SOAP_OK;
 }
 
@@ -291,6 +322,14 @@ int PTZBindingService::SendAuxiliaryCommand(_tptz__SendAuxiliaryCommand *tptz__S
 int PTZBindingService::AbsoluteMove(_tptz__AbsoluteMove *tptz__AbsoluteMove, _tptz__AbsoluteMoveResponse &tptz__AbsoluteMoveResponse)
 {
   DEBUG_FUNCTION();
+
+  Context *context = (Context *)this->soap->user;
+  auto request = tptz__AbsoluteMove;
+
+  context->rtsp_context->camera->zoom_to(100 * request->Position->Zoom->x);
+  context->rtsp_context->camera->pan_to(request->Position->PanTilt->x);
+  context->rtsp_context->camera->tilt_to(request->Position->PanTilt->y);
+
   return SOAP_OK;
 }
 
@@ -298,6 +337,13 @@ int PTZBindingService::AbsoluteMove(_tptz__AbsoluteMove *tptz__AbsoluteMove, _tp
 int PTZBindingService::Stop(_tptz__Stop *tptz__Stop, _tptz__StopResponse &tptz__StopResponse)
 {
   DEBUG_FUNCTION();
+
+  Context *context = (Context *)this->soap->user;
+
+  context->rtsp_context->camera->zoom_stop();
+  context->rtsp_context->camera->pan_stop();
+  context->rtsp_context->camera->tilt_stop();
+
   return SOAP_OK;
 }
 
