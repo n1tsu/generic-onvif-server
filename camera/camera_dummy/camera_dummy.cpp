@@ -62,8 +62,6 @@ struct CameraInformation CameraDummy::get_camera_information()
 
 struct Image CameraDummy::get_current_image()
 {
-  std::cout << "- Get current image" << std::endl;
-
   struct Image image = {
     0,
     NULL,

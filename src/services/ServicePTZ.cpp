@@ -274,20 +274,26 @@ int PTZBindingService::ContinuousMove(_tptz__ContinuousMove *tptz__ContinuousMov
   Context *context = (Context *)this->soap->user;
   auto request = tptz__ContinuousMove;
 
-  if (request->Velocity->Zoom->x > 0)
-    context->rtsp_context->camera->zoom_in();
-  else if (request->Velocity->Zoom->x < 0)
-    context->rtsp_context->camera->zoom_out();
+  if (request->Velocity->Zoom)
+  {
+    if (request->Velocity->Zoom->x > 0)
+      context->rtsp_context->camera->zoom_in();
+    else if (request->Velocity->Zoom->x < 0)
+      context->rtsp_context->camera->zoom_out();
+  }
 
-  if (request->Velocity->PanTilt->x > 0)
-    context->rtsp_context->camera->pan_right();
-  else if (request->Velocity->PanTilt->x < 0)
-    context->rtsp_context->camera->pan_left();
+  if (request->Velocity->PanTilt)
+  {
+    if (request->Velocity->PanTilt->x > 0)
+      context->rtsp_context->camera->pan_right();
+    else if (request->Velocity->PanTilt->x < 0)
+      context->rtsp_context->camera->pan_left();
 
-  if (request->Velocity->PanTilt->y > 0)
-    context->rtsp_context->camera->tilt_up();
-  else if (request->Velocity->PanTilt->y < 0)
-    context->rtsp_context->camera->tilt_down();
+    if (request->Velocity->PanTilt->y > 0)
+      context->rtsp_context->camera->tilt_up();
+    else if (request->Velocity->PanTilt->y < 0)
+      context->rtsp_context->camera->tilt_down();
+  }
 
   return SOAP_OK;
 }
@@ -304,9 +310,13 @@ int PTZBindingService::RelativeMove(_tptz__RelativeMove *tptz__RelativeMove, _tp
   auto pan_pos = context->rtsp_context->camera->get_pan_degree();
   auto tilt_pos = context->rtsp_context->camera->get_tilt_degree();
 
-  context->rtsp_context->camera->zoom_to(request->Translation->Zoom->x * 100 + zoom_pos);
-  context->rtsp_context->camera->zoom_to(request->Translation->PanTilt->x + pan_pos);
-  context->rtsp_context->camera->zoom_to(request->Translation->PanTilt->y + tilt_pos);
+  if (request->Translation->Zoom)
+    context->rtsp_context->camera->zoom_to(request->Translation->Zoom->x * 100 + zoom_pos);
+  if (request->Translation->PanTilt)
+  {
+    context->rtsp_context->camera->zoom_to(request->Translation->PanTilt->x + pan_pos);
+    context->rtsp_context->camera->zoom_to(request->Translation->PanTilt->y + tilt_pos);
+  }
 
   return SOAP_OK;
 }
