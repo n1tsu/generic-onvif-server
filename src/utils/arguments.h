@@ -18,7 +18,6 @@ namespace LongOpts
     help    = 'h',
 
     // Web services
-    interface,
     scope,
     port,
     xaddr,
@@ -64,7 +63,6 @@ public:
   std::string get_xaddr();
   void print();
 
-  std::string interface;
   std::vector<std::string> scopes;
   int port;
   std::string xaddr;

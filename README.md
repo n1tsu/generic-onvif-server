@@ -41,7 +41,6 @@ $ make deep-clean  # also clean gSOAP generated files
 Usage: onvif-server [options]
 Options:
   -h | --help                  Print this help.
-  --interface       <name>     The network interface to be used.
   --scope           <scope>    ONVIF Scope to be added.
   --stream_endpoint <endpoint> URL endpoint to be used for the RTSP stream.
   --stream_port     <port>     Port to be used to serve the RTSP server.
@@ -55,8 +54,44 @@ Options:
   --cameralib       <path>     Camera library path.
 ```
 
+## Default
+
+```
+ - RTSP server -
+ - endpoint  : cam
+ - port      : 8554
+ - encoder   : vaapih264enc
+ - cameralib : camera/libdummycam.so
+ - framerate : 30
+ - width     : 1280
+ - height    : 720
+
+ - Web services -
+ - scopes    : 
+ - port      : 8080
+ - xaddr     : 127.0.0.1
+```
+
+Thus, running `./onvif-server` should create a RTSP server providing stream on local ip address at rtsp://ip:`8554`/`cam` using the GStreamer element encoder `vaapih264`, the camera library at path `camera/libdummycam.so` at framerate `30`, using `1280`x`720` resolution. ONVIF server client can access the server with `127.0.0.1` (xaddr parameter is temporary) on port `8080`. Thus, WS-Discovery server handle ONVIF client discovery requests and your device should appears automatically.  
+
+Consider giving scopes to the device with `--scope`, for example:
+
+* onvif://www.onvif.org/Profile/Streaming
+* onvif://www.onvif.org/hardware/RaspberryPI3
+* onvif://www.onvif.org/location/country/France
+* onvif://www.onvif.org/location/city/Paris
+* onvif://www.onvif.org/name/TestDevice
+
+
+## Configurations
+
+ONVIF protocol works with `Profiles` that contain `Configurations` for the different features (PTZ, Imaging, Media).  
+`Profiles` are also linked with PTZ presets positions.  
+Currently, default profile and configuration are hardcoded and modifications don't work or are dropped when reloading the program.  
+The goal is to load and save those configurations directly inside files.
 
 ## Camera
 
 Camera are loaded giving the path of a dynamic library implementing the `CameraGeneric` class interface with the argument `--cameralib`.  
 In the `camera` directory you can find `camera_generic.h` specifiying `CameraGeneric` class, an example Makefile and a `camera_dummy` folder containing a mocked camera as example.
+Just run `make` inside `camera` directory to generate a `libdummycam.so`.

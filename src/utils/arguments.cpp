@@ -17,7 +17,6 @@ void usage()
     "Usage: " << STR(BIN_NAME) << " [options]" << std::endl <<
     "Options:" << std::endl <<
     "  -h | --help                  Print this help." << std::endl <<
-    "  --interface       <name>     The network interface to be used." << std::endl <<
     "  --scope           <scope>    ONVIF Scope to be added." << std::endl <<
     "  --stream_endpoint <endpoint> URL endpoint to be used for the RTSP stream." << std::endl <<
     "  --stream_port     <port>     Port to be used to serve the RTSP server." << std::endl <<
@@ -38,7 +37,6 @@ static const char *short_opts = "h";
 static const struct option long_opts[] =
 {
     { "help",            no_argument,       NULL, LongOpts::help            },
-    { "interface",       required_argument, NULL, LongOpts::interface       },
     { "scope",           required_argument, NULL, LongOpts::scope           },
     { "stream_endpoint", required_argument, NULL, LongOpts::stream_endpoint },
     { "stream_port",     required_argument, NULL, LongOpts::stream_port     },
@@ -64,10 +62,6 @@ void processing_cmd(int argc, char *argv[])
     case LongOpts::help:
       usage();
       exit(0);
-      break;
-
-    case LongOpts::interface:
-      context.ws_context->interface = optarg;
       break;
 
     case LongOpts::scope:
@@ -254,9 +248,8 @@ void Context::parse_configurations()
 
 
 WSContext::WSContext():
-  interface("wlan0"),
   port(8080),
-  xaddr("192.168.1.90"),
+  xaddr("127.0.0.1"),
   endpoint(""),
   user("admin"),
   password("password")
@@ -313,7 +306,6 @@ void WSContext::print()
 {
   std::cout <<
     std::endl << " - Web services -" << std::endl <<
-    " - interface : " << interface << std::endl <<
     " - scopes    : " << get_scopes().c_str() << std::endl <<
     " - port      : " << port << std::endl <<
     " - xaddr     : " << xaddr << std::endl <<
