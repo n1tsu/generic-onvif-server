@@ -21,6 +21,18 @@ public:
   bool zoom_out() override;
   bool zoom_stop() override;
 
+  int16_t get_pan_degree() override;
+  bool pan_to(int16_t degree) override;
+  bool pan_left() override;
+  bool pan_right() override;
+  bool pan_stop() override;
+
+  int16_t get_tilt_degree() override;
+  bool tilt_to(int16_t degree) override;
+  bool tilt_up() override;
+  bool tilt_down() override;
+  bool tilt_stop() override;
+
   enum Mode get_focus_mode() override;
   enum Mode get_white_balance_mode() override;
   uint16_t get_color_temperature() override;
@@ -33,4 +45,7 @@ public:
 
 private:
   int frame_count = 0;
+  uint8_t zoom_percent = 0;
+  int16_t pan_degree = 0;
+  int16_t tilt_degree = 0;
 };

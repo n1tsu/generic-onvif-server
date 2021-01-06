@@ -122,6 +122,29 @@ int PTZBindingService::RemovePreset(_tptz__RemovePreset *tptz__RemovePreset, _tp
 int PTZBindingService::GotoPreset(_tptz__GotoPreset *tptz__GotoPreset, _tptz__GotoPresetResponse &tptz__GotoPresetResponse)
 {
   DEBUG_FUNCTION();
+
+  Context *context = (Context *)this->soap->user;
+  auto request = tptz__GotoPreset;
+
+  for (Profile *profile : context->profiles)
+  {
+    if (profile->get_token().compare(request->ProfileToken) == 0)
+    {
+      for (PTZPreset *preset : profile->presets)
+      {
+        if (preset->get_token().compare(request->PresetToken) == 0)
+        {
+          context->rtsp_context->camera->zoom_to(preset->position.zoom_pos);
+          context->rtsp_context->camera->tilt_to(preset->position.tilt_pos);
+          context->rtsp_context->camera->pan_to(preset->position.pan_pos);
+
+          return SOAP_OK;
+        }
+      }
+      return SOAP_OK;
+    }
+  }
+
   return SOAP_OK;
 }
 

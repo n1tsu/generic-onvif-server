@@ -50,6 +50,18 @@ public:
   virtual bool zoom_out() = 0;
   virtual bool zoom_stop() = 0;
 
+  virtual int16_t get_pan_degree() = 0;
+  virtual bool pan_to(int16_t degree) = 0;
+  virtual bool pan_left() = 0;
+  virtual bool pan_right() = 0;
+  virtual bool pan_stop() = 0;
+
+  virtual int16_t get_tilt_degree() = 0;
+  virtual bool tilt_to(int16_t degree) = 0;
+  virtual bool tilt_up() = 0;
+  virtual bool tilt_down() = 0;
+  virtual bool tilt_stop() = 0;
+
   virtual enum Mode get_focus_mode() = 0;
   virtual enum Mode get_white_balance_mode() = 0;
   virtual uint16_t get_color_temperature() = 0;

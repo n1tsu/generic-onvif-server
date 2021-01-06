@@ -70,7 +70,7 @@ struct Image CameraDummy::get_current_image()
   };
 
   std::ostringstream stream_format;
-  stream_format << "camera/image" << frame_count % 11 << ".jpeg";
+  stream_format << "camera/jpeg/image" << frame_count % 11 << ".jpeg";
   std::string image_name = stream_format.str();
   std::ifstream file(image_name, std::ios::binary | std::ios::ate);
   if (file.fail())
@@ -98,10 +98,15 @@ struct Image CameraDummy::get_current_image()
   return image;
 }
 
+
+//////////
+// ZOOM //
+//////////
+
 uint8_t CameraDummy::get_zoom_percent()
 {
-  std::cout << "- Get zoom percent" << std::endl;
-  return 0;
+  std::cout << "- Get zoom percent: " << zoom_percent << std::endl;
+  return zoom_percent;
 }
 
 bool CameraDummy::zoom_to(uint8_t percent)
@@ -125,6 +130,78 @@ bool CameraDummy::zoom_out()
 bool CameraDummy::zoom_stop()
 {
   std::cout << "- Set zoom stop" << std::endl;
+  return false;
+}
+
+
+/////////
+// PAN //
+/////////
+
+int16_t CameraDummy::get_pan_degree()
+{
+  std::cout << "- Get pan degree: " << pan_degree << std::endl;
+  return pan_degree;
+}
+
+bool CameraDummy::pan_to(int16_t degree)
+{
+  std::cout << "- Set pan to " << degree << std::endl;
+  pan_degree = degree;
+  return false;
+}
+
+bool CameraDummy::pan_left()
+{
+  std::cout << "- Set pan left" << std::endl;
+  return false;
+}
+
+bool CameraDummy::pan_right()
+{
+  std::cout << "- Set pan right" << std::endl;
+  return false;
+}
+
+bool CameraDummy::pan_stop()
+{
+  std::cout << "- Set pan stop" << std::endl;
+  return false;
+}
+
+
+//////////
+// TILT //
+//////////
+
+int16_t CameraDummy::get_tilt_degree()
+{
+  std::cout << "- Get tilt degree: " << tilt_degree << std::endl;
+  return tilt_degree;
+}
+
+bool CameraDummy::tilt_to(int16_t degree)
+{
+  std::cout << "- Set tilt to " << degree << std::endl;
+  tilt_degree = degree;
+  return false;
+}
+
+bool CameraDummy::tilt_up()
+{
+  std::cout << "- Set tilt up" << std::endl;
+  return false;
+}
+
+bool CameraDummy::tilt_down()
+{
+  std::cout << "- Set tilt down" << std::endl;
+  return false;
+}
+
+bool CameraDummy::tilt_stop()
+{
+  std::cout << "- Set tilt stop" << std::endl;
   return false;
 }
 
