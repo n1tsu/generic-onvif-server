@@ -1,6 +1,6 @@
 CXX      ?= g++
 
-CXXFLAGS  = -std=c++11 -O2  -Wall  -pipe -DBIN_NAME=$(TARGET)
+CXXFLAGS  = -std=c++11 -Wall  -pipe -DBIN_NAME=$(TARGET)
 # for WS-Security
 CXXFLAGS += -DWITH_OPENSSL -lssl -lcrypto -lz -pthread
 # Includes

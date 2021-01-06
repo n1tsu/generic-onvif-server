@@ -5,6 +5,37 @@
 int MediaBindingService::GetServiceCapabilities(_trt__GetServiceCapabilities *trt__GetServiceCapabilities, _trt__GetServiceCapabilitiesResponse &trt__GetServiceCapabilitiesResponse)
 {
   DEBUG_FUNCTION();
+
+  auto& response = trt__GetServiceCapabilitiesResponse;
+
+  response.Capabilities = soap_new_trt__Capabilities(soap);
+  response.Capabilities->ProfileCapabilities = soap_new_trt__ProfileCapabilities(soap);
+  response.Capabilities->ProfileCapabilities->MaximumNumberOfProfiles = soap_new_int(soap);
+  *response.Capabilities->ProfileCapabilities->MaximumNumberOfProfiles = 10;
+
+  response.Capabilities->StreamingCapabilities = soap_new_trt__StreamingCapabilities (soap);
+  response.Capabilities->StreamingCapabilities->RTPMulticast = soap_new_bool(soap);
+  *response.Capabilities->StreamingCapabilities->RTPMulticast = false;
+  response.Capabilities->StreamingCapabilities->RTP_USCORETCP = soap_new_bool(soap);
+  *response.Capabilities->StreamingCapabilities->RTP_USCORETCP = false;
+  response.Capabilities->StreamingCapabilities->RTP_USCORERTSP_USCORETCP = soap_new_bool(soap);
+  *response.Capabilities->StreamingCapabilities->RTP_USCORERTSP_USCORETCP = true;
+  response.Capabilities->StreamingCapabilities->NonAggregateControl = soap_new_bool(soap);
+  *response.Capabilities->StreamingCapabilities->NonAggregateControl = false;
+  response.Capabilities->StreamingCapabilities->NoRTSPStreaming = soap_new_bool(soap);
+  *response.Capabilities->StreamingCapabilities->NoRTSPStreaming = false;
+
+  response.Capabilities->SnapshotUri = soap_new_bool(soap);
+  *response.Capabilities->SnapshotUri = false;
+  response.Capabilities->Rotation = soap_new_bool(soap);
+  *response.Capabilities->Rotation = false;
+  response.Capabilities->VideoSourceMode = soap_new_bool(soap);
+  *response.Capabilities->VideoSourceMode = false;
+  response.Capabilities->OSD = soap_new_bool(soap);
+  *response.Capabilities->OSD = false;
+  response.Capabilities->EXICompression = soap_new_bool(soap);
+  *response.Capabilities->EXICompression = false;
+
   return SOAP_OK;
 }
 

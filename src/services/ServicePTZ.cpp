@@ -27,7 +27,7 @@ int PTZBindingService::GetConfigurations(_tptz__GetConfigurations *tptz__GetConf
   Context *context = (Context *)this->soap->user;
   auto& response = tptz__GetConfigurationsResponse;
 
-  for (auto configuration : context->ptz_confs)
+  for (std::shared_ptr<PTZConfiguration> configuration : context->ptz_confs)
     response.PTZConfiguration.push_back(to_gsoap(soap, configuration));
 
   return SOAP_OK;
@@ -77,7 +77,7 @@ int PTZBindingService::GetConfiguration(_tptz__GetConfiguration *tptz__GetConfig
   auto request = tptz__GetConfiguration;
   auto& response = tptz__GetConfigurationResponse;
 
-  for (auto configuration : context->ptz_confs)
+  for (std::shared_ptr<PTZConfiguration> configuration : context->ptz_confs)
   {
     if (request->PTZConfigurationToken.compare(configuration->get_token()) == 0)
       response.PTZConfiguration = to_gsoap(soap, configuration);
@@ -94,7 +94,7 @@ int PTZBindingService::GetNodes(_tptz__GetNodes *tptz__GetNodes, _tptz__GetNodes
   Context *context = (Context *)this->soap->user;
   auto& response = tptz__GetNodesResponse;
 
-  for (auto node : context->nodes)
+  for (PTZNode *node : context->nodes)
     response.PTZNode.push_back(to_gsoap(soap, node));
 
   return SOAP_OK;
@@ -109,7 +109,7 @@ int PTZBindingService::GetNode(_tptz__GetNode *tptz__GetNode, _tptz__GetNodeResp
   auto request = tptz__GetNode;
   auto& response = tptz__GetNodeResponse;
 
-  for (auto node : context->nodes)
+  for (PTZNode *node : context->nodes)
   {
     if (request->NodeToken.compare(node->get_token()) == 0)
       response.PTZNode = to_gsoap(soap, node);
