@@ -125,7 +125,6 @@ int MediaBindingService::AddVideoEncoderConfiguration(_trt__AddVideoEncoderConfi
   DEBUG_FUNCTION();
 
   auto request = trt__AddVideoEncoderConfiguration;
-
   Context *context = (Context*)this->soap->user;
 
   Profile *t_profile = NULL;
@@ -156,7 +155,6 @@ int MediaBindingService::AddVideoSourceConfiguration(_trt__AddVideoSourceConfigu
   DEBUG_FUNCTION();
 
   auto request = trt__AddVideoSourceConfiguration;
-
   Context *context = (Context*)this->soap->user;
 
   Profile *t_profile = NULL;
@@ -201,7 +199,6 @@ int MediaBindingService::AddPTZConfiguration(_trt__AddPTZConfiguration *trt__Add
   DEBUG_FUNCTION();
 
   auto request = trt__AddPTZConfiguration;
-
   Context *context = (Context*)this->soap->user;
 
   Profile *t_profile = NULL;
@@ -260,7 +257,6 @@ int MediaBindingService::RemoveVideoEncoderConfiguration(_trt__RemoveVideoEncode
   DEBUG_FUNCTION();
 
   auto request = trt__RemoveVideoEncoderConfiguration;
-
   Context *context = (Context *)this->soap->user;
 
   for (Profile *profile : context->profiles)
@@ -281,7 +277,6 @@ int MediaBindingService::RemoveVideoSourceConfiguration(_trt__RemoveVideoSourceC
   DEBUG_FUNCTION();
 
   auto request = trt__RemoveVideoSourceConfiguration;
-
   Context *context = (Context *)this->soap->user;
 
   for (Profile *profile : context->profiles)
@@ -316,7 +311,6 @@ int MediaBindingService::RemovePTZConfiguration(_trt__RemovePTZConfiguration *tr
   DEBUG_FUNCTION();
 
   auto request = trt__RemovePTZConfiguration;
-
   Context *context = (Context *)this->soap->user;
 
   for (Profile *profile : context->profiles)
@@ -365,7 +359,6 @@ int MediaBindingService::DeleteProfile(_trt__DeleteProfile *trt__DeleteProfile, 
   DEBUG_FUNCTION();
 
   auto request = trt__DeleteProfile;
-
   Context *context = (Context *)this->soap->user;
 
   context->profiles.erase(std::remove_if(context->profiles.begin(),
@@ -383,6 +376,13 @@ int MediaBindingService::DeleteProfile(_trt__DeleteProfile *trt__DeleteProfile, 
 int MediaBindingService::GetVideoSourceConfigurations(_trt__GetVideoSourceConfigurations *trt__GetVideoSourceConfigurations, _trt__GetVideoSourceConfigurationsResponse &trt__GetVideoSourceConfigurationsResponse)
 {
   DEBUG_FUNCTION();
+
+  auto& response = trt__GetVideoSourceConfigurationsResponse;
+  Context *context = (Context *)this->soap->user;
+
+  for (std::shared_ptr<VideoConfiguration> config : context->video_confs)
+    response.Configurations.push_back(to_gsoap(soap, config));
+
   return SOAP_OK;
 }
 
@@ -390,6 +390,13 @@ int MediaBindingService::GetVideoSourceConfigurations(_trt__GetVideoSourceConfig
 int MediaBindingService::GetVideoEncoderConfigurations(_trt__GetVideoEncoderConfigurations *trt__GetVideoEncoderConfigurations, _trt__GetVideoEncoderConfigurationsResponse &trt__GetVideoEncoderConfigurationsResponse)
 {
   DEBUG_FUNCTION();
+
+  auto& response = trt__GetVideoEncoderConfigurationsResponse;
+  Context *context = (Context *)this->soap->user;
+
+  for (std::shared_ptr<EncoderConfiguration> config : context->encoder_confs)
+    response.Configurations.push_back(to_gsoap(soap, config));
+
   return SOAP_OK;
 }
 
@@ -439,6 +446,20 @@ int MediaBindingService::GetAudioDecoderConfigurations(_trt__GetAudioDecoderConf
 int MediaBindingService::GetVideoSourceConfiguration(_trt__GetVideoSourceConfiguration *trt__GetVideoSourceConfiguration, _trt__GetVideoSourceConfigurationResponse &trt__GetVideoSourceConfigurationResponse)
 {
   DEBUG_FUNCTION();
+
+  auto request = trt__GetVideoSourceConfiguration;
+  auto& response = trt__GetVideoSourceConfigurationResponse;
+  Context *context = (Context *)this->soap->user;
+
+  for (std::shared_ptr<VideoConfiguration> config : context->video_confs)
+  {
+    if (config->get_token().compare(request->ConfigurationToken) == 0)
+    {
+      response.Configuration = to_gsoap(soap, config);
+      return SOAP_OK;
+    }
+  }
+
   return SOAP_OK;
 }
 
@@ -446,6 +467,20 @@ int MediaBindingService::GetVideoSourceConfiguration(_trt__GetVideoSourceConfigu
 int MediaBindingService::GetVideoEncoderConfiguration(_trt__GetVideoEncoderConfiguration *trt__GetVideoEncoderConfiguration, _trt__GetVideoEncoderConfigurationResponse &trt__GetVideoEncoderConfigurationResponse)
 {
   DEBUG_FUNCTION();
+
+  auto request = trt__GetVideoEncoderConfiguration;
+  auto& response = trt__GetVideoEncoderConfigurationResponse;
+  Context *context = (Context *)this->soap->user;
+
+  for (std::shared_ptr<EncoderConfiguration> config : context->encoder_confs)
+  {
+    if (config->get_token().compare(request->ConfigurationToken) == 0)
+    {
+      response.Configuration = to_gsoap(soap, config);
+      return SOAP_OK;
+    }
+  }
+
   return SOAP_OK;
 }
 
