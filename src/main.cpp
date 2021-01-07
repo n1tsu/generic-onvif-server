@@ -115,12 +115,13 @@ int main(int argc, char *argv[])
 {
   // Retrieve arguments
   processing_cmd(argc, argv);
-  context.print();
 
   // Parsing to retrieve information
   ConfigParser parser(&context);
   if (!parser.parse_configurations())
     return 1;
+
+  context.print();
 
   // Load camera library
   if (load_camera_library(context.rtsp_context->camera_lib.c_str()))

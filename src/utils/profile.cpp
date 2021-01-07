@@ -26,8 +26,11 @@ void Profile::print()
     "Profile: " << name << std::endl <<
     " - Fixed: " << fixed << std::endl <<
     " - Token: " << token << std::endl;
-  video_configuration->print();
-  encoder_configuration->print();
-  ptz_configuration->print();
+  if (video_configuration)
+    video_configuration->print();
+  if (encoder_configuration)
+    encoder_configuration->print();
+  if (ptz_configuration)
+    ptz_configuration->print();
   std::cout << std::endl;
 }

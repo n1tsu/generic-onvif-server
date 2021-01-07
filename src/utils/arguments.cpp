@@ -195,12 +195,32 @@ void Context::print()
   std::cout << "Context: " << std::endl;
   rtsp_context->print();
   ws_context->print();
+
+  std::cout << std::endl << " * Profiles *" << std::endl;
+  for (Profile *profile : profiles)
+    profile->print();
+
+  std::cout << std::endl << " * Nodes *" << std::endl;
+  for (PTZNode *node : nodes)
+    node->print();
+
+  std::cout << std::endl << " * Video configurations *" << std::endl;
+  for (auto video_conf : video_confs)
+    video_conf->print();
+
+  std::cout << std::endl << " * Encoder configurations *" << std::endl;
+  for (auto encoder_conf : encoder_confs)
+    encoder_conf->print();
+
+  std::cout << std::endl << " * PTZ configurations *" << std::endl;
+  for (auto ptz_conf : ptz_confs)
+    ptz_conf->print();
 }
 
 void WSContext::print()
 {
   std::cout <<
-    std::endl << " - Web services -" << std::endl <<
+    std::endl << " * Web services *" << std::endl << std::endl <<
     " - scopes    : " << get_scopes().c_str() << std::endl <<
     " - port      : " << port << std::endl <<
     " - xaddr     : " << xaddr << std::endl <<
@@ -210,7 +230,7 @@ void WSContext::print()
 void RTSPContext::print()
 {
    std::cout <<
-     std::endl << " - RTSP server -" << std::endl <<
+     std::endl << " * RTSP server *" << std::endl << std::endl <<
      " - endpoint  : " << stream_endpoint << std::endl <<
      " - port      : " << stream_port << std::endl <<
      " - encoder   : " << encoder << std::endl <<

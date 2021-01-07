@@ -10,7 +10,7 @@ VideoConfiguration::VideoConfiguration(std::string name, std::string token)
 
 void VideoConfiguration::print()
 {
-  std::cout <<
+  std::cout << std::endl <<
     " - Video configuration: " << name << std::endl <<
     "   * Token: " << token << std::endl <<
     "   * x: " << x << std::endl <<
@@ -27,7 +27,7 @@ EncoderConfiguration::EncoderConfiguration(std::string name, std::string token)
 
 void EncoderConfiguration::print()
 {
-   std::cout <<
+   std::cout << std::endl <<
     " - Encoder configuration: " << name << std::endl <<
     "   * Token: " << token << std::endl <<
     "   * width: " << width << std::endl <<
@@ -44,7 +44,7 @@ PTZConfiguration::PTZConfiguration(std::string name, std::string token)
 
 void PTZConfiguration::print()
 {
-  std::cout <<
+  std::cout << std::endl <<
     " - PTZ configuration: " << name << std::endl <<
     "   * Token: " << token << std::endl;
 }

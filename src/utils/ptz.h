@@ -30,6 +30,8 @@ private:
 class PTZSpace
 {
 public:
+  void print();
+
   float pan_min;
   float pan_max;
 
@@ -47,6 +49,7 @@ public:
   PTZNode(std::string name, std::string token);
   ~PTZNode();
 
+  void print();
   std::string get_name() { return name; }
   std::string get_token() { return token; }
 
