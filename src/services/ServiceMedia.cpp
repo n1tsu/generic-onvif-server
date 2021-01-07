@@ -121,6 +121,30 @@ int MediaBindingService::GetProfiles(_trt__GetProfiles *trt__GetProfiles, _trt__
 int MediaBindingService::AddVideoEncoderConfiguration(_trt__AddVideoEncoderConfiguration *trt__AddVideoEncoderConfiguration, _trt__AddVideoEncoderConfigurationResponse &trt__AddVideoEncoderConfigurationResponse)
 {
   DEBUG_FUNCTION();
+
+  auto request = trt__AddVideoEncoderConfiguration;
+
+  Context *context = (Context*)this->soap->user;
+
+  Profile *t_profile = NULL;
+  for (Profile *profile : context->profiles)
+  {
+    if (profile->get_token().compare(request->ProfileToken) == 0)
+      t_profile = profile;
+  }
+
+  if (!t_profile)
+    return SOAP_OK;
+
+  for (std::shared_ptr<EncoderConfiguration> conf : context->encoder_confs)
+  {
+    if (conf->get_token().compare(request->ConfigurationToken) == 0)
+    {
+      t_profile->encoder_configuration = conf;
+      return SOAP_OK;
+    }
+  }
+
   return SOAP_OK;
 }
 
@@ -128,6 +152,30 @@ int MediaBindingService::AddVideoEncoderConfiguration(_trt__AddVideoEncoderConfi
 int MediaBindingService::AddVideoSourceConfiguration(_trt__AddVideoSourceConfiguration *trt__AddVideoSourceConfiguration, _trt__AddVideoSourceConfigurationResponse &trt__AddVideoSourceConfigurationResponse)
 {
   DEBUG_FUNCTION();
+
+  auto request = trt__AddVideoSourceConfiguration;
+
+  Context *context = (Context*)this->soap->user;
+
+  Profile *t_profile = NULL;
+  for (Profile *profile : context->profiles)
+  {
+    if (profile->get_token().compare(request->ProfileToken) == 0)
+      t_profile = profile;
+  }
+
+  if (!t_profile)
+    return SOAP_OK;
+
+  for (std::shared_ptr<VideoConfiguration> conf : context->video_confs)
+  {
+    if (conf->get_token().compare(request->ConfigurationToken) == 0)
+    {
+      t_profile->video_configuration = conf;
+      return SOAP_OK;
+    }
+  }
+
   return SOAP_OK;
 }
 
@@ -149,6 +197,30 @@ int MediaBindingService::AddAudioSourceConfiguration(_trt__AddAudioSourceConfigu
 int MediaBindingService::AddPTZConfiguration(_trt__AddPTZConfiguration *trt__AddPTZConfiguration, _trt__AddPTZConfigurationResponse &trt__AddPTZConfigurationResponse)
 {
   DEBUG_FUNCTION();
+
+  auto request = trt__AddPTZConfiguration;
+
+  Context *context = (Context*)this->soap->user;
+
+  Profile *t_profile = NULL;
+  for (Profile *profile : context->profiles)
+  {
+    if (profile->get_token().compare(request->ProfileToken) == 0)
+      t_profile = profile;
+  }
+
+  if (!t_profile)
+    return SOAP_OK;
+
+  for (std::shared_ptr<PTZConfiguration> conf : context->ptz_confs)
+  {
+    if (conf->get_token().compare(request->ConfigurationToken) == 0)
+    {
+      t_profile->ptz_configuration = conf;
+      return SOAP_OK;
+    }
+  }
+
   return SOAP_OK;
 }
 
