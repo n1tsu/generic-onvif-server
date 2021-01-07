@@ -118,7 +118,7 @@ int main(int argc, char *argv[])
 
   // Parsing to retrieve information
   ConfigParser parser(&context);
-  if (!parser.parse_configurations())
+  if (!parser.parse_configurations(context.configs_path))
     return 1;
 
   context.print();

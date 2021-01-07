@@ -30,6 +30,7 @@ namespace LongOpts
     framerate,
     width,
     height,
+    configs,
   };
 }
 
@@ -98,5 +99,6 @@ public:
   std::vector<std::shared_ptr<EncoderConfiguration>> encoder_confs;
   std::vector<std::shared_ptr<PTZConfiguration>> ptz_confs;
 
+  std::vector<std::string> configs_path;
   std::atomic<bool> stop;
 };

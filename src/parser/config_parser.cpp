@@ -369,6 +369,18 @@ bool ConfigParser::parse_node(PTZNode *node, std::ifstream& file)
       node->continuous_ranges.zoom_min = std::stof(tokens[1]);
     else if (!tokens[0].compare("con_zoom_max"))
       node->continuous_ranges.zoom_max = std::stof(tokens[1]);
+    else if (!tokens[0].compare("speed_pan_min"))
+      node->speed_ranges.pan_min = std::stof(tokens[1]);
+    else if (!tokens[0].compare("speed_pan_max"))
+      node->speed_ranges.pan_max = std::stof(tokens[1]);
+    else if (!tokens[0].compare("speed_tilt_min"))
+      node->speed_ranges.tilt_min = std::stof(tokens[1]);
+    else if (!tokens[0].compare("speed_tilt_max"))
+      node->speed_ranges.tilt_max = std::stof(tokens[1]);
+    else if (!tokens[0].compare("speed_zoom_min"))
+      node->speed_ranges.zoom_min = std::stof(tokens[1]);
+    else if (!tokens[0].compare("speed_zoom_max"))
+      node->speed_ranges.zoom_max = std::stof(tokens[1]);
     else
       return parse_error("Unknown encoder token '" + tokens[0] + "'.");
   }
@@ -377,14 +389,13 @@ bool ConfigParser::parse_node(PTZNode *node, std::ifstream& file)
 }
 
 
-bool ConfigParser::parse_configurations()
+bool ConfigParser::parse_configurations(std::vector<std::string> configs_path)
 {
-  if (!parse_file("configs/configurations.config"))
-    return false;
-  if (!parse_file("configs/nodes.config"))
-    return false;
-  if (!parse_file("configs/profiles.config"))
-    return false;
+  for (auto path : configs_path)
+  {
+    if (!parse_file(path))
+      return false;
+  }
 
   return true;
 }

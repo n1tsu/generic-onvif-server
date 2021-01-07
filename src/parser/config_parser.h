@@ -7,7 +7,7 @@ class ConfigParser
 public:
   ConfigParser(Context *context);
 
-  bool parse_configurations();
+  bool parse_configurations(std::vector<std::string> configs_path);
 
 private:
   // Will need a refactos since we repeat the more or less the same block of code

@@ -27,7 +27,8 @@ void usage()
     "  --framerate       <num>      Framerate to be used by the camera." << std::endl <<
     "  --width           <num>      Width to be used by the camera." << std::endl <<
     "  --height          <num>      Height to be used by the camera." << std::endl <<
-    "  --cameralib       <path>     Camera library path." << std::endl;
+    "  --cameralib       <path>     Camera library path." << std::endl <<
+    "  --configs         <path>     Configurations file path." << std::endl;
 }
 
 
@@ -47,6 +48,7 @@ static const struct option long_opts[] =
     { "width",           required_argument, NULL, LongOpts::width           },
     { "height",          required_argument, NULL, LongOpts::height          },
     { "cameralib",       required_argument, NULL, LongOpts::camera_lib      },
+    { "configs",         required_argument, NULL, LongOpts::configs         },
     { NULL,              no_argument,       NULL,  0                        }
 };
 
@@ -102,6 +104,10 @@ void processing_cmd(int argc, char *argv[])
 
     case LongOpts::height:
       context.rtsp_context->height = std::stoi(optarg);
+      break;
+
+    case LongOpts::configs:
+      context.configs_path.push_back(optarg);
       break;
 
 

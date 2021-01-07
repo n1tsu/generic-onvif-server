@@ -85,8 +85,27 @@ Consider giving scopes to the device with `--scope`, for example:
 
 ## Configurations
 
-ONVIF protocol works with `Profiles` that contain `Configurations` for the different features (PTZ, Imaging, Media).  
+ONVIF protocol works with `Profiles` that contain `Configurations` for the different features (PTZ, Video, Encoder).  
 `Profiles` are also linked with PTZ presets positions.  
+
+Examples configurations can be found in `configs` folder.  
+It must follow special formatting :
+
+```
+CATEGORY:Name:Token
+key=value
+key=value
+...
+
+CATEGORY:Name:Token
+key=value
+key=value
+...
+```
+
+You could theorically put all categories configurations inside a single file but configurations should be read before profiles since
+profiles contains configurations and need to find it.  
+Recommanded ways is to pass multiple config files : `./onvif --configs configs/configurations.config --configs configs/nodes.config --configs configs/profiles.config`
 
 ## Camera
 

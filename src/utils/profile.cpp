@@ -27,10 +27,10 @@ void Profile::print()
     " - Fixed: " << fixed << std::endl <<
     " - Token: " << token << std::endl;
   if (video_configuration)
-    video_configuration->print();
+    std::cout << " - Video configuration token: " << video_configuration->get_token() << std::endl;
   if (encoder_configuration)
-    encoder_configuration->print();
+    std::cout << " - Encoder configuration token: " << encoder_configuration->get_token() << std::endl;
   if (ptz_configuration)
-    ptz_configuration->print();
+    std::cout << " - PTZ configuration token: " << ptz_configuration->get_token() << std::endl;
   std::cout << std::endl;
 }
