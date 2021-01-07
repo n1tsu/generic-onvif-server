@@ -256,6 +256,20 @@ int MediaBindingService::AddAudioDecoderConfiguration(_trt__AddAudioDecoderConfi
 int MediaBindingService::RemoveVideoEncoderConfiguration(_trt__RemoveVideoEncoderConfiguration *trt__RemoveVideoEncoderConfiguration, _trt__RemoveVideoEncoderConfigurationResponse &trt__RemoveVideoEncoderConfigurationResponse)
 {
   DEBUG_FUNCTION();
+
+  auto request = trt__RemoveVideoEncoderConfiguration;
+
+  Context *context = (Context *)this->soap->user;
+
+  for (Profile *profile : context->profiles)
+  {
+    if (profile->get_token().compare(request->ProfileToken) == 0)
+    {
+      profile->encoder_configuration = NULL;
+      return SOAP_OK;
+    }
+  }
+
   return SOAP_OK;
 }
 
@@ -263,6 +277,20 @@ int MediaBindingService::RemoveVideoEncoderConfiguration(_trt__RemoveVideoEncode
 int MediaBindingService::RemoveVideoSourceConfiguration(_trt__RemoveVideoSourceConfiguration *trt__RemoveVideoSourceConfiguration, _trt__RemoveVideoSourceConfigurationResponse &trt__RemoveVideoSourceConfigurationResponse)
 {
   DEBUG_FUNCTION();
+
+  auto request = trt__RemoveVideoSourceConfiguration;
+
+  Context *context = (Context *)this->soap->user;
+
+  for (Profile *profile : context->profiles)
+  {
+    if (profile->get_token().compare(request->ProfileToken) == 0)
+    {
+      profile->video_configuration = NULL;
+      return SOAP_OK;
+    }
+  }
+
   return SOAP_OK;
 }
 
@@ -284,6 +312,20 @@ int MediaBindingService::RemoveAudioSourceConfiguration(_trt__RemoveAudioSourceC
 int MediaBindingService::RemovePTZConfiguration(_trt__RemovePTZConfiguration *trt__RemovePTZConfiguration, _trt__RemovePTZConfigurationResponse &trt__RemovePTZConfigurationResponse)
 {
   DEBUG_FUNCTION();
+
+  auto request = trt__RemovePTZConfiguration;
+
+  Context *context = (Context *)this->soap->user;
+
+  for (Profile *profile : context->profiles)
+  {
+    if (profile->get_token().compare(request->ProfileToken) == 0)
+    {
+      profile->ptz_configuration = NULL;
+      return SOAP_OK;
+    }
+  }
+
   return SOAP_OK;
 }
 
