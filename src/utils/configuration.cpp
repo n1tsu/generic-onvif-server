@@ -46,5 +46,18 @@ void PTZConfiguration::print()
 {
   std::cout << std::endl <<
     " - PTZ configuration: " << name << std::endl <<
-    "   * Token: " << token << std::endl;
+    "   * Token: " << token << std::endl <<
+    "   * Absolute pan tilt: " << absolute_pantilt << std::endl <<
+    "   * Absolute zoom: " << absolute_zoom << std::endl <<
+    "   * Relative pan tilt: " << relative_pantilt << std::endl <<
+    "   * Relative zoom: " << relative_zoom << std::endl <<
+    "   * Continuous pan tilt: " << continuous_pantilt << std::endl <<
+    "   * Continuous zoom: " << continuous_zoom << std::endl <<
+    "   * Default pan speed: " << pan_speed << std::endl <<
+    "   * Default tilt speed: " << tilt_speed << std::endl <<
+    "   * Default zoom speed: " << zoom_speed << std::endl <<
+    "   * Default pan ranges: [" << ranges.pan_min << ":" << ranges.pan_max << "]" << std::endl <<
+    "   * Default tilt ranges: [" << ranges.tilt_min << ":" << ranges.tilt_max << "]" << std::endl <<
+    "   * Default zoom ranges: [" << ranges.zoom_min << ":" << ranges.zoom_max << "]" << std::endl <<
+    "   * Node token: " << node_token << std::endl;
 }

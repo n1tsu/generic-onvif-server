@@ -111,14 +111,14 @@ tt__PTZNode *to_gsoap(soap *soap, PTZNode *node)
   pan_tilt_con->YRange = soap_new_tt__FloatRange(soap);
   pan_tilt_con->YRange->Min = node->continuous_ranges.tilt_min;
   pan_tilt_con->YRange->Max = node->continuous_ranges.tilt_max;
-  g_node->SupportedPTZSpaces->ContinuousPanTiltVelocitySpace.push_back(pan_tilt_rel);
+  g_node->SupportedPTZSpaces->ContinuousPanTiltVelocitySpace.push_back(pan_tilt_con);
 
   auto zoom_con = soap_new_tt__Space1DDescription(soap);
   zoom_con->URI = "http://www.onvif.org/ver10/tptz/ZoomSpaces/VelocityGenericSpace";
   zoom_con->XRange = soap_new_tt__FloatRange(soap);
   zoom_con->XRange->Min = node->continuous_ranges.zoom_min;
   zoom_con->XRange->Max = node->continuous_ranges.zoom_max;
-  g_node->SupportedPTZSpaces->ContinuousZoomVelocitySpace.push_back(zoom_rel);
+  g_node->SupportedPTZSpaces->ContinuousZoomVelocitySpace.push_back(zoom_con);
 
   // SPEED
   auto pan_tilt_speed = soap_new_tt__Space1DDescription(soap);
