@@ -112,3 +112,12 @@ Recommanded ways is to pass multiple config files : `./onvif --configs configs/c
 Camera are loaded giving the path of a dynamic library implementing the `CameraGeneric` class interface with the argument `--cameralib`.  
 In the `camera` directory you can find `camera_generic.h` specifiying `CameraGeneric` class, an example Makefile and a `camera_dummy` folder containing a mocked camera as example.
 Just run `make` inside `camera` directory to generate a `libdummycam.so`.
+
+## TODO
+
+- [x] Load configurations from files.
+- [ ] Save configurations into files before exiting.
+- [ ] Implement ONVIF System features.
+- [ ] Add HTTPS.
+- [ ] Make RTSP server more generic (only take JPEG frame currently).
+- [ ] Add dynamic modification on GStreamer pipeline. (adding OSD for example).

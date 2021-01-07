@@ -13,6 +13,7 @@
 #include "camera_generic.h"
 #include "pipeline.h"
 #include "config_parser.h"
+#include "utils.h"
 
 extern Context context;
 
@@ -110,9 +111,9 @@ bool load_camera_library(std::string name)
 }
 
 
-
 int main(int argc, char *argv[])
 {
+  register_handler();
   // Retrieve arguments
   processing_cmd(argc, argv);
 

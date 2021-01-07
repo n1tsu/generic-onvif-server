@@ -45,9 +45,10 @@ SRC  = $(SRC_DIR)/main.cpp                 \
        $(UTILS_DIR)/utils.cpp              \
        $(UTILS_DIR)/profile.cpp            \
        $(UTILS_DIR)/ptz.cpp                \
+       $(UTILS_DIR)/conversion.cpp         \
        $(UTILS_DIR)/configuration.cpp      \
        $(RTSP_DIR)/pipeline.cpp            \
-       $(PARSER_DIR)/config_parser.cpp            \
+       $(PARSER_DIR)/config_parser.cpp     \
 
 # gSOAP sources
 SRC += $(GSOAP_DIR)/stdsoap2.cpp            \
