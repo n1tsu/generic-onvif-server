@@ -12,6 +12,7 @@
 #include "arguments.h"
 #include "camera_generic.h"
 #include "pipeline.h"
+#include "config_parser.h"
 
 extern Context context;
 
@@ -117,9 +118,9 @@ int main(int argc, char *argv[])
   context.print();
 
   // Parsing to retrieve information
-  context.parse_configurations();
-  context.parse_nodes();
-  context.parse_profiles();
+  ConfigParser parser(&context);
+  if (!parser.parse_configurations())
+    return 1;
 
   // Load camera library
   if (load_camera_library(context.rtsp_context->camera_lib.c_str()))

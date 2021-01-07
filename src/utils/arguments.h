@@ -81,9 +81,6 @@ public:
   // Context(const Context &context);
 
   void print();
-  void parse_profiles();
-  void parse_nodes();
-  void parse_configurations();
 
   // RTSP
   RTSPContext *rtsp_context;

@@ -6,7 +6,7 @@ CXXFLAGS += -DWITH_OPENSSL -lssl -lcrypto -lz -pthread
 # Includes
 CXXFLAGS += -I$(GENERATED_DIR) -I$(GSOAP_IMPORT_DIR) -I$(GSOAP_DIR) \
             -I$(GSOAP_CUSTOM_DIR) -I$(GSOAP_PLUGIN_DIR) -I$(UTILS_DIR) \
-            -I$(DISCOVERY_DIR) -I$(RTSP_DIR) -I$(CAMERA_DIR)
+            -I$(DISCOVERY_DIR) -I$(RTSP_DIR) -I$(CAMERA_DIR) -I$(PARSER_DIR)
 # Libraries
 CXXFLAGS += -ldl                                                    \
             -lgstbase-1.0                                           \
@@ -21,6 +21,7 @@ SERVICE_DIR   = $(SRC_DIR)/services
 DISCOVERY_DIR = $(SRC_DIR)/discovery
 UTILS_DIR     = $(SRC_DIR)/utils
 RTSP_DIR      = $(SRC_DIR)/rtsp
+PARSER_DIR    = $(SRC_DIR)/parser
 CAMERA_DIR    = camera
 
 # gSOAP
@@ -46,6 +47,7 @@ SRC  = $(SRC_DIR)/main.cpp                 \
        $(UTILS_DIR)/ptz.cpp                \
        $(UTILS_DIR)/configuration.cpp      \
        $(RTSP_DIR)/pipeline.cpp            \
+       $(PARSER_DIR)/config_parser.cpp            \
 
 # gSOAP sources
 SRC += $(GSOAP_DIR)/stdsoap2.cpp            \
@@ -122,6 +124,6 @@ clean:
 
 deep-clean: clean
 	@rm -rf $(GENERATED_DIR)
-	@rm *.log
+	@rm -f *.log
 
 .PHONY: all clean deep-clean gsoap_target $(TARGET) debug

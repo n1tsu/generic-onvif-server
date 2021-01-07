@@ -87,8 +87,6 @@ Consider giving scopes to the device with `--scope`, for example:
 
 ONVIF protocol works with `Profiles` that contain `Configurations` for the different features (PTZ, Imaging, Media).  
 `Profiles` are also linked with PTZ presets positions.  
-Currently, default profile and configuration are hardcoded and modifications don't work or are dropped when reloading the program.  
-The goal is to load and save those configurations directly inside files.
 
 ## Camera
 
