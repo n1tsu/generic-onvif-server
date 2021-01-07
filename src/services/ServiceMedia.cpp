@@ -1,6 +1,8 @@
 #include "soapMediaBindingService.h"
 #include "macros.h"
 
+#include <algorithm>
+
 
 int MediaBindingService::GetServiceCapabilities(_trt__GetServiceCapabilities *trt__GetServiceCapabilities, _trt__GetServiceCapabilitiesResponse &trt__GetServiceCapabilitiesResponse)
 {
@@ -361,6 +363,19 @@ int MediaBindingService::RemoveAudioDecoderConfiguration(_trt__RemoveAudioDecode
 int MediaBindingService::DeleteProfile(_trt__DeleteProfile *trt__DeleteProfile, _trt__DeleteProfileResponse &trt__DeleteProfileResponse)
 {
   DEBUG_FUNCTION();
+
+  auto request = trt__DeleteProfile;
+
+  Context *context = (Context *)this->soap->user;
+
+  context->profiles.erase(std::remove_if(context->profiles.begin(),
+                          context->profiles.end(),
+                          [&](Profile *profile){
+                                           return (profile->get_token().compare(request->ProfileToken) == 0) &&
+                                             !profile->fixed;
+                                         }),
+                          context->profiles.end());
+
   return SOAP_OK;
 }
 
