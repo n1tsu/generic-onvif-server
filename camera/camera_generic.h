@@ -38,8 +38,8 @@ public:
   // FOCUS
   virtual bool set_focus_mode(enum Mode mode) { return false; }
   virtual enum Mode get_focus_mode() { return Mode::AUTO; }
-  virtual float get_focus() { return 0; }
-  virtual bool focus_to(float depth) { return false; }
+  virtual int get_focus() { return 0; }
+  virtual bool focus_to(int depth) { return false; }
   virtual bool focus_in() { return false; }
   virtual bool focus_out() { return false; }
 
@@ -52,8 +52,8 @@ public:
   // EXPOSURE
   virtual enum Mode get_exposure_mode() { return Mode::AUTO; }
   virtual bool set_exposure_mode(enum Mode mode) { return false; }
-  virtual float get_exposure() { return 0; }
-  virtual bool set_exposure(float time) { return false; }
+  virtual int get_exposure() { return 0; }
+  virtual bool set_exposure(int time) { return false; }
 
 protected:
   std::string name;

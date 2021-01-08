@@ -271,13 +271,13 @@ enum Mode CameraDummy::get_focus_mode()
   return focus_mode;
 }
 
-float CameraDummy::get_focus()
+int CameraDummy::get_focus()
 {
   std::cout << "- Get focus : " << depth_focus << std::endl;
   return focus_mode;
 }
 
-bool CameraDummy::focus_to(float depth)
+bool CameraDummy::focus_to(int depth)
 {
 
   std::cout << "- Focus to: " << depth << std::endl;
@@ -342,13 +342,13 @@ bool CameraDummy::set_exposure_mode(enum Mode mode)
   return false;
 }
 
-float CameraDummy::get_exposure()
+int CameraDummy::get_exposure()
 {
   std::cout << " - Get exposure: " << exposure_time << std::endl;
   return exposure_time;
 }
 
-bool CameraDummy::set_exposure(float time)
+bool CameraDummy::set_exposure(int time)
 {
   std::cout << " - Set exposure: " << time << std::endl;
   return false;

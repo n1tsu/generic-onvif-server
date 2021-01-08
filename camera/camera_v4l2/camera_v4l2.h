@@ -1,12 +1,16 @@
 #pragma once
 
+#include <linux/v4l2-common.h>
+#include <linux/v4l2-controls.h>
+#include <linux/videodev2.h>
+
 #include "camera_generic.h"
 
-class CameraDummy: public CameraGeneric
+class CameraV4L2 : public CameraGeneric
 {
 public:
-  CameraDummy();
-  ~CameraDummy();
+  CameraV4L2();
+  ~CameraV4L2();
 
   struct CameraCapabilities get_camera_capabilities() override;
   bool initiate_connection(int argc, char *argv[]) override;
@@ -15,34 +19,23 @@ public:
 
   struct Image get_current_image() override;
 
-  // ZOOM
-  uint8_t get_zoom_percent() override;
-  bool zoom_to(uint8_t percent) override;
-  bool zoom_in() override;
-  bool zoom_out() override;
-  bool zoom_stop() override;
-
   // PAN
   int16_t get_pan_degree() override;
   bool pan_to(int16_t degree) override;
-  bool pan_left() override;
-  bool pan_right() override;
-  bool pan_stop() override;
 
   // TILT
   int16_t get_tilt_degree() override;
   bool tilt_to(int16_t degree) override;
-  bool tilt_up() override;
-  bool tilt_down() override;
-  bool tilt_stop() override;
+
+  // ZOOM
+  uint8_t get_zoom_percent() override;
+  bool zoom_to(uint8_t percent) override;
 
   // FOCUS
   bool set_focus_mode(enum Mode mode) override;
   enum Mode get_focus_mode() override;
-  int get_focus() override;
   bool focus_to(int depth) override;
-  bool focus_in() override;
-  bool focus_out() override;
+  int get_focus() override;
 
   // WHITE BALANCE
   enum Mode get_white_balance_mode() override;
@@ -56,23 +49,17 @@ public:
   int get_exposure() override;
   bool set_exposure(int time) override;
 
+
 private:
+  void retrieve_capabilities();
+  int get_control_int(int ctrl_id);
+  int set_control_int(int ctrl_id, int value);
+
   int frame_count = 0;
+  int fd;
+  int type;
+  char *buffer;
+  v4l2_buffer bufferinfo;
 
-  // PTZ
-  uint8_t zoom_percent = 0;
-  int16_t pan_degree = 0;
-  int16_t tilt_degree = 0;
-
-  // FOCUS
-  Mode focus_mode;
-  float depth_focus;
-
-  // WHITE BALANCE
-  Mode white_balance_mode;
-  uint16_t color_temperature;
-
-  // EXPOSURE
-  Mode exposure_mode;
-  float exposure_time;
+  struct CameraCapabilities capabilities;
 };
