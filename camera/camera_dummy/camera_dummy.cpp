@@ -204,6 +204,15 @@ bool CameraDummy::tilt_stop()
 }
 
 
+///////////
+// FOCUS //
+///////////
+
+bool CameraDummy::set_focus_mode(enum Mode mode)
+{
+  std::cout << "- Set focus mode" << std::endl;
+  return focus_mode;
+}
 
 enum Mode CameraDummy::get_focus_mode()
 {
@@ -211,44 +220,85 @@ enum Mode CameraDummy::get_focus_mode()
   return focus_mode;
 }
 
+float CameraDummy::get_focus()
+{
+  std::cout << "- Get focus : " << depth_focus << std::endl;
+  return focus_mode;
+}
+
+bool CameraDummy::focus_to(float depth)
+{
+
+  std::cout << "- Focus to: " << depth << std::endl;
+  return false;
+}
+
+bool CameraDummy::focus_in()
+{
+  std::cout << "- Focus in" << std::endl;
+  return false;
+}
+
+bool CameraDummy::focus_out()
+{
+  std::cout << "- Focus out" << std::endl;
+  return false;
+}
+
+
+///////////////////
+// WHITE BALANCE //
+///////////////////
+
 enum Mode CameraDummy::get_white_balance_mode()
 {
   std::cout << "- Get white balance mode" << std::endl;
   return white_balance_mode;
 }
 
-uint16_t CameraDummy::get_color_temperature()
-{
-  std::cout << "- Get color temperature" << std::endl;
-  return color_temperature;
-}
-
-enum Mode CameraDummy::get_exposure_mode()
-{
-  std::cout << "- Get exposure mode" << std::endl;
-  return exposure_mode;
-}
-
-bool CameraDummy::set_focus_mode(enum Mode mode)
-{
-  std::cout << "- Set focus mode " << mode << std::endl;
-  return false;
-}
-
 bool CameraDummy::set_white_balance_mode(enum Mode mode)
 {
-  std::cout << "- Set white balance mode " << mode << std::endl;
+  std::cout << " - Set white balance mode" << std::endl;
   return false;
+}
+
+uint16_t CameraDummy::get_color_temperature()
+{
+  std::cout << " - Get color temperature: " << color_temperature << std::endl;
+  return color_temperature;
 }
 
 bool CameraDummy::set_color_temperature(uint16_t kelvin)
 {
-  std::cout << "- Set color temperature " << kelvin << std::endl;
+  std::cout << " - Set color temperature: " << kelvin << std::endl;
   return false;
+}
+
+
+//////////////
+// EXPOSURE //
+//////////////
+
+enum Mode CameraDummy::get_exposure_mode()
+{
+  std::cout << " - Get exposure mode: " << exposure_mode << std::endl;
+  return exposure_mode;
 }
 
 bool CameraDummy::set_exposure_mode(enum Mode mode)
 {
-  std::cout << "- Set exposure mode " << mode << std::endl;
+  std::cout << " - Set exposure mode: " << mode << std::endl;
+  return false;
+}
+
+float CameraDummy::get_exposure()
+{
+  std::cout << " - Get exposure: " << exposure_time << std::endl;
+  return exposure_time;
+}
+
+bool CameraDummy::set_exposure(float time)
+{
+  std::cout << " - Set exposure: " << time << std::endl;
   return false;
 }

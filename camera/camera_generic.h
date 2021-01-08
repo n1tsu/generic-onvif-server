@@ -1,36 +1,6 @@
 #pragma once
 
-#include <string>
-#include <vector>
-
-struct CameraInformation
-{
-  std::string name;
-  std::string manufacturer;
-};
-
-struct Image
-{
-  std::size_t size;
-  char *data;
-};
-
-enum Mode {
-  MANUAL,
-  AUTO
-};
-
-struct CameraCapabilities
-{
-  bool pan;
-  bool tilt;
-  bool zoom;
-  std::vector<enum Mode> focus_modes;
-  std::vector<enum Mode> white_balance_modes;
-  std::vector<enum Mode> exposure_mode;
-  bool color_temperature;
-};
-
+#include "camera_structs.h"
 
 class CameraGeneric
 {
@@ -44,33 +14,46 @@ public:
 
   virtual struct Image get_current_image() = 0;
 
-  virtual uint8_t get_zoom_percent() = 0;
-  virtual bool zoom_to(uint8_t percent) = 0;
-  virtual bool zoom_in() = 0;
-  virtual bool zoom_out() = 0;
-  virtual bool zoom_stop() = 0;
+  // ZOOM
+  virtual uint8_t get_zoom_percent() { return 0; }
+  virtual bool zoom_to(uint8_t percent) { return false; }
+  virtual bool zoom_in() { return false; }
+  virtual bool zoom_out() { return false; }
+  virtual bool zoom_stop() { return false; }
 
-  virtual int16_t get_pan_degree() = 0;
-  virtual bool pan_to(int16_t degree) = 0;
-  virtual bool pan_left() = 0;
-  virtual bool pan_right() = 0;
-  virtual bool pan_stop() = 0;
+  // PAN
+  virtual int16_t get_pan_degree() { return 0; }
+  virtual bool pan_to(int16_t degree) { return false; }
+  virtual bool pan_left() { return false; }
+  virtual bool pan_right() { return false; }
+  virtual bool pan_stop() { return false; }
 
-  virtual int16_t get_tilt_degree() = 0;
-  virtual bool tilt_to(int16_t degree) = 0;
-  virtual bool tilt_up() = 0;
-  virtual bool tilt_down() = 0;
-  virtual bool tilt_stop() = 0;
+  // TILT
+  virtual int16_t get_tilt_degree() { return 0; }
+  virtual bool tilt_to(int16_t degree) { return false; }
+  virtual bool tilt_up() { return false; }
+  virtual bool tilt_down() { return false; }
+  virtual bool tilt_stop() { return false; }
 
-  virtual enum Mode get_focus_mode() = 0;
-  virtual enum Mode get_white_balance_mode() = 0;
-  virtual uint16_t get_color_temperature() = 0;
-  virtual enum Mode get_exposure_mode() = 0;
+  // FOCUS
+  virtual bool set_focus_mode(enum Mode mode) { return false; }
+  virtual enum Mode get_focus_mode() { return Mode::AUTO; }
+  virtual float get_focus() { return 0; }
+  virtual bool focus_to(float depth) { return false; }
+  virtual bool focus_in() { return false; }
+  virtual bool focus_out() { return false; }
 
-  virtual bool set_focus_mode(enum Mode mode) = 0;
-  virtual bool set_white_balance_mode(enum Mode mode) = 0;
-  virtual bool set_color_temperature(uint16_t kelvin) = 0;
-  virtual bool set_exposure_mode(enum Mode mode) = 0;
+  // WHITE BALANCE
+  virtual enum Mode get_white_balance_mode() { return Mode::AUTO; }
+  virtual bool set_white_balance_mode(enum Mode mode) { return false; }
+  virtual uint16_t get_color_temperature() { return 0; }
+  virtual bool set_color_temperature(uint16_t kelvin) { return false; }
+
+  // EXPOSURE
+  virtual enum Mode get_exposure_mode() { return Mode::AUTO; }
+  virtual bool set_exposure_mode(enum Mode mode) { return false; }
+  virtual float get_exposure() { return 0; }
+  virtual bool set_exposure(float time) { return false; }
 
 protected:
   std::string name;

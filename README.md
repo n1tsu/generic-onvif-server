@@ -121,3 +121,6 @@ Just run `make` inside `camera` directory to generate a `libdummycam.so`.
 - [ ] Add HTTPS.
 - [ ] Make RTSP server more generic (only take JPEG frame currently).
 - [ ] Add dynamic modification on GStreamer pipeline. (adding OSD for example).
+- [ ] Add capabilities request for generic camera headers.
+- [ ] Add Doxygen-like comments on important functions (mostly camera folder)
+

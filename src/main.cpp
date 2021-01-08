@@ -127,6 +127,8 @@ int main(int argc, char *argv[])
   // Load camera library
   if (load_camera_library(context.rtsp_context->camera_lib.c_str()))
     return 1;
+  if (context.rtsp_context->camera->initiate_connection(argc, argv))
+    return 1;
 
   // Run WS Discovery thread
   std::thread discovery_thread(discovery_routine);
@@ -138,6 +140,7 @@ int main(int argc, char *argv[])
   services_routine();
   context.stop = true;
 
+  context.rtsp_context->camera->close_connection();
   discovery_thread.join();
   rtsp_thread.join();
 
