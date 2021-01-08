@@ -22,7 +22,7 @@ CameraV4L2::CameraV4L2()
   : CameraGeneric()
 {
   name = "V4L2 Camera";
-  manufacturer = "PROCOMM-MMC";
+  manufacturer = "Manufacturer";
 }
 
 CameraV4L2::~CameraV4L2()

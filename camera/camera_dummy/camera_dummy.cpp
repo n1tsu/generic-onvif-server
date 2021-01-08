@@ -12,7 +12,7 @@ CameraDummy::CameraDummy()
   : CameraGeneric()
 {
   name = "Dummy camera";
-  manufacturer = "PROCOMM-MMC";
+  manufacturer = "Dummy manufacturer";
   std::cout << "- Constructor" << std::endl;
 }
 
@@ -119,7 +119,7 @@ struct Image CameraDummy::get_current_image()
   };
 
   std::ostringstream stream_format;
-  stream_format << "camera/jpeg/image" << frame_count % 11 << ".jpeg";
+  stream_format << "camera/jpeg/frame" << frame_count % 36 << ".jpg";
   std::string image_name = stream_format.str();
   std::ifstream file(image_name, std::ios::binary | std::ios::ate);
   if (file.fail())
