@@ -23,16 +23,67 @@ CameraDummy::~CameraDummy()
 
 struct CameraCapabilities CameraDummy::get_camera_capabilities()
 {
-  struct CameraCapabilities capabilities =
-  {
-    true,
-    true,
-    true,
-    {Mode::AUTO, Mode::MANUAL},
-    {Mode::AUTO, Mode::MANUAL},
-    {Mode::AUTO, Mode::MANUAL},
-    true,
-  };
+  struct CameraCapabilities capabilities;
+  // PAN
+  capabilities.absolute_pan = true;
+  capabilities.relative_pan = true;
+  capabilities.continuous_pan = true;
+  capabilities.relative_pan_range.min = -1;
+  capabilities.relative_pan_range.max = 1;
+  capabilities.absolute_pan_range.min = -180;
+  capabilities.absolute_pan_range.max = 180;
+  capabilities.continuous_pan_range.min = -1;
+  capabilities.continuous_pan_range.max =  1;
+
+  // TILT
+  capabilities.absolute_tilt = true;
+  capabilities.relative_tilt = true;
+  capabilities.continuous_tilt = true;
+  capabilities.relative_tilt_range.min = -1;
+  capabilities.relative_tilt_range.max = 1;
+  capabilities.absolute_tilt_range.min = -180;
+  capabilities.absolute_tilt_range.max = 180;
+  capabilities.continuous_tilt_range.min = -1;
+  capabilities.continuous_tilt_range.max =  1;
+
+  // ZOOM
+  capabilities.absolute_zoom = true;
+  capabilities.relative_zoom = true;
+  capabilities.continuous_zoom = true;
+  capabilities.relative_zoom_range.min = -0.1;
+  capabilities.relative_zoom_range.max = 0.1;
+  capabilities.absolute_zoom_range.min = 1;
+  capabilities.absolute_zoom_range.max = 0;
+  capabilities.continuous_zoom_range.min = 0.1;
+  capabilities.continuous_zoom_range.max = 1;
+
+  // FOCUS
+  capabilities.focus_modes.push_back(Mode::AUTO);
+  capabilities.focus_modes.push_back(Mode::MANUAL);
+  capabilities.absolute_focus = true;
+  capabilities.relative_focus = true;
+  capabilities.continuous_focus = true;
+  capabilities.absolute_focus_range.min = 0.0;
+  capabilities.absolute_focus_range.max = 1.0;
+  capabilities.relative_focus_range.min = 0.0;
+  capabilities.relative_focus_range.max = 0.1;
+  capabilities.continuous_focus_range.min = 0.0;
+  capabilities.continuous_focus_range.max = 0.1;
+
+  // EXPOSURE
+  capabilities.exposure_modes.push_back(Mode::AUTO);
+  capabilities.exposure_modes.push_back(Mode::MANUAL);
+  capabilities.exposure_range.min = 0.0;
+  capabilities.exposure_range.max = 1.0;
+
+  // WHITE BALANCE
+  capabilities.color_temperature = true;
+  capabilities.white_balance_modes.push_back(Mode::AUTO);
+  capabilities.white_balance_modes.push_back(Mode::MANUAL);
+  capabilities.color_temperature_range.min = 2000;
+  capabilities.color_temperature_range.min = 9000;
+  capabilities.color_temperature_range.step = 9000;
+
 
   return capabilities;
 }
