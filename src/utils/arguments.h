@@ -88,6 +88,7 @@ public:
   // Web services
   WSContext *ws_context;
 
+  std::string manufacturer;
   std::string model;
   std::string firmware_version;
   std::string serial_number;

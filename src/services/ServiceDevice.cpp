@@ -70,6 +70,7 @@ int DeviceBindingService::GetDeviceInformation(_tds__GetDeviceInformation *tds__
   Context *context = (Context *)this->soap->user;
 
   auto& response = tds__GetDeviceInformationResponse;
+  response.Manufacturer = context->manufacturer;
   response.Model = context->model;
   response.FirmwareVersion = context->firmware_version;
   response.SerialNumber = context->serial_number;

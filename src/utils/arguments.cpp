@@ -131,9 +131,10 @@ Context::Context()
   rtsp_context = new RTSPContext();
   ws_context = new WSContext();
 
+  manufacturer = "Factureur Manu";
   model = "Cara Delevingne";
-  firmware_version = "69";
-  serial_number = "42";
+  firmware_version = "0.001";
+  serial_number = "53RI4L";
   hardware_id = "1234567890";
 }
 
