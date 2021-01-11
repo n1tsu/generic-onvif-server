@@ -18,18 +18,9 @@ namespace LongOpts
     help    = 'h',
 
     // Web services
-    scope,
     port,
     xaddr,
 
-    // RTSP
-    camera_lib,
-    stream_endpoint,
-    stream_port,
-    encoder,
-    framerate,
-    width,
-    height,
     configs,
   };
 }

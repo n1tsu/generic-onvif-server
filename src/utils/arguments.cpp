@@ -17,17 +17,8 @@ void usage()
     "Usage: " << STR(BIN_NAME) << " [options]" << std::endl <<
     "Options:" << std::endl <<
     "  -h | --help                  Print this help." << std::endl <<
-    "  --scope           <scope>    ONVIF Scope to be added." << std::endl <<
-    "  --stream_endpoint <endpoint> URL endpoint to be used for the RTSP stream." << std::endl <<
-    "  --stream_port     <port>     Port to be used to serve the RTSP server." << std::endl <<
     "  --port            <port>     Port to be used to serve ONVIF server." << std::endl <<
     "  --xaddr           <addr>     Address used by client to reach ONVIF server." << std::endl <<
-    "  --profile         <name>     Name of the main profile." << std::endl <<
-    "  --encoder         <name>     GStreamer encoder name to be used by RTSP server." << std::endl <<
-    "  --framerate       <num>      Framerate to be used by the camera." << std::endl <<
-    "  --width           <num>      Width to be used by the camera." << std::endl <<
-    "  --height          <num>      Height to be used by the camera." << std::endl <<
-    "  --cameralib       <path>     Camera library path." << std::endl <<
     "  --configs         <path>     Configurations file path." << std::endl;
 }
 
@@ -38,16 +29,8 @@ static const char *short_opts = "h";
 static const struct option long_opts[] =
 {
     { "help",            no_argument,       NULL, LongOpts::help            },
-    { "scope",           required_argument, NULL, LongOpts::scope           },
-    { "stream_endpoint", required_argument, NULL, LongOpts::stream_endpoint },
-    { "stream_port",     required_argument, NULL, LongOpts::stream_port     },
     { "port",            required_argument, NULL, LongOpts::port            },
     { "xaddr",           required_argument, NULL, LongOpts::xaddr           },
-    { "encoder",         required_argument, NULL, LongOpts::encoder         },
-    { "framerate",       required_argument, NULL, LongOpts::framerate       },
-    { "width",           required_argument, NULL, LongOpts::width           },
-    { "height",          required_argument, NULL, LongOpts::height          },
-    { "cameralib",       required_argument, NULL, LongOpts::camera_lib      },
     { "configs",         required_argument, NULL, LongOpts::configs         },
     { NULL,              no_argument,       NULL,  0                        }
 };
@@ -66,44 +49,12 @@ void processing_cmd(int argc, char *argv[])
       exit(0);
       break;
 
-    case LongOpts::scope:
-      context.ws_context->scopes.push_back(optarg);
-      break;
-
-    case LongOpts::stream_endpoint:
-      context.rtsp_context->stream_endpoint = optarg;
-      break;
-
-    case LongOpts::stream_port:
-      context.rtsp_context->stream_port = std::stoi(optarg);
-      break;
-
     case LongOpts::port:
       context.ws_context->port = std::stoi(optarg);
       break;
 
     case LongOpts::xaddr:
       context.ws_context->xaddr = optarg;
-      break;
-
-    case LongOpts::encoder:
-      context.rtsp_context->encoder = optarg;
-      break;
-
-    case LongOpts::camera_lib:
-      context.rtsp_context->camera_lib = optarg;
-      break;
-
-    case LongOpts::framerate:
-      context.rtsp_context->framerate = std::stoi(optarg);
-      break;
-
-    case LongOpts::width:
-      context.rtsp_context->width = std::stoi(optarg);
-      break;
-
-    case LongOpts::height:
-      context.rtsp_context->height = std::stoi(optarg);
       break;
 
     case LongOpts::configs:
@@ -131,10 +82,10 @@ Context::Context()
   rtsp_context = new RTSPContext();
   ws_context = new WSContext();
 
-  manufacturer = "Factureur Manu";
-  model = "Cara Delevingne";
-  firmware_version = "0.001";
-  serial_number = "53RI4L";
+  manufacturer = "Manufacturer";
+  model = "Model";
+  firmware_version = "0.1";
+  serial_number = "1234567890";
   hardware_id = "1234567890";
 }
 

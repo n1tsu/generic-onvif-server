@@ -17,6 +17,8 @@ private:
   bool parse_video_conf(std::shared_ptr<VideoConfiguration> config, std::ifstream& file);
   bool parse_encoder_conf(std::shared_ptr<EncoderConfiguration> config, std::ifstream& file);
   bool parse_ptz_conf(std::shared_ptr<PTZConfiguration> config, std::ifstream& file);
+  bool parse_stream(RTSPContext *rtsp_context, std::ifstream& file);
+  bool parse_device(Context *context, std::ifstream& file);
 
   bool parse_error(std::string error);
 

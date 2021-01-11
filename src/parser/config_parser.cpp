@@ -93,6 +93,17 @@ bool ConfigParser::parse_file(std::string filename)
         else
           return false;
       }
+      else if (!tokens[0].compare("STREAM"))
+      {
+        auto rtsp_context = context->rtsp_context;
+        if (!parse_stream(rtsp_context, file))
+          return false;
+      }
+      else if (!tokens[0].compare("DEVICE"))
+      {
+        if (!parse_device(context, file))
+          return false;
+      }
       else
         return parse_error("Can't identify configuration type '" + tokens[0] + "'");
     }
@@ -387,6 +398,97 @@ bool ConfigParser::parse_node(PTZNode *node, std::ifstream& file)
 
   return true;
 }
+
+
+bool ConfigParser::parse_stream(RTSPContext *rtsp_context, std::ifstream& file)
+{
+  std::string line;
+  while (std::getline(file, line))
+  {
+    curr_line++;
+    if (line.empty())
+      break;
+    if (line[0] == '#')
+      continue;
+
+    const std::string delimiter = "=";
+    size_t pos = 0;
+    size_t n = 0;
+    std::string tokens[2];
+    while ((pos = line.find(delimiter)) != std::string::npos)
+    {
+      tokens[n++] = line.substr(0, pos);
+      line.erase(0, pos + delimiter.length());
+    }
+    tokens[n++] = line;
+    if (n != 2)
+      return parse_error("Found only " + std::to_string(n) + " token[s], expected 2.");
+
+    if (!tokens[0].compare("stream_endpoint"))
+      rtsp_context->stream_endpoint = tokens[1];
+    else if (!tokens[0].compare("stream_port"))
+      rtsp_context->stream_port = std::stoi(tokens[1]);
+    else if (!tokens[0].compare("encoder"))
+      rtsp_context->encoder = tokens[1];
+    else if (!tokens[0].compare("camera_lib"))
+      rtsp_context->camera_lib = tokens[1];
+    else if (!tokens[0].compare("framerate"))
+      rtsp_context->framerate = std::stoi(tokens[1]);
+    else if (!tokens[0].compare("width"))
+      rtsp_context->width = std::stoi(tokens[1]);
+    else if (!tokens[0].compare("height"))
+      rtsp_context->height = std::stoi(tokens[1]);
+    else
+      return parse_error("Unknown stream token '" + tokens[0] + "'.");
+  }
+
+  return true;
+}
+
+
+bool ConfigParser::parse_device(Context *context, std::ifstream& file)
+{
+  std::string line;
+  while (std::getline(file, line))
+  {
+    curr_line++;
+    if (line.empty())
+      break;
+    if (line[0] == '#')
+      continue;
+
+    const std::string delimiter = "=";
+    size_t pos = 0;
+    size_t n = 0;
+    std::string tokens[2];
+    while ((pos = line.find(delimiter)) != std::string::npos)
+    {
+      tokens[n++] = line.substr(0, pos);
+      line.erase(0, pos + delimiter.length());
+    }
+    tokens[n++] = line;
+    if (n != 2)
+      return parse_error("Found only " + std::to_string(n) + " token[s], expected 2.");
+
+    if (!tokens[0].compare("manufacturer"))
+      context->manufacturer = tokens[1];
+    else if (!tokens[0].compare("model"))
+      context->model = tokens[1];
+    else if (!tokens[0].compare("firmware_version"))
+      context->firmware_version = tokens[1];
+    else if (!tokens[0].compare("serial_number"))
+      context->serial_number = tokens[1];
+    else if (!tokens[0].compare("hardware_id"))
+      context->hardware_id = tokens[1];
+    else if (!tokens[0].compare("scope"))
+      context->ws_context->scopes.push_back(tokens[1]);
+    else
+      return parse_error("Unknown stream token '" + tokens[0] + "'.");
+  }
+
+  return true;
+}
+
 
 
 bool ConfigParser::parse_configurations(std::vector<std::string> configs_path)
