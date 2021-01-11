@@ -1,4 +1,6 @@
 #include <algorithm>
+#include <ctime>
+
 
 #include "soapDeviceBindingService.h"
 #include "macros.h"
@@ -93,9 +95,23 @@ int DeviceBindingService::GetSystemDateAndTime(_tds__GetSystemDateAndTime *tds__
 
   auto& response = tds__GetSystemDateAndTimeResponse;
 
+  time_t now = time(0);
+  tm *ltm = localtime(&now);
+
   response.SystemDateAndTime = soap_new_tt__SystemDateTime(soap);
   response.SystemDateAndTime->DateTimeType = tt__SetDateTimeType__NTP; // tt__SetDateTimeType__Manual
   response.SystemDateAndTime->DaylightSavings = false;
+  response.SystemDateAndTime->UTCDateTime = soap_new_tt__DateTime(soap);
+
+  response.SystemDateAndTime->UTCDateTime->Date = soap_new_tt__Date(soap);
+  response.SystemDateAndTime->UTCDateTime->Date->Year = 1900 + ltm->tm_year;
+  response.SystemDateAndTime->UTCDateTime->Date->Month = ltm->tm_mon;
+  response.SystemDateAndTime->UTCDateTime->Date->Day = ltm->tm_mday;
+
+  response.SystemDateAndTime->UTCDateTime->Time = soap_new_tt__Time(soap);
+  response.SystemDateAndTime->UTCDateTime->Time->Hour = ltm->tm_hour;
+  response.SystemDateAndTime->UTCDateTime->Time->Minute = ltm->tm_min;
+  response.SystemDateAndTime->UTCDateTime->Time->Second = ltm->tm_sec;
 
   return SOAP_OK;
 }
