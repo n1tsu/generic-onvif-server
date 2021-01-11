@@ -16,6 +16,7 @@
 #else
 
 #define DEBUG_MSG(...)
+#define DEBUG_FUNCTION()
 
 #endif
 
