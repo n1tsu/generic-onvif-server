@@ -113,7 +113,9 @@ int start_pipeline(int argc, char *argv[]) {
   std::ostringstream pipeline_stream;
   pipeline_stream << "( appsrc do-timestamp=true is-live=true name=mysrc "
                   << "! queue ! jpegdec ! queue ! videoconvert ! video/x-raw,format=I420,framerate="
-                  << context.rtsp_context->framerate << "/1 " << "! queue ! " << context.rtsp_context->encoder
+                  << context.rtsp_context->framerate << "/1 " << "! videoscale ! video/x-raw,width="
+                  << context.rtsp_context->width << ",height=" << context.rtsp_context->height
+                  << " ! queue ! " << context.rtsp_context->encoder
                   << " ! queue ! rtph264pay name=pay0 pt=96 )";
   std::string pipeline = pipeline_stream.str();
 

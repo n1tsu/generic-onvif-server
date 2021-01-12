@@ -192,5 +192,6 @@ Just run `make` inside `camera` directory to generate `libdummycam.so` and `libv
 - [ ] Make RTSP server more generic (only take JPEG frame currently).
 - [ ] Add dynamic runtime modification on GStreamer pipeline. (adding OSD for example).
 - [ ] Add capabilities request for generic camera headers.
-- [ ] Add Doxygen-like comments on important functions (mostly camera folder)
-- [ ] Hard refactoring on CameraV4L2
+- [ ] Add Doxygen-like comments on important functions (mostly camera folder).
+- [ ] Hard refactoring on CameraV4L2.
+- [ ] Add usage function in camera generic.

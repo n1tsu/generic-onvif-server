@@ -63,9 +63,9 @@ void processing_cmd(int argc, char *argv[])
 
 
     default:
-      std::cout << "Invalid argument !" << std::endl;
-      usage();
-      exit(1);
+      // std::cout << "Invalid argument !" << std::endl;
+      // usage();
+      // exit(1);
       break;
     }
   }
