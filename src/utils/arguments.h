@@ -16,6 +16,7 @@ namespace LongOpts
   {
     version = 'v',
     help    = 'h',
+    debug    = 'd',
 
     // Web services
     port,
@@ -93,4 +94,6 @@ public:
 
   std::vector<std::string> configs_path;
   std::atomic<bool> stop;
+
+  bool debug = false;
 };

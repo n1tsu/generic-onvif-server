@@ -3,22 +3,14 @@
 #include "utils.h"
 
 // Debug macros
-#ifdef DEBUG
-
 #define DEBUG_MSG(...) do {      \
   fprintf (stderr, __VA_ARGS__); \
 } while (0)
 
-#define DEBUG_FUNCTION() do {                                                   \
-  DEBUG_MSG("%s: %s\n", last_occurence(__FILE__, "/\\").c_str(), __FUNCTION__); \
+#define DEBUG_FUNCTION(CTX) do {                                                   \
+  if (CTX->debug)                                                                  \
+    DEBUG_MSG("%s: %s\n", last_occurence(__FILE__, "/\\").c_str(), __FUNCTION__);  \
 } while (0)
-
-#else
-
-#define DEBUG_MSG(...)
-#define DEBUG_FUNCTION()
-
-#endif
 
 
 // Stringify macro

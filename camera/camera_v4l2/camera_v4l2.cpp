@@ -173,7 +173,7 @@ bool CameraV4L2::initiate_connection(int argc, char *argv[])
 
   int width = 0;
   int height = 0;
-  std::string video = 0;
+  std::string video = "0";
 
   for (int i = 0; i < argc; i++)
   {

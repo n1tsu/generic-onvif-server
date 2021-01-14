@@ -17,18 +17,20 @@ void usage()
     "Usage: " << STR(BIN_NAME) << " [options]" << std::endl <<
     "Options:" << std::endl <<
     "  -h | --help                  Print this help." << std::endl <<
+    "  -d | --debug                 Activate debug output." << std::endl <<
     "  --port            <port>     Port to be used to serve ONVIF server." << std::endl <<
     "  --xaddr           <addr>     Address used by client to reach ONVIF server." << std::endl <<
     "  --configs         <path>     Configurations file path." << std::endl;
 }
 
 
-static const char *short_opts = "h";
+static const char *short_opts = "hd";
 
 
 static const struct option long_opts[] =
 {
     { "help",            no_argument,       NULL, LongOpts::help            },
+    { "debug",           no_argument,       NULL, LongOpts::debug           },
     { "port",            required_argument, NULL, LongOpts::port            },
     { "xaddr",           required_argument, NULL, LongOpts::xaddr           },
     { "configs",         required_argument, NULL, LongOpts::configs         },
@@ -47,6 +49,10 @@ void processing_cmd(int argc, char *argv[])
     case LongOpts::help:
       usage();
       exit(0);
+      break;
+
+    case LongOpts::debug:
+      context.debug = true;
       break;
 
     case LongOpts::port:
@@ -151,6 +157,7 @@ std::string WSContext::get_xaddr()
 void Context::print()
 {
   std::cout << "Context: " << std::endl;
+  std::cout << " (DEBUG " << debug << ")" << std::endl;
   rtsp_context->print();
   ws_context->print();
 
