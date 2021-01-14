@@ -171,10 +171,40 @@ bool CameraV4L2::initiate_connection(int argc, char *argv[])
 {
   // TODO: handle CLI parameters for resolution and dev path
 
-  fd = open("/dev/video0", O_RDWR);
+  int width = 0;
+  int height = 0;
+  std::string video = 0;
+
+  for (int i = 0; i < argc; i++)
+  {
+    if (!argv || !argv[i])
+      break;
+    if (strcmp(argv[i], "--width") == 0)
+    {
+      if (!argv[++i])
+        break;
+      width = std::stoi(argv[i]);
+    }
+    else if (strcmp(argv[i], "--height") == 0)
+    {
+      if (!argv[++i])
+        break;
+      height = std::stoi(argv[i]);
+    }
+    else if (strcmp(argv[i], "--video") == 0)
+    {
+      if (!argv[++i])
+        break;
+      height = std::stoi(argv[i]);
+    }
+  }
+
+  std::string path = "/dev/video" + video;
+  fd = open(path.c_str(), O_RDWR);
   if (fd < 0)
   {
-    perror("! Failed to open device /dev/video0.");
+    std::string error_msg = "! Failed to open device " + path;
+    perror(error_msg.c_str());
     return true;
   }
 
@@ -190,8 +220,8 @@ bool CameraV4L2::initiate_connection(int argc, char *argv[])
 
   v4l2_format format;
   format.type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
-  format.fmt.pix.width = 1024;
-  format.fmt.pix.height = 720;
+  format.fmt.pix.width = width;
+  format.fmt.pix.height = height;
   format.fmt.pix.pixelformat = V4L2_PIX_FMT_MJPEG;
   format.fmt.pix.field = V4L2_FIELD_NONE;
 
