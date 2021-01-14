@@ -107,7 +107,7 @@ Context::~Context()
 
 
 WSContext::WSContext():
-  port(8080),
+  port(80),
   xaddr("127.0.0.1"),
   endpoint(""),
   user("admin"),
@@ -116,7 +116,7 @@ WSContext::WSContext():
 
 RTSPContext::RTSPContext():
   stream_endpoint("cam"),
-  stream_port(8554),
+  stream_port(554),
   encoder("vaapih264enc"),
   camera_lib("camera/libdummycam.so"),
   framerate(30),

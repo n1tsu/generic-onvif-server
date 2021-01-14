@@ -18,7 +18,7 @@ bool ConfigParser::parse_error(std::string error)
 }
 
 
-bool ConfigParser::parse_file(std::string filename)
+bool ConfigParser::parse_file(std::string filename, int silent)
 {
   curr_line = 0;
   curr_file = last_occurence(filename, "\\/");
@@ -108,6 +108,9 @@ bool ConfigParser::parse_file(std::string filename)
         return parse_error("Can't identify configuration type '" + tokens[0] + "'");
     }
   }
+  else if (!silent)
+    std::cerr << "! Can't open " << filename << std::endl;
+
 
   file.close();
   return true;
@@ -482,6 +485,8 @@ bool ConfigParser::parse_device(Context *context, std::ifstream& file)
       context->hardware_id = tokens[1];
     else if (!tokens[0].compare("scope"))
       context->ws_context->scopes.push_back(tokens[1]);
+    else if (!tokens[0].compare("port"))
+      context->ws_context->port = stoi(tokens[1]);
     else
       return parse_error("Unknown stream token '" + tokens[0] + "'.");
   }
@@ -493,9 +498,18 @@ bool ConfigParser::parse_device(Context *context, std::ifstream& file)
 
 bool ConfigParser::parse_configurations(std::vector<std::string> configs_path)
 {
+  int silent = 0;
+  if (configs_path.size() == 0)
+  {
+    // We push default configuration path and silent about errors
+    configs_path.push_back("onvif.config");
+    configs_path.push_back("/etc/generic-onvif-server/configs/onvif.config");
+    silent = 1;
+  }
+
   for (auto path : configs_path)
   {
-    if (!parse_file(path))
+    if (!parse_file(path, silent))
       return false;
   }
 

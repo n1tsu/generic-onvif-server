@@ -11,7 +11,7 @@ public:
 
 private:
   // Will need a refactos since we repeat the more or less the same block of code
-  bool parse_file(std::string filename);
+  bool parse_file(std::string filename, int silent);
   bool parse_node(PTZNode *node, std::ifstream& file);
   bool parse_profile(Profile *profile, std::ifstream& file);
   bool parse_video_conf(std::shared_ptr<VideoConfiguration> config, std::ifstream& file);
