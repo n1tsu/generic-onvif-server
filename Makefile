@@ -94,6 +94,9 @@ all: $(TARGET)
 debug: CXXFLAGS += -g -fsanitize=address -DDEBUG
 debug: $(TARGET)
 
+soft-debug: CXXFLAGS += -DDEBUG -g
+soft-debug: $(TARGET)
+
 # Little trick to ensure gsoap files will get generated before
 # compilation even with parallelism (-jN)
 $(TARGET):

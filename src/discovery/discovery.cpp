@@ -44,7 +44,8 @@ void discovery_routine()
     // Join multicast group
     struct ip_mreq mcast;
     mcast.imr_multiaddr.s_addr = inet_addr("239.255.255.250");
-    mcast.imr_interface.s_addr = INADDR_ANY;
+    mcast.imr_interface.s_addr = inet_addr(context.ws_context->xaddr.c_str());
+    // mcast.imr_interface.s_addr = INADDR_ANY;
 
     setsockopt(soap_discover->master, IPPROTO_IP, IP_MULTICAST_IF,
                &mcast.imr_interface.s_addr, sizeof(struct in_addr));
