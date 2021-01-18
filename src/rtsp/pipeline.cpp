@@ -114,9 +114,12 @@ int start_pipeline(int argc, char *argv[]) {
   pipeline_stream << "( appsrc do-timestamp=true is-live=true name=mysrc "
                   << "! queue ! jpegdec ! queue ! videoconvert ! video/x-raw,format=I420,framerate="
                   << context.rtsp_context->framerate << "/1 " << "! videoscale ! video/x-raw,width="
-                  << context.rtsp_context->width << ",height=" << context.rtsp_context->height
-                  << " ! queue ! " << context.rtsp_context->encoder
-                  << " ! queue ! rtph264pay name=pay0 pt=96 )";
+                  << context.rtsp_context->width << ",height=" << context.rtsp_context->height;
+
+  if (context.rtsp_context->encoder.compare("jpeg"))
+    pipeline_stream << " ! queue ! " << context.rtsp_context->encoder;
+
+  pipeline_stream << " ! queue ! rtph264pay name=pay0 pt=96 )";
   std::string pipeline = pipeline_stream.str();
 
   gst_rtsp_media_factory_set_launch(factory, pipeline.c_str());

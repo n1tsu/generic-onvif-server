@@ -94,6 +94,7 @@ tt__VideoSourceConfiguration *to_gsoap(soap *soap, std::shared_ptr<VideoConfigur
   video_configuration->Name           = configuration->get_name();
   video_configuration->UseCount       = configuration.use_count();
   video_configuration->token          = configuration->get_token();
+  // video_configuration->SourceToken    = "0";
   video_configuration->Bounds         = soap_new_tt__IntRectangle(soap);
   video_configuration->Bounds->x      = configuration->x;
   video_configuration->Bounds->y      = configuration->y;
@@ -113,16 +114,39 @@ tt__VideoEncoderConfiguration *to_gsoap(soap *soap, std::shared_ptr<EncoderConfi
   encoder_configuration->token    = configuration->get_token();
 
   if (!configuration->encoder.compare("H264"))
+  {
     encoder_configuration->Encoding = tt__VideoEncoding__H264;
+    // TODO handle this parameters properly
+    encoder_configuration->H264 = soap_new_tt__H264Configuration(soap);
+    encoder_configuration->H264->GovLength = 10;
+    encoder_configuration->H264->H264Profile = tt__H264Profile::tt__H264Profile__Baseline;
+  }
   else if (configuration->encoder.compare("JPEG"))
     encoder_configuration->Encoding = tt__VideoEncoding__JPEG;
   else if (configuration->encoder.compare("MPEG4"))
     encoder_configuration->Encoding = tt__VideoEncoding__MPEG4;
 
+    // TODO handle this parameters properly
+  encoder_configuration->RateControl                   = soap_new_tt__VideoRateControl(soap);
+  encoder_configuration->RateControl->FrameRateLimit   = 30;
+  encoder_configuration->RateControl->EncodingInterval = 10;
+  encoder_configuration->RateControl->BitrateLimit     = 10000000;
+
   encoder_configuration->Resolution         = soap_new_tt__VideoResolution(soap);
   encoder_configuration->Resolution->Width  = configuration->width;
   encoder_configuration->Resolution->Height = configuration->height;
   encoder_configuration->Quality            = configuration->quality;
+  // PT0S might be better
+  // encoder_configuration->SessionTimeout     = "PT00H01M00S";
+
+  encoder_configuration->Multicast                        = soap_new_tt__MulticastConfiguration(soap);
+  encoder_configuration->Multicast->Address               = soap_new_tt__IPAddress(soap);
+  encoder_configuration->Multicast->Address->Type         = tt__IPType::tt__IPType__IPv4;
+  encoder_configuration->Multicast->Address->IPv4Address  = soap_new_tt__IPv4Address(soap);
+  *encoder_configuration->Multicast->Address->IPv4Address = "0.0.0.0";
+  encoder_configuration->Multicast->Port                  = 0;
+  encoder_configuration->Multicast->TTL                   = 5;
+  encoder_configuration->Multicast->AutoStart             = false;
 
   return encoder_configuration;
 }

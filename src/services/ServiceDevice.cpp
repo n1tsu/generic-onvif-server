@@ -342,7 +342,8 @@ int DeviceBindingService::GetCapabilities(_tds__GetCapabilities *tds__GetCapabil
   if ((device_found != end) || (all_found != end))
   {
     response.Capabilities->Device = soap_new_tt__DeviceCapabilities(soap);
-    response.Capabilities->Device->XAddr = context->ws_context->get_xaddr();
+    response.Capabilities->Device->XAddr = context->ws_context->get_xaddr() + "/onvif/device_service";
+    // System
     response.Capabilities->Device->System = soap_new_tt__SystemCapabilities(soap);
     response.Capabilities->Device->System->RemoteDiscovery = true;
     response.Capabilities->Device->System->DiscoveryBye = false;
@@ -351,20 +352,43 @@ int DeviceBindingService::GetCapabilities(_tds__GetCapabilities *tds__GetCapabil
     response.Capabilities->Device->System->SystemLogging = false;
     response.Capabilities->Device->System->FirmwareUpgrade = false;
     response.Capabilities->Device->System->SupportedVersions.push_back(soap_new_req_tt__OnvifVersion(this->soap, 2, 0));
+    // Network
     response.Capabilities->Device->Network = soap_new_tt__NetworkCapabilities(soap);
+    response.Capabilities->Device->Network->IPFilter = soap_new_bool(soap);
+    *response.Capabilities->Device->Network->IPFilter = false;
+    response.Capabilities->Device->Network->ZeroConfiguration = soap_new_bool(soap);
+    *response.Capabilities->Device->Network->ZeroConfiguration = false;
+    response.Capabilities->Device->Network->IPVersion6 = soap_new_bool(soap);
+    *response.Capabilities->Device->Network->IPVersion6 = false;
+    response.Capabilities->Device->Network->DynDNS = soap_new_bool(soap);
+    *response.Capabilities->Device->Network->DynDNS = false;
+    // Security
     response.Capabilities->Device->Security = soap_new_tt__SecurityCapabilities(soap);
+    response.Capabilities->Device->Security->TLS1_x002e1 = false;
+    response.Capabilities->Device->Security->TLS1_x002e2 = false;
+    response.Capabilities->Device->Security->OnboardKeyGeneration = false;
+    response.Capabilities->Device->Security->AccessPolicyConfig = false;
+    response.Capabilities->Device->Security->X_x002e509Token = false;
+    response.Capabilities->Device->Security->SAMLToken = false;
+    response.Capabilities->Device->Security->KerberosToken = false;
+    response.Capabilities->Device->Security->RELToken = false;
+    // IO
     response.Capabilities->Device->IO = soap_new_tt__IOCapabilities(soap);
+    response.Capabilities->Device->IO->InputConnectors = soap_new_int(soap);
+    *response.Capabilities->Device->IO->InputConnectors = 0;
+    response.Capabilities->Device->IO->RelayOutputs = soap_new_int(soap);
+    *response.Capabilities->Device->IO->RelayOutputs = 0;
 
   }
   if ((imaging_found != end) || (all_found != end))
   {
     response.Capabilities->Imaging = soap_new_tt__ImagingCapabilities(soap);
-    response.Capabilities->Imaging->XAddr = context->ws_context->get_xaddr();
+    response.Capabilities->Imaging->XAddr = context->ws_context->get_xaddr() + "/onvif/device_service";
   }
   if ((media_found != end) || (all_found != end))
   {
     response.Capabilities->Media = soap_new_tt__MediaCapabilities(soap);
-    response.Capabilities->Media->XAddr = context->ws_context->get_xaddr();
+    response.Capabilities->Media->XAddr = context->ws_context->get_xaddr() + "/onvif/device_service";
     response.Capabilities->Media->StreamingCapabilities = soap_new_tt__RealTimeStreamingCapabilities(soap);
     response.Capabilities->Media->StreamingCapabilities->RTPMulticast = soap_new_bool(soap);
     *response.Capabilities->Media->StreamingCapabilities->RTPMulticast = false;
@@ -376,7 +400,7 @@ int DeviceBindingService::GetCapabilities(_tds__GetCapabilities *tds__GetCapabil
   if ((ptz_found != end) || (all_found != end))
   {
     response.Capabilities->PTZ = soap_new_tt__PTZCapabilities(soap);
-    response.Capabilities->PTZ->XAddr = context->ws_context->get_xaddr();
+    response.Capabilities->PTZ->XAddr = context->ws_context->get_xaddr() + "/onvif/device_service";
   }
 
   return SOAP_OK;
