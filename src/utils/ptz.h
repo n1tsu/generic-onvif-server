@@ -19,7 +19,7 @@ public:
   std::string get_name() { return name; }
   std::string get_token() { return token; }
 
-  struct PTZPosition position;
+  struct PTZPosition position = {0.0f, 0.0f, 0.0f};
 
 private:
   std::string name;
@@ -53,15 +53,15 @@ public:
   std::string get_name() { return name; }
   std::string get_token() { return token; }
 
-  bool fixed_home;
-  bool geo_move;
-  int max_presets;
-  bool support_home;
+  bool fixed_home            = false;
+  bool geo_move              = false;
+  int max_presets            = 10;
+  bool support_home          = true;
 
-  PTZSpace absolute_ranges;
-  PTZSpace relative_ranges;
-  PTZSpace continuous_ranges;
-  PTZSpace speed_ranges;
+  PTZSpace absolute_ranges   = {-180.0f, 180.0f, -180.0f, 180.0f, 0.0f, 1.0f};
+  PTZSpace relative_ranges   = {-1.0f, 1.0f, -1.0f, 1.0f, -0.1f, 0.1f};
+  PTZSpace continuous_ranges = {-1.0f, 1.0f, -1.0f, 1.0f, -1.0f, 1.0f};
+  PTZSpace speed_ranges      = {0.0f, 1.0f, 0.0f, 1.0f, 0.0f, 1.0f};
 
 private:
   std::string name;

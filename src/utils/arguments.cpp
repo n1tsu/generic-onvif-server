@@ -18,7 +18,6 @@ void usage()
     "Options:" << std::endl <<
     "  -h | --help                  Print this help." << std::endl <<
     "  -d | --debug                 Activate debug output." << std::endl <<
-    "  --port            <port>     Port to be used to serve ONVIF server." << std::endl <<
     "  --xaddr           <addr>     Address used by client to reach ONVIF server." << std::endl <<
     "  --configs         <path>     Configurations file path." << std::endl;
 }
@@ -31,7 +30,6 @@ static const struct option long_opts[] =
 {
     { "help",            no_argument,       NULL, LongOpts::help            },
     { "debug",           no_argument,       NULL, LongOpts::debug           },
-    { "port",            required_argument, NULL, LongOpts::port            },
     { "xaddr",           required_argument, NULL, LongOpts::xaddr           },
     { "configs",         required_argument, NULL, LongOpts::configs         },
     { NULL,              no_argument,       NULL,  0                        }
@@ -55,10 +53,6 @@ void processing_cmd(int argc, char *argv[])
       context.debug = true;
       break;
 
-    case LongOpts::port:
-      context.ws_context->port = std::stoi(optarg);
-      break;
-
     case LongOpts::xaddr:
       context.ws_context->xaddr = optarg;
       break;
@@ -69,6 +63,9 @@ void processing_cmd(int argc, char *argv[])
 
 
     default:
+      // We don't want exit on invalid argument because those invalid arguments
+      // might be arguments to be handled by camera lib.
+
       // std::cout << "Invalid argument !" << std::endl;
       // usage();
       // exit(1);
@@ -85,14 +82,15 @@ void processing_cmd(int argc, char *argv[])
 Context::Context()
   : stop(false)
 {
-  rtsp_context = new RTSPContext();
-  ws_context = new WSContext();
+  rtsp_context     = new RTSPContext();
+  ws_context       = new WSContext();
 
-  manufacturer = "Manufacturer";
-  model = "Model";
+  //  Default values
+  manufacturer     = "Manufacturer";
+  model            = "Model";
   firmware_version = "0.1";
-  serial_number = "1234567890";
-  hardware_id = "1234567890";
+  serial_number    = "1234567890";
+  hardware_id      = "1234567890";
 }
 
 Context::~Context()
@@ -106,24 +104,25 @@ Context::~Context()
 }
 
 
-WSContext::WSContext():
-  port(80),
-  xaddr("127.0.0.1"),
-  endpoint(""),
-  user("admin"),
-  password("password")
-{}
+WSContext::WSContext()
+{
+  // Default values
+  port      = 8080;
+  xaddr     = "127.0.0.1";
+}
 
-RTSPContext::RTSPContext():
-  stream_endpoint("cam"),
-  stream_port(554),
-  encoder("vaapih264enc"),
-  camera_lib("camera/libdummycam.so"),
-  framerate(30),
-  width(1280),
-  height(720),
-  camera(NULL)
-{}
+RTSPContext::RTSPContext()
+{
+  // Default values
+  stream_endpoint = "cam";
+  stream_port     = 554;
+  encoder         = "vaapih264enc";
+  camera_lib      = "camera/libdummycam.so";
+  framerate       = 30;
+  width           = 1280;
+  height          = 720;
+  camera          = NULL;
+}
 
 
 RTSPContext::~RTSPContext()
@@ -153,6 +152,10 @@ std::string WSContext::get_xaddr()
   return result;
 }
 
+
+//////////////
+// PRINTING //
+//////////////
 
 void Context::print()
 {

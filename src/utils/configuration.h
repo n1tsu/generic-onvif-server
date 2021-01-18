@@ -13,10 +13,10 @@ public:
   std::string get_name() { return name; }
   std::string get_token() { return token; }
 
-  int x;
-  int y;
-  int width;
-  int height;
+  int x       = 0;
+  int y       = 0;
+  int width   = 1280;
+  int height  = 720;
 
 private:
   std::string name;
@@ -33,10 +33,10 @@ public:
   std::string get_name() { return name; }
   std::string get_token() { return token; }
 
-  int height;
-  int width;
-  float quality;
-  std::string encoder;
+  int width           = 1280;
+  int height          = 720;
+  float quality       = 1.0f;
+  std::string encoder = "H264";
 
 private:
   std::string name;
@@ -53,18 +53,18 @@ public:
   std::string get_name() { return name; }
   std::string get_token() { return token; }
 
-  bool absolute_pantilt;
-  bool absolute_zoom;
-  bool relative_pantilt;
-  bool relative_zoom;
-  bool continuous_pantilt;
-  bool continuous_zoom;
+  bool absolute_pantilt   = false;
+  bool absolute_zoom      = false;
+  bool relative_pantilt   = false;
+  bool relative_zoom      = false;
+  bool continuous_pantilt = false;
+  bool continuous_zoom    = false;
 
-  float pan_speed;
-  float tilt_speed;
-  float zoom_speed;
+  float pan_speed         = 1.0f;
+  float tilt_speed        = 1.0f;
+  float zoom_speed        = 0.1f;
 
-  PTZSpace ranges;
+  PTZSpace ranges         = {-180.0f, 180.0f, -180.0f, 180.0f, 0.0f, 1.0f};
 
   std::string node_token;
 

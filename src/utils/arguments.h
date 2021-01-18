@@ -16,12 +16,9 @@ namespace LongOpts
   {
     version = 'v',
     help    = 'h',
-    debug    = 'd',
+    debug   = 'd',
 
-    // Web services
-    port,
     xaddr,
-
     configs,
   };
 }
@@ -58,9 +55,16 @@ public:
 
   std::vector<std::string> scopes;
   int port;
+
+  /* xaddr is the address used by the client (IP in local) used by the client
+   * to reach the server. We can find it using the socket when a client connect
+   * but for the moment it is just the IP address of the interface we want to use
+   * and is given with CLI argument. */
   std::string xaddr;
   std::string endpoint;
 
+  /* user and password are not used in the code but can be easily added with
+   * `CHECK_SECURITY` macro inside the `macros.h` file. */
   std::string user;
   std::string password;
 };

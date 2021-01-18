@@ -19,7 +19,7 @@ public:
 
   std::string name;
   std::string token;
-  bool fixed;
+  bool fixed = true;
 
   std::shared_ptr<VideoConfiguration> video_configuration;
   std::shared_ptr<EncoderConfiguration> encoder_configuration;

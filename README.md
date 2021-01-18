@@ -41,7 +41,7 @@ $ make deep-clean  # also clean gSOAP generated files
 Usage: onvif-server [options]
 Options:
   -h | --help                  Print this help.
-  --port            <port>     Port to be used to serve ONVIF server.
+  -d | --debug                 Activate debug output.
   --xaddr           <addr>     Address used by client to reach ONVIF server.
   --configs         <path>     Configurations file path.
 ```
@@ -49,14 +49,15 @@ Options:
 ## Configurations
 
 * Configurations can be loaded with the parameter `--configs`, use it multiple time to load multiple files.
-* You can put all configurations in a single file but be sure to load profile configurations last. 
+* You can put all configurations in a single file but be sure to load PROFILE category last. 
 * Example configurations can be found inside `configs` folder.
 * More details [here](configs/README.md)
 
 
 ## Camera
 
-Camera are loaded giving the path of a dynamic library implementing the `CameraGeneric` class interface with the argument `--cameralib`.  
+Camera are loaded giving the path of a dynamic library implementing the `CameraGeneric` class interface.  
+Add the path of the lib in the configuration category STREAM under the variable `camera_lib`.  
 In the `camera` directory you can find `camera_generic.h` and `camera_generic_structs.h` specifiying `CameraGeneric` class interface.  
 
 An example Makefile and two example camera libraries are within the directory :
