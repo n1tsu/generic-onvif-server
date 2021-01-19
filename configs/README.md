@@ -18,23 +18,23 @@ There is different configuration categories :
 
 Device configuration bring general configuration about the server.
 
-| Options          | Example                                 | Description                                                  |
+| Options          | Default                                 | Description                                                  |
 |------------------|-----------------------------------------|--------------------------------------------------------------|
-| manufacturer     | Company name                            | Manufacturer of the system.                                  |
-| model            | Model A                                 | Model of the system.                                         |
-| firmware_version | 1.0                                     | Version of the firmware.                                     |
-| serial_number    | 123                                     | Serial number of the system.                                 |
-| hardware_id      | 123                                     | Hardware ID of the system.                                   |
+| manufacturer     | Manufacturer                            | Manufacturer of the system.                                  |
+| model            | Model                                   | Model of the system.                                         |
+| firmware_version | 0.1                                     | Version of the firmware.                                     |
+| serial_number    | 1234567890                              | Serial number of the system.                                 |
+| hardware_id      | 1234567890                              | Hardware ID of the system.                                   |
 | scope            | onvif://www.onvif.org/Profile/Streaming | Scope of the device (Repeat this option for multiple scopes) |
 
 ### STREAM
 
 Stream configuration of the GStreamer RTSP server.
 
-| Options         | Example               | Description                         |
+| Options         | Default               | Description                         |
 |-----------------|-----------------------|-------------------------------------|
 | stream_endpoint | cam                   | URL endpoint of the RTSP stream.    |
-| stream_port     | 8554                  | Port of RTSP the stream.            |
+| stream_port     | 554                   | Port of RTSP the stream.            |
 | encoder         | vaapih264enc          | GStreamer element encoder name.     |
 | camera_lib      | camera/libdummycam.so | Path of the camera library to load. |
 | framerate       | 30                    | Framerate of the RTSP stream.       |
@@ -45,9 +45,9 @@ Stream configuration of the GStreamer RTSP server.
 
 A node configuration represents a physical PTZ configuration.
 
-| Options       | Example | Description                                      |
+| Options       | Default | Description                                      |
 |---------------|---------|--------------------------------------------------|
-| fixed_home    | true    | Wether home position can be changed or not.      |
+| fixed_home    | false   | Wether home position can be changed or not.      |
 | geo_move      | false   | Wether camera supports move giving GPS position. |
 | max_presets   | 10      | Maximum number of presets.                       |
 | support_home  | true    | Wether camera support having an home position.   |
@@ -68,7 +68,7 @@ A node configuration represents a physical PTZ configuration.
 Video configuration of the stream to specifies the screen part to watch.  
 (Example: x=20, y=20, width=20, height=20 specifies a configuration to only display a square of 20pixels beginning at x=20 y=20.)
 
-| Options | Example | Description |
+| Options | Default | Description |
 |---------|---------|-------------|
 | x       | 0       | X position  |
 | y       | 0       | Y position  |
@@ -79,7 +79,7 @@ Video configuration of the stream to specifies the screen part to watch.
 
 Encoder configuration.
 
-| Options | Example | Description                                               |
+| Options | Default | Description                                               |
 |---------|---------|-----------------------------------------------------------|
 | width   | 1280    | Width of encoded video.                                   |
 | height  | 720     | Heigth of encoded video.                                  |
@@ -90,7 +90,7 @@ Encoder configuration.
 
 PTZ configuration is like node configuration but is not tied with physical capabilities.
 
-| Options     | Example   | Description                                  |
+| Options     | Default   | Description                                  |
 |-------------|-----------|----------------------------------------------|
 | abs_pantilt | true      | Specifies if absolute pan tilt is supported. |
 | abs_zoom    | true      | Specifies if absolute zoom is supported.     |
@@ -102,15 +102,15 @@ PTZ configuration is like node configuration but is not tied with physical capab
 | zoom_speed  | 0.1       | Same for zoom.                               |
 | pan_min     | -180.0    | Minimum pan position.                        |
 | ...         |           | Same for maximum, tilt and zoom              |
-| node_token  | main_node | Token name of the physical node.             |
+| node_token  | main_node | Token name of the physical node. (Mandatory) |
 
 ### PROFILE
 
 Profile configuration is the last configuration to load since it contains reference to other configurations.
 
-| Options      | Example      | Description                                  |
+| Options      | Default      | Description                                  |
 |--------------|--------------|----------------------------------------------|
 | fixed        | true         | If the profile is fixed it can't be removed. |
-| video_conf   | video_main   | Token name of video configuration.           |
-| encoder_conf | encoder_main | Token name of encoder configuration.         |
-| ptz_conf     | ptz_main     | Token name of PTZ configuration.             |
+| video_conf   |              | Token name of video configuration.           |
+| encoder_conf |              | Token name of encoder configuration.         |
+| ptz_conf     |              | Token name of PTZ configuration.             |

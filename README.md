@@ -17,7 +17,7 @@ Follow the installation guide : [here](https://www.genivia.com/downloads.html)
 
 ### [GStreamer RTSP server](https://github.com/GStreamer/gst-rtsp-server)
 
-Easiest way to get the packages is from distribution repositories (`apt-get`, `pacman`, ...).
+Easiest way to get the packages is from distribution repositories (`apt-get`, `pacman`, ...).  
 Names can vary depending of the distribution :  
 
 * `gstreamer`
@@ -26,7 +26,8 @@ Names can vary depending of the distribution :
 * `gst-plugins-good`
 * `gst-vaapi`
 
-Depending on the encoder you want to use, you might need to add other gst packages.
+Depending on the encoder you want to use, you might need to add other gst packages.  
+You can activate GStreamer debug output setting GST_DEBUG variable to wanted log level.
 
 ## Usage
 
@@ -51,6 +52,7 @@ Options:
 * Configurations can be loaded with the parameter `--configs`, use it multiple time to load multiple files.
 * You can put all configurations in a single file but be sure to load PROFILE category last. 
 * Example configurations can be found inside `configs` folder.
+* Default configurations search paths are `./onvif.config`and `/etc/generic-onvif-server/configs/onvif.config` if no configuration path is provided.
 * More details [here](configs/README.md)
 
 
@@ -81,3 +83,4 @@ Just run `make` inside `camera` directory to generate `libdummycam.so` and `libv
 - [ ] Add Doxygen-like comments on important functions (mostly camera folder).
 - [ ] Hard refactoring on CameraV4L2.
 - [ ] Add usage function in camera generic.
+- [ ] Handle GStreamer behavior when it failed to create pipeline (either log it or exit).

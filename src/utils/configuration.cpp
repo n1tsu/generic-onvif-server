@@ -33,7 +33,11 @@ void EncoderConfiguration::print()
     "   * width: " << width << std::endl <<
     "   * height: " << height << std::endl <<
     "   * quality: " << quality << std::endl <<
-    "   * encoder: " << encoder << std::endl;
+    "   * encoder: " << encoder << std::endl <<
+    "   * frame limit: " << encoder << std::endl <<
+    "   * encoding interval: " << encoder << std::endl <<
+    "   * bitrate limit: " << encoder << std::endl <<
+    "   * gov_length: " << encoder << std::endl;
 }
 
 

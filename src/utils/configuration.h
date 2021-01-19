@@ -13,10 +13,10 @@ public:
   std::string get_name() { return name; }
   std::string get_token() { return token; }
 
-  int x       = 0;
-  int y       = 0;
-  int width   = 1280;
-  int height  = 720;
+  int x                 = 0;
+  int y                 = 0;
+  int width             = 1280;
+  int height            = 720;
 
 private:
   std::string name;
@@ -37,6 +37,12 @@ public:
   int height          = 720;
   float quality       = 1.0f;
   std::string encoder = "H264";
+
+  // TODO this parameters are not effective with camera and are dummy.
+  int frame_limit       = 30;
+  int encoding_interval = 10;
+  int bitrate_limit     = 10000000;
+  int gov_length        = 10;
 
 private:
   std::string name;

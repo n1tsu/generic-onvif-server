@@ -118,7 +118,7 @@ tt__VideoEncoderConfiguration *to_gsoap(soap *soap, std::shared_ptr<EncoderConfi
     encoder_configuration->Encoding = tt__VideoEncoding__H264;
     // TODO handle this parameters properly
     encoder_configuration->H264 = soap_new_tt__H264Configuration(soap);
-    encoder_configuration->H264->GovLength = 10;
+    encoder_configuration->H264->GovLength = configuration->gov_length;
     encoder_configuration->H264->H264Profile = tt__H264Profile::tt__H264Profile__Baseline;
   }
   else if (configuration->encoder.compare("JPEG"))
@@ -126,11 +126,11 @@ tt__VideoEncoderConfiguration *to_gsoap(soap *soap, std::shared_ptr<EncoderConfi
   else if (configuration->encoder.compare("MPEG4"))
     encoder_configuration->Encoding = tt__VideoEncoding__MPEG4;
 
-    // TODO handle this parameters properly
+  // TODO handle this parameters properly
   encoder_configuration->RateControl                   = soap_new_tt__VideoRateControl(soap);
-  encoder_configuration->RateControl->FrameRateLimit   = 30;
-  encoder_configuration->RateControl->EncodingInterval = 10;
-  encoder_configuration->RateControl->BitrateLimit     = 10000000;
+  encoder_configuration->RateControl->FrameRateLimit   = configuration->frame_limit;
+  encoder_configuration->RateControl->EncodingInterval = configuration->encoding_interval;
+  encoder_configuration->RateControl->BitrateLimit     = configuration->bitrate_limit;
 
   encoder_configuration->Resolution         = soap_new_tt__VideoResolution(soap);
   encoder_configuration->Resolution->Width  = configuration->width;

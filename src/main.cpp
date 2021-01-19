@@ -106,6 +106,7 @@ bool load_camera_library(std::string name)
 
   CameraGeneric* camera = (CameraGeneric*)create();
   context.rtsp_context->camera = camera;
+  // TODO get capabilities of camera to populate context
 
   return false;
 }
