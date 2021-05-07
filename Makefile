@@ -90,7 +90,7 @@ OBJS := $(patsubst %.c,   %.o, $(OBJS))
 
 # targets
 
-all: $(TARGET)
+all: $(TARGET) libs
 
 debug: CXXFLAGS += -g -fsanitize=address -DDEBUG
 debug: $(TARGET)
@@ -109,6 +109,8 @@ compilation: $(OBJS)
 
 gsoap_target: $(GENERATED_DIR)/soapC.cpp $(GENERATED_DIR)/wsddClient.cpp
 
+libs:
+	make -C camera
 
 $(GENERATED_DIR)/onvif.h:
 	@mkdir -p $(GENERATED_DIR)
@@ -129,6 +131,7 @@ install:
 clean:
 	@rm -f $(OBJS)
 	@rm -f $(TARGET)
+	make -C camera clean
 
 deep-clean: clean
 	@rm -rf $(GENERATED_DIR)
