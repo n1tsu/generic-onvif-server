@@ -117,7 +117,7 @@ RTSPContext::RTSPContext()
   stream_endpoint = "cam";
   stream_port     = 8554;
   encoder         = "vaapih264enc";
-  camera_lib      = "camera/libdummycam.so";
+  camera_lib      = "camera/lib/libdummycam.so";
   framerate       = 30;
   width           = 1280;
   height          = 720;
