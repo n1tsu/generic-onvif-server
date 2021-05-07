@@ -16,6 +16,7 @@ CXXFLAGS += -ldl                                                    \
             `pkg-config --cflags --libs gstreamer-rtsp-server-1.0`  \
 
 TARGET       := onvif-server
+CONFIG_PATH   = /etc/generic-onvif-server
 SRC_DIR       = src
 SERVICE_DIR   = $(SRC_DIR)/services
 DISCOVERY_DIR = $(SRC_DIR)/discovery
@@ -120,7 +121,10 @@ $(GENERATED_DIR)/soapC.cpp: $(GENERATED_DIR)/onvif.h
 $(GENERATED_DIR)/wsddClient.cpp: $(GSOAP_IMPORT_DIR)/wsdd.h
 	soapcpp2 -a -L -x -pwsdd -d $(GENERATED_DIR) -I$(GSOAP_DIR):$(GSOAP_IMPORT_DIR) $<
 
-
+install:
+	@mkdir -p $(CONFIG_PATH)
+	@cp -r configs $(CONFIG_PATH)
+	@install -D -m 0755 onvif-server /usr/bin
 
 clean:
 	@rm -f $(OBJS)
