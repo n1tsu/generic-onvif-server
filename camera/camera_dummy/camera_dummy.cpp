@@ -1,7 +1,11 @@
 #include "camera_dummy.h"
-#include <iostream>
+#include <cstring>
+#include <dirent.h>
+#include <filesystem>
 #include <fstream>
+#include <iostream>
 #include <sstream>
+
 
 extern "C" CameraGeneric* create_object()
 {
@@ -88,9 +92,51 @@ struct CameraCapabilities CameraDummy::get_camera_capabilities()
   return capabilities;
 }
 
+void usage()
+{
+    std::cout <<
+    "Options for camera_dummy:" << std::endl <<
+    "  --camhelp                    Print this help." << std::endl <<
+    "  --camdir                     Path of directory containing frame" << std::endl <<
+    "" << std::endl <<
+    "Directory must contain jpeg named `frameX.jpeg`, with X being the index of" <<
+    "the frame. It should not contain any other files." << std::endl;
+}
+
 bool CameraDummy::initiate_connection(int argc, char *argv[])
 {
   std::cout << "- Initiate connection" << std::endl;
+  for (int i = 0; i < argc; i++)
+  {
+    if (!argv || !argv[i])
+      break;
+    if (strcmp(argv[i], "--camdir") == 0)
+    {
+      if (!argv[++i])
+        break;
+      images_path = argv[i];
+    }
+    else if (strcmp(argv[i], "--camhelp") == 0)
+      usage();
+  }
+
+  DIR * dirp;
+  struct dirent * entry;
+
+  dirp = opendir(images_path.c_str());
+  if (!dirp)
+  {
+    perror("Failed to open image directory");
+    return true;
+  }
+
+  while ((entry = readdir(dirp)) != NULL)
+  {
+    if (entry->d_type == DT_REG)
+      images_num++;
+  }
+  closedir(dirp);
+
   return false;
 }
 
@@ -119,7 +165,7 @@ struct Image CameraDummy::get_current_image()
   };
 
   std::ostringstream stream_format;
-  stream_format << "camera/jpeg/frame" << frame_count % 36 << ".jpg";
+  stream_format << images_path << "/" << "frame" << frame_count % images_num << ".jpg";
   std::string image_name = stream_format.str();
   std::ifstream file(image_name, std::ios::binary | std::ios::ate);
   if (file.fail())

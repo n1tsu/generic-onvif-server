@@ -59,6 +59,11 @@ public:
 private:
   int frame_count = 0;
 
+  // Path of folder containing jpeg
+  std::string images_path;
+  // Number of jpeg within the folder
+  int images_num = 0;
+
   // PTZ
   uint8_t zoom_percent = 0;
   int16_t pan_degree = 0;

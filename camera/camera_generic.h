@@ -15,6 +15,7 @@ public:
 
   /**
    * @brief Initiate the connection with the camera.
+   * Ensure to have at least an argument '--camhelp' providing other arguments
    * @param [in]argc : size of arguments array.
    * @param [in]argv : arguments array.
    * @return false on success and true on failure.

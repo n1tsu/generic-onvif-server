@@ -167,6 +167,16 @@ struct CameraCapabilities CameraV4L2::get_camera_capabilities()
   return capabilities;
 }
 
+void usage()
+{
+    std::cout <<
+    "Options for camera_v4l2:" << std::endl <<
+    "  --camhelp                    Print this help." << std::endl <<
+    "  --width                      v4l2 video width" << std::endl <<
+    "  --height                     v4l2 video height" << std::endl <<
+    "  --video                      Index x of /dev/videox" << std::endl;
+}
+
 bool CameraV4L2::initiate_connection(int argc, char *argv[])
 {
   // TODO: handle CLI parameters for resolution and dev path
@@ -179,24 +189,26 @@ bool CameraV4L2::initiate_connection(int argc, char *argv[])
   {
     if (!argv || !argv[i])
       break;
-    if (strcmp(argv[i], "--width") == 0)
+    if (strcmp(argv[i], "--camwidth") == 0)
     {
       if (!argv[++i])
         break;
       width = std::stoi(argv[i]);
     }
-    else if (strcmp(argv[i], "--height") == 0)
+    else if (strcmp(argv[i], "--camheight") == 0)
     {
       if (!argv[++i])
         break;
       height = std::stoi(argv[i]);
     }
-    else if (strcmp(argv[i], "--video") == 0)
+    else if (strcmp(argv[i], "--camvideo") == 0)
     {
       if (!argv[++i])
         break;
       height = std::stoi(argv[i]);
     }
+    else if (strcmp(argv[i], "--camhelp") == 0)
+      usage();
   }
 
   std::string path = "/dev/video" + video;
