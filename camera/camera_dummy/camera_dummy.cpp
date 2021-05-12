@@ -137,6 +137,8 @@ bool CameraDummy::initiate_connection(int argc, char *argv[])
   }
   closedir(dirp);
 
+  std::cout << "Images path is: " << images_path << std::endl;
+
   return false;
 }
 

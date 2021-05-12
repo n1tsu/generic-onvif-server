@@ -60,7 +60,7 @@ private:
   int frame_count = 0;
 
   // Path of folder containing jpeg
-  std::string images_path;
+  std::string images_path = "/var/generic-onvif-server/frames";
   // Number of jpeg within the folder
   int images_num = 0;
 
