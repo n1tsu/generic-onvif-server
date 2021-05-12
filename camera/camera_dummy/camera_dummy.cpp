@@ -126,7 +126,7 @@ bool CameraDummy::initiate_connection(int argc, char *argv[])
   dirp = opendir(images_path.c_str());
   if (!dirp)
   {
-    perror("Failed to open image directory");
+    perror("! Failed to open image directory");
     return true;
   }
 
@@ -170,7 +170,8 @@ struct Image CameraDummy::get_current_image()
   std::ifstream file(image_name, std::ios::binary | std::ios::ate);
   if (file.fail())
   {
-    std::cout << "! Failed opening JPEG." << std::endl;
+    perror("! Failed opening JPEG: ");
+    std::cerr << "! Path was: " << images_path << std::endl;
     return image;
   }
   file.seekg(0, std::ios::end);
@@ -188,7 +189,7 @@ struct Image CameraDummy::get_current_image()
   }
 
   free(buffer);
-  std::cout << "! Failed reading JPEG." << std::endl;
+  perror("! Failed reading JPEG: ");
 
   return image;
 }

@@ -33,7 +33,8 @@ void discovery_routine()
 
     if(!soap_valid_socket(soap_bind(soap_discover, NULL, 3702, 100)))
     {
-      std::cerr << "Failed to bind multicast socket." << std::endl;
+      std::cerr << "! Failed to bind multicast socket." << std::endl;
+      soap_print_fault(soap_discover, stderr);
       exit(1);
     }
 

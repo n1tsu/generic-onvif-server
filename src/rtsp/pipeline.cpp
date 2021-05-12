@@ -1,5 +1,6 @@
 #include "pipeline.h"
 
+#include <iostream>
 #include <sstream>
 
 extern Context context;
@@ -142,7 +143,8 @@ int start_pipeline(int argc, char *argv[]) {
   gst_rtsp_server_attach(server, NULL);
 
   /* start serving */
-  g_print ("stream ready at rtsp://127.0.0.1:%d/%s\n",
+  g_print ("stream ready at rtsp://%s:%d/%s\n",
+           context.ws_context->xaddr.c_str(),
            context.rtsp_context->stream_port,
            context.rtsp_context->stream_endpoint.c_str());
 

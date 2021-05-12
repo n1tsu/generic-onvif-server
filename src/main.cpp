@@ -28,9 +28,11 @@ int services_routine()
   soap->user = (void*)&context;
   soap->bind_flags |= SO_REUSEADDR;
 
+  std::cerr << context.ws_context->port << std::endl;
   if (!soap_valid_socket(soap_bind(soap, NULL, context.ws_context->port, 100)))
   {
-    std::cerr << "Failed to bind service socket." << std::endl;
+    std::cerr << "! Failed to bind service socket." << std::endl;
+    soap_print_fault(soap, stderr);
     soap_destroy(soap);
     soap_end(soap);
     soap_free(soap);
@@ -41,7 +43,8 @@ int services_routine()
   {
     if (!soap_valid_socket(soap_accept(soap)))
     {
-      std::cerr << "Failed to accept connection." << std::endl;
+      std::cerr << "! Failed to accept connection." << std::endl;
+      soap_print_fault(soap, stderr);
       soap_destroy(soap);
       soap_end(soap);
       soap_free(soap);
